@@ -150,6 +150,7 @@ fun MainScreen(
         drawerContent = {
             MainDrawerContent(
                 drawerState = drawerState,
+                subscriptionCount = groups.size,
                 onNavigate = { route ->
                     scope.launch { drawerState.close() }
                     onNavigate(route)
