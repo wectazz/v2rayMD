@@ -76,6 +76,7 @@ fun GroupPagerPage(
     onShareServer: (String, ProfileItem) -> Unit,
     onMoreServer: (String, ProfileItem) -> Unit,
     onRemoveServer: (String) -> Unit,
+    emptyContent: @Composable () -> Unit,
     contentPadding: PaddingValues
 ) {
     val groupStateFlow = remember(groupId) {
@@ -97,6 +98,10 @@ fun GroupPagerPage(
             more = onMoreServer,
             remove = onRemoveServer,
         )
+    }
+    if (groupState.rows.isEmpty()) {
+        emptyContent()
+        return
     }
     ServerListPage(
         rows = groupState.rows,

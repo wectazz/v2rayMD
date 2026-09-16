@@ -255,6 +255,12 @@ fun MainScreen(
                                 shareTarget = Triple(guid, profile, true)
                             },
                             onRemoveServer = removeServer,
+                            emptyContent = {
+                                MainEmptyState(
+                                    onImportClipboard = { onAction(MainAction.ImportClipboard) },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            },
                             contentPadding = PaddingValues(
                                 start = 0.dp,
                                 top = 0.dp,
