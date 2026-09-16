@@ -1,14 +1,27 @@
 package com.v2ray.md.ui.main
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.isComplexType
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
-import com.v2ray.md.ui.compose.SelectListDialog
 
 private enum class ImportMenuAction(@StringRes val labelRes: Int, val action: MainAction) {
     QRCode(R.string.menu_item_import_config_qrcode, MainAction.ImportQRcode),
@@ -72,6 +85,7 @@ fun MoreMenuContent(onSelected: (MainMoreMenuAction) -> Unit) = AppDropdownMenuI
     onSelected = onSelected
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareMethodDialog(
     guid: String,
@@ -85,19 +99,34 @@ fun ShareMethodDialog(
         isComplexProfile = profile.configType.isComplexType(),
         includeManagementActions = more,
     )
-    SelectListDialog(
-        options = menuActions,
-        optionText = { stringResource(it.labelRes) },
-        onSelected = { action ->
-            onDismiss()
-            when (action) {
-                ServerMenuAction.ShareQRCode -> onAction(MainAction.ShareQRCode(guid))
-                ServerMenuAction.ShareClipboard -> onAction(MainAction.ShareClipboard(guid))
-                ServerMenuAction.ShareFullContent -> onAction(MainAction.ShareFullContent(guid))
-                ServerMenuAction.Edit -> onAction(MainAction.EditServer(guid, profile))
-                ServerMenuAction.Delete -> onRemove(guid)
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState()
+    ) {
+        Column(modifier = Modifier.navigationBarsPadding()) {
+            menuActions.forEach { action ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onDismiss()
+                            when (action) {
+                                ServerMenuAction.ShareQRCode -> onAction(MainAction.ShareQRCode(guid))
+                                ServerMenuAction.ShareClipboard -> onAction(MainAction.ShareClipboard(guid))
+                                ServerMenuAction.ShareFullContent -> onAction(MainAction.ShareFullContent(guid))
+                                ServerMenuAction.Edit -> onAction(MainAction.EditServer(guid, profile))
+                                ServerMenuAction.Delete -> onRemove(guid)
+                            }
+                        }
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(action.labelRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
-        },
-        onDismiss = onDismiss
-    )
+        }
+    }
 }

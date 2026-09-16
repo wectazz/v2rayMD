@@ -25,10 +25,12 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -77,6 +79,8 @@ fun GroupPagerPage(
     onMoreServer: (String, ProfileItem) -> Unit,
     onRemoveServer: (String) -> Unit,
     emptyContent: @Composable () -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     contentPadding: PaddingValues
 ) {
     val groupStateFlow = remember(groupId) {
@@ -113,6 +117,8 @@ fun GroupPagerPage(
         lazyListStates = lazyListStates,
         lazyGridStates = lazyGridStates,
         actions = actions,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         onLocateHandled = { mainViewModel.onAction(MainAction.LocateHandled) },
         onMoveServer = { fromIndex, toIndex ->
             mainViewModel.moveServer(groupId, fromIndex, toIndex)
@@ -129,6 +135,7 @@ private class ServerRowActions(
     val remove: (String) -> Unit,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ServerListPage(
     rows: List<ServerRowUiModel>,
@@ -140,6 +147,8 @@ private fun ServerListPage(
     lazyListStates: MutableMap<String, LazyListState>,
     lazyGridStates: MutableMap<String, LazyGridState>,
     actions: ServerRowActions,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onLocateHandled: () -> Unit,
     onMoveServer: (Int, Int) -> Unit,
     contentPadding: PaddingValues
@@ -156,35 +165,41 @@ private fun ServerListPage(
 
         LocateTargetEffect(locateTarget, rows, gridState, onLocateHandled)
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            state = gridState,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScrollbar(gridState),
-            contentPadding = contentPadding
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
-                val content: @Composable () -> Unit = {
-                    ServerItemColumn(
-                        row = row,
-                        isSelected = row.guid == selectedGuid,
-                        doubleColumnDisplay = true,
-                        actions = actions
-                    )
-                }
-                if (canReorder && reorderableGridState != null) {
-                    ReorderableItem(
-                        reorderableGridState,
-                        key = row.guid
-                    ) { isDragging ->
-                        ReorderableGridItem(
-                            scope = this,
-                            isDragging = isDragging
-                        ) { content() }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = gridState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScrollbar(gridState),
+                contentPadding = contentPadding
+            ) {
+                itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
+                    val content: @Composable () -> Unit = {
+                        ServerItemColumn(
+                            row = row,
+                            isSelected = row.guid == selectedGuid,
+                            doubleColumnDisplay = true,
+                            actions = actions
+                        )
                     }
-                } else {
-                    content()
+                    if (canReorder && reorderableGridState != null) {
+                        ReorderableItem(
+                            reorderableGridState,
+                            key = row.guid
+                        ) { isDragging ->
+                            ReorderableGridItem(
+                                scope = this,
+                                isDragging = isDragging
+                            ) { content() }
+                        }
+                    } else {
+                        content()
+                    }
                 }
             }
         }
@@ -200,40 +215,46 @@ private fun ServerListPage(
 
         LocateTargetEffect(locateTarget, rows, listState, onLocateHandled)
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScrollbar(listState),
-            contentPadding = contentPadding
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
-                if (canReorder && reorderableState != null) {
-                    ReorderableItem(
-                        reorderableState,
-                        key = row.guid
-                    ) { isDragging ->
-                        ReorderableListItem(
-                            scope = this,
-                            isDragging = isDragging
-                        ) {
-                            ServerItemRow(
-                                row = row,
-                                isSelected = row.guid == selectedGuid,
-                                actions = actions
-                            )
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScrollbar(listState),
+                contentPadding = contentPadding
+            ) {
+                itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
+                    if (canReorder && reorderableState != null) {
+                        ReorderableItem(
+                            reorderableState,
+                            key = row.guid
+                        ) { isDragging ->
+                            ReorderableListItem(
+                                scope = this,
+                                isDragging = isDragging
+                            ) {
+                                ServerItemRow(
+                                    row = row,
+                                    isSelected = row.guid == selectedGuid,
+                                    actions = actions
+                                )
+                            }
+                            ItemDivider()
                         }
-                        ItemDivider()
-                    }
-                } else {
-                    ServerItemRow(
-                        row = row,
-                        isSelected = row.guid == selectedGuid,
-                        actions = actions
-                    )
+                    } else {
+                        ServerItemRow(
+                            row = row,
+                            isSelected = row.guid == selectedGuid,
+                            actions = actions
+                        )
                     ItemDivider()
                 }
             }
+        }
         }
     }
 }

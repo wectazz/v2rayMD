@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,15 +61,21 @@ fun MainConnectFab(
     isRunning: Boolean,
     onAction: (MainAction) -> Unit
 ) {
-    FloatingActionButton(
-        onClick = { onAction(MainAction.ToggleService) }
-    ) {
-        Icon(
-            painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
-            else painterResource(R.drawable.ic_play_24dp),
-            contentDescription = stringResource(
-                if (isRunning) R.string.acc_stop else R.string.acc_start
+    ExtendedFloatingActionButton(
+        modifier = Modifier.navigationBarsPadding(),
+        text = {            Text(
+                stringResource(
+                    if (isRunning) R.string.acc_stop else R.string.acc_start
+                )
             )
-        )
-    }
+        },
+        icon = {
+            Icon(
+                painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
+                else painterResource(R.drawable.ic_play_24dp),
+                contentDescription = null
+            )
+        },
+        onClick = { onAction(MainAction.ToggleService) }
+    )
 }
