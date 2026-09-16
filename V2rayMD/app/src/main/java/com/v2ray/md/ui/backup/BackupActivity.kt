@@ -42,6 +42,7 @@ import com.v2ray.md.ui.compose.InputField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.util.LogUtil
 import kotlinx.coroutines.flow.StateFlow
@@ -223,16 +224,19 @@ fun BackupScreen(
                     title = stringResource(R.string.title_configuration_backup),
                     onClick = { showBackupDialog = true }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_share_24dp),
                     title = stringResource(R.string.title_configuration_share),
                     onClick = onShareClick
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_restore_24dp),
                     title = stringResource(R.string.title_configuration_restore),
                     onClick = { showRestoreDialog = true }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_delete_24dp),
                     title = stringResource(R.string.title_profile_storage_cleanup),

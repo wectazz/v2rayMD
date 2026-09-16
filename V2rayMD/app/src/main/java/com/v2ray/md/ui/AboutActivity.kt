@@ -34,6 +34,7 @@ import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.VersionInfoBlock
 import com.v2ray.md.util.Utils
@@ -88,26 +89,31 @@ fun AboutScreen(
                     title = stringResource(R.string.title_source_code),
                     onClick = { Utils.openUri(context, AppConfig.APP_URL) }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.license_24px),
                     title = stringResource(R.string.title_oss_license),
                     onClick = { showOssDialog = true }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_translate_24dp),
                     title = stringResource(R.string.title_translators),
                     onClick = onTranslatorsClick
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_feedback_24dp),
                     title = stringResource(R.string.title_pref_feedback),
                     onClick = { Utils.openUri(context, AppConfig.APP_ISSUES_URL) }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_telegram_24dp),
                     title = stringResource(R.string.title_tg_channel),
                     onClick = { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
                 )
+                SettingsCardDivider()
                 SettingsMenuItem(
                     icon = painterResource(R.drawable.ic_privacy_24dp),
                     title = stringResource(R.string.title_privacy_policy),

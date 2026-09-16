@@ -1,7 +1,6 @@
 package com.v2ray.md.ui.compose
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -30,25 +30,38 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 
 /**
- * M3 settings group: vertical stack of per-row cards with standard gaps.
- * Each row composable ([SettingsSwitchItem], [SettingsEditItem], ...) draws its own
- * card background; this container only provides page margins and spacing.
+ * M3 settings group: single tonal container with hairline dividers between rows.
+ * Place [SettingsCardDivider] between rows, following m3.material.io lists.
  */
 @Composable
 fun SettingsCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(
+    Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        content = content
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer
+    ) {
+        Column(content = content)
+    }
+}
+
+/** Hairline divider between rows inside a [SettingsCard]. */
+@Composable
+fun SettingsCardDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        thickness = Dp.Hairline,
+        color = MaterialTheme.colorScheme.outlineVariant
     )
 }
 
@@ -123,39 +136,45 @@ private fun SettingsItemRow(
     val descriptionColor = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
 
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer
-    ) {
-        ListItem(
-            headlineContent = {
-                Text(text = title, color = titleColor)
-            },
-            supportingContent = if (!description.isNullOrEmpty()) {
-                { Text(text = description, color = descriptionColor) }
-            } else {
-                null
-            },
-            leadingContent = if (icon != null) {
-                {
-                    Icon(
-                        painter = icon,
-                        contentDescription = null,
-                        tint = titleColor
-                    )
-                }
-            } else {
-                null
-            },
-            trailingContent = trailing,
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-            modifier = Modifier.then(
-                if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
-                else Modifier
-            )
+    ListItem(
+        headlineContent = {
+            Text(text = title, color = titleColor)
+        },
+        supportingContent = if (!description.isNullOrEmpty()) {
+            { Text(text = description, color = descriptionColor) }
+        } else {
+            null
+        },
+        leadingContent = if (icon != null) {
+            {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    tint = titleColor
+                )
+            }
+        } else {
+            null
+        },
+        trailingContent = trailing,
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        modifier = modifier.then(
+            if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
+            else Modifier
         )
-    }
+    )
+}
+
+@Composable
+private fun TrailingValueText(text: String, enabled: Boolean) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
+        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 @Composable
@@ -179,12 +198,15 @@ fun SettingsEditItem(
     SettingsItemRow(
         icon = icon,
         title = title,
-        description = description,
+        description = null,
         enabled = enabled,
         onClick = if (enabled) {
             { showDialog = true }
         } else null,
-        modifier = modifier
+        modifier = modifier,
+        trailing = description?.let { value ->
+            { TrailingValueText(text = value, enabled = enabled) }
+        }
     )
 
     if (showDialog) {
@@ -226,12 +248,15 @@ fun SettingsListItem(
     SettingsItemRow(
         icon = icon,
         title = title,
-        description = summary.ifEmpty { null },
+        description = null,
         enabled = enabled,
         onClick = if (enabled) {
             { showDialog = true }
         } else null,
-        modifier = modifier
+        modifier = modifier,
+        trailing = summary.takeIf { it.isNotEmpty() }?.let { value ->
+            { TrailingValueText(text = value, enabled = enabled) }
+        }
     )
 
     if (showDialog) {
