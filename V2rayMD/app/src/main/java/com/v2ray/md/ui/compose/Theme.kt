@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.expressiveDarkColorScheme
+import androidx.compose.material3.expressiveLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -112,14 +112,14 @@ fun AppTheme(
 ) {
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
     val context = LocalContext.current
-    // Pure dynamic color when available; stock M3 baseline otherwise. No brand palette.
+    // Pure dynamic color when available; expressive baseline otherwise. No brand palette.
     val baseScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> darkColorScheme()
-        else -> lightColorScheme()
+        darkTheme -> expressiveDarkColorScheme()
+        else -> expressiveLightColorScheme()
     }
     // Dark surfaces are lifted slightly above the M3 baseline: dynamic hues and
     // accents stay intact, only the background luminance goes up.
@@ -142,10 +142,9 @@ fun AppTheme(
         LocalDarkTheme provides darkTheme,
         LocalAppSnackbar provides snackbarController
     ) {
-        // NOTE: MaterialExpressiveTheme is internal in the material3 version
-        // pinned by the Compose BOM (verified by CI 2026-09-16); revisit on BOM bump.
-        MaterialTheme(
+        MaterialExpressiveTheme(
             colorScheme = colorScheme,
+            motionScheme = MotionScheme.expressive(),
             shapes = AppShapes
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
