@@ -262,7 +262,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
             )
 
             if (state.streamSecurity.isBlank()) {
-                return@Column
+                return@FormCard
             }
 
             FormTextField(
