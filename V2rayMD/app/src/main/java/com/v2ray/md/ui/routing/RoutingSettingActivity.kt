@@ -24,7 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -58,7 +56,6 @@ import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsListItem
-import com.v2ray.md.ui.compose.colorConfigType
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.JsonUtil
 import com.v2ray.md.util.LogUtil
@@ -365,7 +362,7 @@ private fun RoutingRulesetItem(
                 Text(
                     text = ruleset.outboundTag,
                     style = MaterialTheme.typography.labelMedium,
-                    color = colorConfigType
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
         }
@@ -383,12 +380,7 @@ private fun RoutingRulesetItem(
             Spacer(modifier = Modifier.height(4.dp))
             Switch(
                 checked = ruleset.enabled ?: false,
-                onCheckedChange = onEnabledChange,
-                modifier = Modifier.scale(0.7f),
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colorScheme.onSecondary,
-                    checkedTrackColor = MaterialTheme.colorScheme.secondary
-                )
+                onCheckedChange = onEnabledChange
             )
         }
     }

@@ -43,7 +43,6 @@ private val AppShapes = Shapes(
 // Semantic Colors
 val colorPing = Color(0xFF009966) // Green
 val colorPingRed = Color(0xFFFF0099) // Pink Red
-val colorConfigType = Color(0xFFf97910) // Orange
 val dividerColorLight = Color(0xFFE0E0E0) // Light Gray
 val dividerColorDark = Color(0xFF424242) // Dark Gray
 
