@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -62,7 +63,9 @@ fun MainConnectFab(
     onAction: (MainAction) -> Unit
 ) {
     ExtendedFloatingActionButton(
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier.padding(
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        ),
         text = {            Text(
                 stringResource(
                     if (isRunning) R.string.acc_stop else R.string.acc_start
