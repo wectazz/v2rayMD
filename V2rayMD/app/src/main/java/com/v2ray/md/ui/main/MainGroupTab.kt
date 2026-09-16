@@ -39,13 +39,27 @@ fun GroupTabBar(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             groups.forEachIndexed { index, group ->
-                SegmentedGroupButton(
-                    group = group,
+                val serverFlow = remember(group.id, mainViewModel) {
+                    mainViewModel.serversForGroup(group.id)
+                }
+                val servers by serverFlow.collectAsStateWithLifecycle()
+                val text = if (group.id.isEmpty()) {
+                    group.remarks
+                } else {
+                    "${group.remarks} (${servers.size})"
+                }
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = groups.size),
+                    onClick = { onTabClick(index) },
                     selected = index == selectedIndex,
-                    index = index,
-                    count = groups.size,
-                    mainViewModel = mainViewModel,
-                    onClick = { onTabClick(index) }
+                    label = {
+                        Text(
+                            text = text,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 )
             }
         }
@@ -68,39 +82,6 @@ fun GroupTabBar(
             }
         }
     }
-}
-
-@Composable
-private fun SegmentedGroupButton(
-    group: GroupMapItem,
-    selected: Boolean,
-    index: Int,
-    count: Int,
-    mainViewModel: MainViewModel,
-    onClick: () -> Unit
-) {
-    val serverFlow = remember(group.id, mainViewModel) {
-        mainViewModel.serversForGroup(group.id)
-    }
-    val servers by serverFlow.collectAsStateWithLifecycle()
-    val text = if (group.id.isEmpty()) {
-        group.remarks
-    } else {
-        "${group.remarks} (${servers.size})"
-    }
-    SegmentedButton(
-        shape = SegmentedButtonDefaults.itemShape(index = index, count = count),
-        onClick = onClick,
-        selected = selected,
-        label = {
-            Text(
-                text = text,
-                maxLines = 1,
-                softWrap = false,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    )
 }
 
 @Composable
