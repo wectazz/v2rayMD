@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,6 @@ import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.CollapsiblePreferenceGroupHeader
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsCard
-import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsEditItem
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SettingsMenuItem
@@ -245,20 +245,21 @@ fun SettingsScreen(
             if (uiSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_play_24dp),
                         title = stringResource(R.string.title_pref_speed_enabled),
                         summary = stringResource(R.string.summary_pref_speed_enabled),
                         checked = speedEnabled,
                         onCheckedChange = { speedEnabled = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_delete_24dp),
                         title = stringResource(R.string.title_pref_confirm_remove),
                         summary = stringResource(R.string.summary_pref_confirm_remove),
                         checked = confirmRemove,
                         onCheckedChange = { confirmRemove = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_select_all_24dp),
                         title = stringResource(R.string.title_pref_double_column_display),
                         summary = stringResource(R.string.summary_pref_double_column_display),
                         checked = doubleColumnDisplay,
@@ -267,8 +268,8 @@ fun SettingsScreen(
                             SettingsChangeManager.makeSetupGroupTab()
                         }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_subscriptions_24dp),
                         title = stringResource(R.string.title_pref_group_all_display),
                         summary = stringResource(R.string.summary_pref_group_all_display),
                         checked = groupAllDisplay,
@@ -277,8 +278,8 @@ fun SettingsScreen(
                             SettingsChangeManager.makeSetupGroupTab()
                         }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_image_24dp),
                         title = stringResource(R.string.title_pref_dynamic_color),
                         summary = stringResource(R.string.summary_pref_dynamic_color),
                         checked = dynamicColor,
@@ -288,8 +289,8 @@ fun SettingsScreen(
                             ThemeManager.setDynamicColorEnabled(it)
                         }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_translate_24dp),
                         title = stringResource(R.string.title_language),
                         entries = languageEntries,
                         values = languageValues,
@@ -299,8 +300,8 @@ fun SettingsScreen(
                             AppLocaleManager.setApplicationLanguage(it)
                         }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_flash_off_24dp),
                         title = stringResource(R.string.title_pref_ui_mode_night),
                         entries = uiModeNightEntries,
                         values = uiModeNightValues,
@@ -321,51 +322,52 @@ fun SettingsScreen(
             if (vpnSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_routing_24dp),
                         title = stringResource(R.string.title_pref_ipv6_enabled),
                         summary = stringResource(R.string.summary_pref_ipv6_enabled),
                         checked = ipv6Enabled,
                         onCheckedChange = { ipv6Enabled = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_select_all_24dp),
                         title = stringResource(R.string.title_pref_prefer_ipv6),
                         summary = stringResource(R.string.summary_pref_prefer_ipv6),
                         checked = preferIpv6,
                         onCheckedChange = { preferIpv6 = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_lock_24dp),
                         title = stringResource(R.string.title_pref_local_dns_enabled),
                         summary = stringResource(R.string.summary_pref_local_dns_enabled),
                         checked = localDns,
                         enabled = isVpn,
                         onCheckedChange = { localDns = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_privacy_24dp),
                         title = stringResource(R.string.title_pref_fake_dns_enabled),
                         summary = stringResource(R.string.summary_pref_fake_dns_enabled),
                         checked = fakeDns,
                         enabled = isVpn && localDns,
                         onCheckedChange = { fakeDns = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_vpn_dns),
                         value = vpnDns,
                         enabled = isVpn && !localDns,
                         onValueChanged = { vpnDns = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_share_24dp),
                         title = stringResource(R.string.title_pref_append_http_proxy),
                         summary = stringResource(R.string.summary_pref_append_http_proxy),
                         checked = appendHttpProxy,
                         enabled = effectiveLocalProxy,
                         onCheckedChange = { appendHttpProxy = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_outline_filter_alt_24),
                         title = stringResource(R.string.title_pref_vpn_bypass_lan),
                         entries = bypassLanEntries,
                         values = bypassLanValues,
@@ -373,8 +375,8 @@ fun SettingsScreen(
                         enabled = isVpn,
                         onSelected = { vpnBypassLan = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_settings_24dp),
                         title = stringResource(R.string.title_pref_vpn_interface_address),
                         entries = interfaceAddrEntries,
                         values = interfaceAddrValues,
@@ -382,16 +384,16 @@ fun SettingsScreen(
                         enabled = isVpn,
                         onSelected = { vpnInterfaceAddress = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_vpn_mtu),
                         value = vpnMtu,
                         enabled = isVpn,
                         keyboardNumber = true,
                         onValueChanged = { vpnMtu = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_play_24dp),
                         title = stringResource(R.string.title_pref_use_hev_tunnel),
                         summary = stringResource(R.string.summary_pref_use_hev_tunnel),
                         checked = useHevTun,
@@ -403,8 +405,8 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_logcat_24dp),
                         title = stringResource(R.string.title_pref_hev_tunnel_loglevel),
                         entries = hevLogEntries,
                         values = hevLogValues,
@@ -412,8 +414,8 @@ fun SettingsScreen(
                         enabled = hevTunEnabled,
                         onSelected = { hevTunLogLevel = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_restore_24dp),
                         title = stringResource(R.string.title_pref_hev_tunnel_rw_timeout),
                         value = hevTunRwTimeout,
                         enabled = hevTunEnabled,
@@ -431,20 +433,21 @@ fun SettingsScreen(
             if (coreSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_search_24dp),
                         title = stringResource(R.string.title_pref_sniffing_enabled),
                         summary = stringResource(R.string.summary_pref_sniffing_enabled),
                         checked = sniffingEnabled,
                         onCheckedChange = { sniffingEnabled = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_routing_24dp),
                         title = stringResource(R.string.title_pref_route_only_enabled),
                         summary = stringResource(R.string.summary_pref_route_only_enabled),
                         checked = routeOnlyEnabled,
                         onCheckedChange = { routeOnlyEnabled = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_share_24dp),
                         title = stringResource(R.string.title_pref_enable_local_proxy),
                         summary = stringResource(R.string.summary_pref_enable_local_proxy),
                         checked = enableLocalProxy,
@@ -458,81 +461,81 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_promotion_24dp),
                         title = stringResource(R.string.title_pref_proxy_sharing_enabled),
                         summary = stringResource(R.string.summary_pref_proxy_sharing_enabled),
                         checked = proxySharing,
                         enabled = effectiveLocalProxy,
                         onCheckedChange = { proxySharing = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_restore_24dp),
                         title = stringResource(R.string.title_pref_dynamic_socks_port),
                         summary = stringResource(R.string.summary_pref_dynamic_socks_port),
                         checked = dynamicSocksPort,
                         enabled = effectiveLocalProxy,
                         onCheckedChange = { dynamicSocksPort = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_socks_port),
                         value = socksPort,
                         enabled = effectiveLocalProxy && !dynamicSocksPort,
                         keyboardNumber = true,
                         onValueChanged = { socksPort = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_about_24dp),
                         title = stringResource(R.string.title_pref_socks_username),
                         value = socksUsername,
                         enabled = effectiveLocalProxy,
                         onValueChanged = { socksUsername = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_lock_24dp),
                         title = stringResource(R.string.title_pref_socks_password),
                         value = socksPassword,
                         enabled = effectiveLocalProxy,
                         isPassword = true,
                         onValueChanged = { socksPassword = it }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_flash_on_24dp),
                         title = stringResource(R.string.title_pref_socks_enable_udp),
                         summary = stringResource(R.string.summary_pref_socks_enable_udp),
                         checked = socksEnableUdp,
                         enabled = effectiveLocalProxy,
                         onCheckedChange = { socksEnableUdp = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_cloud_download_24dp),
                         title = stringResource(R.string.title_pref_remote_dns),
                         value = remoteDns,
                         onValueChanged = { remoteDns = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_domestic_dns),
                         value = domesticDns,
                         onValueChanged = { domesticDns = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_file_24dp),
                         title = stringResource(R.string.title_pref_dns_hosts),
                         value = dnsHosts,
                         onValueChanged = { dnsHosts = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_logcat_24dp),
                         title = stringResource(R.string.title_core_loglevel),
                         entries = coreLogLevelEntries,
                         values = coreLogLevelValues,
                         selectedValue = coreLogLevel,
                         onSelected = { coreLogLevel = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_outline_filter_alt_24),
                         title = stringResource(R.string.title_outbound_domain_resolve_method),
                         entries = outboundResolveEntries,
                         values = outboundResolveValues,
@@ -550,29 +553,30 @@ fun SettingsScreen(
             if (muxSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_play_24dp),
                         title = stringResource(R.string.title_pref_mux_enabled),
                         summary = stringResource(R.string.summary_pref_mux_enabled),
                         checked = mux,
                         onCheckedChange = { mux = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_mux_concurrency),
                         value = muxConcurrency,
                         enabled = mux,
                         keyboardNumber = true,
                         onValueChanged = { muxConcurrency = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_mux_xudp_concurrency),
                         value = muxXudpConcurrency,
                         enabled = mux,
                         keyboardNumber = true,
                         onValueChanged = { muxXudpConcurrency = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_lock_24dp),
                         title = stringResource(R.string.title_pref_mux_xudp_quic),
                         entries = xudpQuicEntries,
                         values = xudpQuicValues,
@@ -591,12 +595,13 @@ fun SettingsScreen(
             if (fragmentSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_copy),
                         title = stringResource(R.string.title_pref_fragment_enabled),
                         checked = fragment,
                         onCheckedChange = { fragment = it }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_file_24dp),
                         title = stringResource(R.string.title_pref_fragment_packets),
                         entries = fragmentPacketsEntries,
                         values = fragmentPacketsValues,
@@ -604,22 +609,22 @@ fun SettingsScreen(
                         enabled = fragment,
                         onSelected = { fragmentPackets = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_fragment_length),
                         value = fragmentLength,
                         enabled = fragment,
                         onValueChanged = { fragmentLength = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_restore_24dp),
                         title = stringResource(R.string.title_pref_fragment_interval),
                         value = fragmentInterval,
                         enabled = fragment,
                         onValueChanged = { fragmentInterval = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_fragment_maxsplit),
                         value = fragmentMaxSplit,
                         enabled = fragment,
@@ -637,6 +642,7 @@ fun SettingsScreen(
             if (observatorySettingsExpanded) {
                 SettingsCard {
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_restore_24dp),
                         title = stringResource(R.string.title_pref_observatory_least_ping_interval),
                         value = observatoryLeastPingInterval,
                         onValueChanged = {
@@ -645,8 +651,8 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_observatory_least_load_interval),
                         value = observatoryLeastLoadInterval,
                         onValueChanged = {
@@ -655,16 +661,16 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_outline_filter_alt_24),
                         title = stringResource(R.string.title_pref_observatory_least_load_method),
                         entries = observatoryLeastLoadMethodEntries,
                         values = observatoryLeastLoadMethodValues,
                         selectedValue = observatoryLeastLoadMethod,
                         onSelected = { observatoryLeastLoadMethod = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_observatory_least_load_sampling),
                         value = observatoryLeastLoadSampling,
                         keyboardNumber = true,
@@ -674,8 +680,8 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_save_24dp),
                         title = stringResource(R.string.title_pref_observatory_least_load_timeout),
                         value = observatoryLeastLoadTimeout,
                         onValueChanged = {
@@ -695,34 +701,35 @@ fun SettingsScreen(
             if (advancedSettingsExpanded) {
                 SettingsCard {
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_play_24dp),
                         title = stringResource(R.string.title_pref_is_booted),
                         summary = stringResource(R.string.summary_pref_is_booted),
                         checked = isBooted,
                         onCheckedChange = { isBooted = it }
                     )
-                    SettingsCardDivider()
                     if (systemVpnSettingsAvailable) {
                         SettingsMenuItem(
+                            icon = painterResource(R.drawable.ic_settings_24dp),
                             title = stringResource(R.string.title_system_vpn_settings),
                             subtitle = stringResource(R.string.summary_system_vpn_settings),
                             onClick = onSystemVpnSettingsClicked
                         )
                     }
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_cloud_download_24dp),
                         title = stringResource(R.string.title_pref_delay_test_url),
                         value = delayTestUrl,
                         onValueChanged = { delayTestUrl = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_edit_24dp),
                         title = stringResource(R.string.title_pref_real_ping_concurrency),
                         value = realPingConcurrency,
                         keyboardNumber = true,
                         onValueChanged = { realPingConcurrency = it }
                     )
-                    SettingsCardDivider()
                     SettingsEditItem(
+                        icon = painterResource(R.drawable.ic_description_24dp),
                         title = stringResource(R.string.title_pref_ip_api_url),
                         value = ipApiUrl,
                         onValueChanged = { ipApiUrl = it }
@@ -738,19 +745,20 @@ fun SettingsScreen(
             if (modeSettingsExpanded) {
                 SettingsCard {
                     SettingsListItem(
+                        icon = painterResource(R.drawable.ic_menu_24dp),
                         title = stringResource(R.string.title_mode),
                         entries = modeEntries,
                         values = modeValues,
                         selectedValue = mode,
                         onSelected = { mode = it }
                     )
-                    SettingsCardDivider()
                     SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_about_24dp),
                         title = stringResource(R.string.title_mode_help),
                         onClick = onModeHelpClicked
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_lock_24dp),
                         title = stringResource(R.string.title_root_mode_enabled),
                         summary = stringResource(R.string.summary_root_mode_enabled),
                         checked = enableRootMode,
@@ -764,8 +772,8 @@ fun SettingsScreen(
                             }
                         }
                     )
-                    SettingsCardDivider()
                     SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_share_24dp),
                         title = stringResource(R.string.title_root_lan_sharing),
                         summary = stringResource(R.string.summary_root_lan_sharing),
                         checked = lanSharing,

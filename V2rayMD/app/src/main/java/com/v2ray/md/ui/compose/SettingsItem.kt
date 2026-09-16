@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,49 +29,39 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 
 /**
- * M3 settings group card: tonal container. Place [SettingsCardDivider] between rows.
+ * M3 settings group: vertical stack of per-row cards with standard gaps.
+ * Each row composable ([SettingsSwitchItem], [SettingsEditItem], ...) draws its own
+ * card background; this container only provides page margins and spacing.
  */
 @Composable
 fun SettingsCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer
-    ) {
-        Column(content = content)
-    }
-}
-
-/** Hairline divider between rows inside a [SettingsCard]. */
-@Composable
-fun SettingsCardDivider() {
-    HorizontalDivider(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        thickness = Dp.Hairline,
-        color = MaterialTheme.colorScheme.outlineVariant
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        content = content
     )
 }
 
 /** Check mark for switch thumbs, following the M3 selected-switch pattern. */
 @Composable
 fun SwitchCheckThumb(checked: Boolean) {
-    if (checked) {
-        Icon(
-            painter = painterResource(R.drawable.ic_action_done),
-            contentDescription = null,
-            modifier = Modifier.size(SwitchDefaults.IconSize)
-        )
-    }
+    Icon(
+        painter = painterResource(
+            if (checked) R.drawable.ic_action_done
+            else android.R.drawable.ic_menu_close_clear_cancel
+        ),
+        contentDescription = null,
+        modifier = Modifier.size(SwitchDefaults.IconSize)
+    )
 }
 
 @Composable
@@ -133,38 +122,44 @@ private fun SettingsItemRow(
     val descriptionColor = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick) else Modifier)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer
     ) {
-        if (icon != null) {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = titleColor
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = titleColor
-            )
-            if (!description.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = descriptionColor
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick) else Modifier)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (icon != null) {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = titleColor
                 )
+                Spacer(modifier = Modifier.width(16.dp))
             }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = titleColor
+                )
+                if (!description.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = descriptionColor
+                    )
+                }
+            }
+            trailing?.invoke()
         }
-        trailing?.invoke()
     }
 }
 

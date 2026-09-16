@@ -264,9 +264,9 @@ fun MainScreen(
                                 )
                             },
                             contentPadding = PaddingValues(
-                                start = 0.dp,
-                                top = 0.dp,
-                                end = 0.dp,
+                                start = 16.dp,
+                                top = 8.dp,
+                                end = 16.dp,
                                 bottom = 80.dp
                             )
                         )

@@ -5,17 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,7 +50,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.R
 import com.v2ray.md.dto.LocateTarget
 import com.v2ray.md.dto.entities.ProfileItem
-import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.ReorderableGridItem
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.colorPing
@@ -176,11 +173,13 @@ private fun ServerListPage(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(gridState),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
                     val content: @Composable () -> Unit = {
-                        ServerItemColumn(
+                        ServerListItem(
                             row = row,
                             isSelected = row.guid == selectedGuid,
                             doubleColumnDisplay = true,
@@ -225,7 +224,8 @@ private fun ServerListPage(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(listState),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
                     if (canReorder && reorderableState != null) {
@@ -243,7 +243,6 @@ private fun ServerListPage(
                                     actions = actions
                                 )
                             }
-                            ItemDivider()
                         }
                     } else {
                         ServerItemRow(
@@ -251,7 +250,6 @@ private fun ServerListPage(
                             isSelected = row.guid == selectedGuid,
                             actions = actions
                         )
-                    ItemDivider()
                 }
             }
         }
@@ -306,24 +304,6 @@ private fun ServerItemRow(
 }
 
 @Composable
-private fun ServerItemColumn(
-    row: ServerRowUiModel,
-    isSelected: Boolean,
-    doubleColumnDisplay: Boolean,
-    actions: ServerRowActions
-) {
-    Column {
-        ServerListItem(
-            row = row,
-            isSelected = isSelected,
-            doubleColumnDisplay = doubleColumnDisplay,
-            actions = actions
-        )
-        ItemDivider()
-    }
-}
-
-@Composable
 private fun ServerListItem(
     row: ServerRowUiModel,
     isSelected: Boolean,
@@ -343,41 +323,23 @@ private fun ServerListItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
             .background(
                 if (isSelected) MaterialTheme.colorScheme.secondaryContainer
-                else Color.Transparent
+                else MaterialTheme.colorScheme.surfaceContainer
             )
-            .height(IntrinsicSize.Min)
             .semantics {
                 if (selectedStateDescription != null) {
                     stateDescription = selectedStateDescription
                 }
             }
             .clickable { actions.select(row.guid) }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier
-                .width(10.dp)
-                .fillMaxHeight()
-        ) {
-            if (isSelected) {
-                Row {
-                    Spacer(Modifier.width(6.dp))
-                    Box(
-                        Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .padding(vertical = 10.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                }
-            }
-        }
-
         Column(
             Modifier
                 .weight(1f)
-                .padding(start = 8.dp, end = 12.dp, top = 8.dp, bottom = 8.dp)
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(row.remarks, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge.copy(lineBreak = LineBreak.Paragraph), maxLines = 2, overflow = TextOverflow.Ellipsis)
