@@ -1,19 +1,16 @@
 package com.v2ray.md.ui.compose
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -25,43 +22,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 
 /**
- * M3 settings group: single tonal container with hairline dividers between rows.
- * Place [SettingsCardDivider] between rows, following m3.material.io lists.
+ * M3 expressive settings group: stack of single segmented list items with the
+ * spec [ListItemDefaults.SegmentedGap] spacing. Each row draws its own container.
  */
 @Composable
 fun SettingsCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer
-    ) {
-        Column(content = content)
-    }
-}
-
-/** Hairline divider between rows inside a [SettingsCard]. */
-@Composable
-fun SettingsCardDivider() {
-    HorizontalDivider(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        thickness = Dp.Hairline,
-        color = MaterialTheme.colorScheme.outlineVariant
+        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+        content = content
     )
 }
 
@@ -131,47 +114,53 @@ private fun SettingsItemRow(
     modifier: Modifier = Modifier,
     trailing: @Composable (() -> Unit)? = null
 ) {
-    val titleColor = if (enabled) MaterialTheme.colorScheme.onSurface
-    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-    val descriptionColor = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
-    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
-
-    ListItem(
-        headlineContent = {
-            Text(text = title, color = titleColor)
-        },
-        supportingContent = if (!description.isNullOrEmpty()) {
-            { Text(text = description, color = descriptionColor) }
-        } else {
-            null
-        },
-        leadingContent = if (icon != null) {
-            {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    tint = titleColor
-                )
-            }
-        } else {
-            null
-        },
-        trailingContent = trailing,
-        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-        modifier = modifier.then(
-            if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
-            else Modifier
-        )
-    )
+    val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    val leadingContent: @Composable (() -> Unit)? = if (icon != null) {
+        {
+            Icon(
+                painter = icon,
+                contentDescription = null
+            )
+        }
+    } else {
+        null
+    }
+    val supportingContent: @Composable (() -> Unit)? = if (!description.isNullOrEmpty()) {
+        { Text(text = description) }
+    } else {
+        null
+    }
+    if (onClick != null) {
+        SegmentedListItem(
+            onClick = onClick,
+            shapes = shapes,
+            enabled = enabled,
+            leadingContent = leadingContent,
+            trailingContent = trailing,
+            supportingContent = supportingContent,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Text(text = title)
+        }
+    } else {
+        SegmentedListItem(
+            shapes = shapes,
+            enabled = enabled,
+            leadingContent = leadingContent,
+            trailingContent = trailing,
+            supportingContent = supportingContent,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Text(text = title)
+        }
+    }
 }
 
 @Composable
-private fun TrailingValueText(text: String, enabled: Boolean) {
+private fun TrailingValueText(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge,
-        color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
-        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
@@ -205,7 +194,7 @@ fun SettingsEditItem(
         } else null,
         modifier = modifier,
         trailing = description?.let { value ->
-            { TrailingValueText(text = value, enabled = enabled) }
+            { TrailingValueText(text = value) }
         }
     )
 
@@ -255,7 +244,7 @@ fun SettingsListItem(
         } else null,
         modifier = modifier,
         trailing = summary.takeIf { it.isNotEmpty() }?.let { value ->
-            { TrailingValueText(text = value, enabled = enabled) }
+            { TrailingValueText(text = value) }
         }
     )
 
