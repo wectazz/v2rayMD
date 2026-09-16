@@ -6,8 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -87,7 +86,6 @@ fun resolveDarkTheme(): Boolean {
 
 val LocalDarkTheme = compositionLocalOf { false }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTheme(
     darkTheme: Boolean = resolveDarkTheme(),
@@ -122,7 +120,9 @@ fun AppTheme(
         LocalDarkTheme provides darkTheme,
         LocalAppSnackbar provides snackbarController
     ) {
-        MaterialExpressiveTheme(
+        // NOTE: MaterialExpressiveTheme is internal in the material3 version
+        // pinned by the Compose BOM (verified by CI 2026-09-16); revisit on BOM bump.
+        MaterialTheme(
             colorScheme = colorScheme,
             shapes = AppShapes
         ) {
