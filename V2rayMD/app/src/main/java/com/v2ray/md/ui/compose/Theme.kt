@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
@@ -86,6 +87,24 @@ fun resolveDarkTheme(): Boolean {
 
 val LocalDarkTheme = compositionLocalOf { false }
 
+/**
+ * Returns a copy of a dark [ColorScheme] with all surface roles lifted above the
+ * M3 baseline luminance. Accent, error and inverse roles are preserved as-is.
+ */
+private fun ColorScheme.liftedDarkSurfaces(): ColorScheme =
+    copy(
+        background = Color(0xFF1C1B1F),
+        surface = Color(0xFF1C1B1F),
+        surfaceDim = Color(0xFF1C1B1F),
+        surfaceBright = Color(0xFF42434A),
+        surfaceContainerLowest = Color(0xFF151318),
+        surfaceContainerLow = Color(0xFF232227),
+        surfaceContainer = Color(0xFF28272C),
+        surfaceContainerHigh = Color(0xFF333137),
+        surfaceContainerHighest = Color(0xFF3F3D45),
+        surfaceVariant = Color(0xFF524E57)
+    )
+
 @Composable
 fun AppTheme(
     darkTheme: Boolean = resolveDarkTheme(),
@@ -94,7 +113,7 @@ fun AppTheme(
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
     val context = LocalContext.current
     // Pure dynamic color when available; stock M3 baseline otherwise. No brand palette.
-    val colorScheme = when {
+    val baseScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
@@ -102,6 +121,9 @@ fun AppTheme(
         darkTheme -> darkColorScheme()
         else -> lightColorScheme()
     }
+    // Dark surfaces are lifted slightly above the M3 baseline: dynamic hues and
+    // accents stay intact, only the background luminance goes up.
+    val colorScheme = if (darkTheme) baseScheme.liftedDarkSurfaces() else baseScheme
     val snackbarController = rememberAppSnackbarController()
 
     val view = LocalView.current
