@@ -48,6 +48,7 @@ import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.reorderableDragHandle
@@ -269,11 +270,13 @@ fun ProxyChainScreen(
             )
         ) {
             item(key = "remarks_field") {
-                FormTextField(
-                    label = stringResource(R.string.server_lab_remarks),
-                    value = remarks,
-                    onValueChange = { remarks = it }
-                )
+                FormCard {
+                    FormTextField(
+                        label = stringResource(R.string.server_lab_remarks),
+                        value = remarks,
+                        onValueChange = { remarks = it }
+                    )
+                }
             }
 
             item {

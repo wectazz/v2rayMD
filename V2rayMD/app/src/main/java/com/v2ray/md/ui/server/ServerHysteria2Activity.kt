@@ -9,6 +9,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.toast
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 
@@ -50,63 +51,63 @@ class ServerHysteria2Activity : BaseServerActivity() {
 
     @Composable
     private fun Hysteria2ProtocolFields(state: ServerUiState) {
-        FormTextField(
-            stringResource(R.string.server_lab_id3),
-            state.password,
-            { state.password = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_obfs_password),
-            state.obfsPassword,
-            { state.obfsPassword = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_port_hop),
-            state.portHopping,
-            { state.portHopping = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_port_hop_interval),
-            state.portHoppingInterval,
-            { state.portHoppingInterval = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_bandwidth_down),
-            state.bandwidthDown,
-            { state.bandwidthDown = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_bandwidth_up),
-            state.bandwidthUp,
-            { state.bandwidthUp = it }
-        )
-
-        SettingsSwitchItem(
-            title = stringResource(R.string.server_lab_allow_insecure),
-            checked = state.allowInsecure,
-            onCheckedChange = { state.allowInsecure = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_sni),
-            state.sni,
-            { state.sni = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_ech_config_list),
-            state.echConfigList,
-            { state.echConfigList = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_pinned_ca256),
-            state.pinnedCA256,
-            { state.pinnedCA256 = it }
-        )
-
-        FormTextField(
-            stringResource(R.string.server_lab_final_mask),
-            state.finalMask,
-            { state.finalMask = it }
-        )
+        FormCard {
+            FormTextField(
+                stringResource(R.string.server_lab_id3),
+                state.password,
+                { state.password = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_obfs_password),
+                state.obfsPassword,
+                { state.obfsPassword = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_port_hop),
+                state.portHopping,
+                { state.portHopping = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_port_hop_interval),
+                state.portHoppingInterval,
+                { state.portHoppingInterval = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_bandwidth_down),
+                state.bandwidthDown,
+                { state.bandwidthDown = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_bandwidth_up),
+                state.bandwidthUp,
+                { state.bandwidthUp = it }
+            )
+            SettingsSwitchItem(
+                title = stringResource(R.string.server_lab_allow_insecure),
+                checked = state.allowInsecure,
+                onCheckedChange = { state.allowInsecure = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_sni),
+                state.sni,
+                { state.sni = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_ech_config_list),
+                state.echConfigList,
+                { state.echConfigList = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_pinned_ca256),
+                state.pinnedCA256,
+                { state.pinnedCA256 = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_final_mask),
+                state.finalMask,
+                { state.finalMask = it }
+            )
+        }
     }
 }
 

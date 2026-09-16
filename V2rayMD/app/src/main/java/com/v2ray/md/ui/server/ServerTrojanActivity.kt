@@ -8,6 +8,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.toast
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
 
 class ServerTrojanActivity : BaseServerActivity() {
@@ -56,11 +57,13 @@ class ServerTrojanActivity : BaseServerActivity() {
 
     @Composable
     private fun TrojanProtocolFields(state: ServerUiState) {
-        FormTextField(
-            stringResource(R.string.server_lab_id3),
-            state.password,
-            { state.password = it }
-        )
+        FormCard {
+            FormTextField(
+                stringResource(R.string.server_lab_id3),
+                state.password,
+                { state.password = it }
+            )
+        }
     }
 }
 

@@ -42,6 +42,7 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
@@ -103,7 +104,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
     protected fun CommonBasicFields(
         state: ServerUiState
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        FormCard {
             FormTextField(
                 stringResource(R.string.server_lab_remarks),
                 state.remarks,
@@ -128,7 +129,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
         state: ServerUiState,
         options: FieldOptions
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        FormCard {
             FormDropdownField(
                 stringResource(R.string.server_lab_network),
                 state.network,
@@ -252,7 +253,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
         buildProfileItem: () -> ProfileItem
     ) {
         val context = LocalContext.current
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        FormCard {
             FormDropdownField(
                 stringResource(R.string.server_lab_stream_security),
                 state.streamSecurity,

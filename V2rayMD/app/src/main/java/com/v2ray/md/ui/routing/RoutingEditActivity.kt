@@ -44,6 +44,7 @@ import com.v2ray.md.ui.apppicker.AppPickerActivity
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
@@ -213,95 +214,97 @@ fun RoutingEditScreen(
                 .verticalScrollbar(scrollState)
                 .padding(vertical = 8.dp)
         ) {
-            FormTextField(
-                label = stringResource(R.string.sub_setting_remarks),
-                value = remarks,
-                onValueChange = { remarks = it }
-            )
-            SettingsSwitchItem(
-                title = stringResource(R.string.routing_settings_locked),
-                checked = locked,
-                onCheckedChange = { locked = it }
-            )
-            Text(
-                text = stringResource(R.string.routing_settings_tips),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            FormTextField(
-                label = stringResource(R.string.routing_settings_domain),
-                placeholder = stringResource(R.string.routing_settings_comma_tip),
-                value = domain,
-                onValueChange = { domain = it }
-            )
-            FormTextField(
-                label = stringResource(R.string.routing_settings_ip),
-                placeholder = stringResource(R.string.routing_settings_comma_tip),
-                value = ip,
-                onValueChange = { ip = it }
-            )
-            FormTextField(
-                label = stringResource(R.string.routing_settings_process),
-                placeholder = stringResource(R.string.routing_settings_comma_tip),
-                value = processText,
-                onValueChange = { processText = it },
-                enabled = canUseProcess
-            )
-            if (canUseProcess) {
-                TextButton(
-                    onClick = {
-                        val current = processText
-                            .split(",")
-                            .map { it.trim() }
-                            .filter { it.isNotEmpty() }
-                            .distinct()
-                        processPickerLauncher.launch(
-                            AppPickerActivity.createIntent(
-                                context = context,
-                                selectedPackages = current,
-                                title = processSelectTitle
+            FormCard {
+                FormTextField(
+                    label = stringResource(R.string.sub_setting_remarks),
+                    value = remarks,
+                    onValueChange = { remarks = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.routing_settings_locked),
+                    checked = locked,
+                    onCheckedChange = { locked = it }
+                )
+                Text(
+                    text = stringResource(R.string.routing_settings_tips),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                FormTextField(
+                    label = stringResource(R.string.routing_settings_domain),
+                    placeholder = stringResource(R.string.routing_settings_comma_tip),
+                    value = domain,
+                    onValueChange = { domain = it }
+                )
+                FormTextField(
+                    label = stringResource(R.string.routing_settings_ip),
+                    placeholder = stringResource(R.string.routing_settings_comma_tip),
+                    value = ip,
+                    onValueChange = { ip = it }
+                )
+                FormTextField(
+                    label = stringResource(R.string.routing_settings_process),
+                    placeholder = stringResource(R.string.routing_settings_comma_tip),
+                    value = processText,
+                    onValueChange = { processText = it },
+                    enabled = canUseProcess
+                )
+                if (canUseProcess) {
+                    TextButton(
+                        onClick = {
+                            val current = processText
+                                .split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotEmpty() }
+                                .distinct()
+                            processPickerLauncher.launch(
+                                AppPickerActivity.createIntent(
+                                    context = context,
+                                    selectedPackages = current,
+                                    title = processSelectTitle
+                                )
                             )
+                        },
+                        modifier = Modifier.padding(start = 16.dp)
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.ic_per_apps_24dp),
+                            contentDescription = null
                         )
-                    },
-                    modifier = Modifier.padding(start = 16.dp)
-                ) {
-                    Icon(
-                        painterResource(R.drawable.ic_per_apps_24dp),
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(processSelectTitle)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(processSelectTitle)
+                    }
                 }
+                FormTextField(
+                    label = stringResource(R.string.routing_settings_port),
+                    value = port,
+                    onValueChange = { port = it }
+                )
+                FormTextField(
+                    label = stringResource(R.string.routing_settings_protocol),
+                    placeholder = stringResource(R.string.routing_settings_protocol_tip),
+                    value = protocol,
+                    onValueChange = { protocol = it }
+                )
+                FormDropdownField(
+                    label = stringResource(R.string.routing_settings_network),
+                    value = selectedNetwork,
+                    options = ROUTING_NETWORK_OPTIONS,
+                    onValueChange = { network = it }
+                )
+                FormDropdownField(
+                    label = stringResource(R.string.routing_settings_outbound_tag),
+                    placeholder = stringResource(
+                        R.string.routing_settings_outbound_tag_hint,
+                        stringResource(R.string.server_lab_remarks)
+                    ),
+                    value = outboundTag,
+                    options = outboundSuggestions,
+                    onValueChange = { outboundTag = it },
+                    editable = true
+                )
             }
-            FormTextField(
-                label = stringResource(R.string.routing_settings_port),
-                value = port,
-                onValueChange = { port = it }
-            )
-            FormTextField(
-                label = stringResource(R.string.routing_settings_protocol),
-                placeholder = stringResource(R.string.routing_settings_protocol_tip),
-                value = protocol,
-                onValueChange = { protocol = it }
-            )
-            FormDropdownField(
-                label = stringResource(R.string.routing_settings_network),
-                value = selectedNetwork,
-                options = ROUTING_NETWORK_OPTIONS,
-                onValueChange = { network = it }
-            )
-            FormDropdownField(
-                label = stringResource(R.string.routing_settings_outbound_tag),
-                placeholder = stringResource(
-                    R.string.routing_settings_outbound_tag_hint,
-                    stringResource(R.string.server_lab_remarks)
-                ),
-                value = outboundTag,
-                options = outboundSuggestions,
-                onValueChange = { outboundTag = it },
-                editable = true
-            )
             Spacer(modifier = Modifier.height(36.dp))
             NavigationBarsSpacer()
         }

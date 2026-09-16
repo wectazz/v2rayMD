@@ -6,10 +6,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -43,6 +41,8 @@ import com.v2ray.md.ui.compose.InputDialog
 import com.v2ray.md.ui.compose.InputField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SelectListDialog
+import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.util.LogUtil
 import kotlinx.coroutines.flow.StateFlow
@@ -218,34 +218,40 @@ fun BackupScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_backup_24dp),
-                title = stringResource(R.string.title_configuration_backup),
-                onClick = { showBackupDialog = true }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_share_24dp),
-                title = stringResource(R.string.title_configuration_share),
-                onClick = onShareClick
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_restore_24dp),
-                title = stringResource(R.string.title_configuration_restore),
-                onClick = { showRestoreDialog = true }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_delete_24dp),
-                title = stringResource(R.string.title_profile_storage_cleanup),
-                subtitle = stringResource(R.string.summary_profile_storage_cleanup),
-                onClick = { showCleanupDialog = true }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_settings_24dp),
-                title = stringResource(R.string.title_webdav_config_setting),
-                subtitle = webDavSummary,
-                onClick = { showWebDavDialog = true }
-            )
+            SettingsCard {
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_backup_24dp),
+                    title = stringResource(R.string.title_configuration_backup),
+                    onClick = { showBackupDialog = true }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_share_24dp),
+                    title = stringResource(R.string.title_configuration_share),
+                    onClick = onShareClick
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_restore_24dp),
+                    title = stringResource(R.string.title_configuration_restore),
+                    onClick = { showRestoreDialog = true }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_delete_24dp),
+                    title = stringResource(R.string.title_profile_storage_cleanup),
+                    subtitle = stringResource(R.string.summary_profile_storage_cleanup),
+                    onClick = { showCleanupDialog = true }
+                )
+            }
+            SettingsCard {
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_settings_24dp),
+                    title = stringResource(R.string.title_webdav_config_setting),
+                    subtitle = webDavSummary,
+                    onClick = { showWebDavDialog = true }
+                )
+            }
             NavigationBarsSpacer()
         }
     }

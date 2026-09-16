@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,6 +33,8 @@ import com.v2ray.md.core.CoreNativeManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
+import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.VersionInfoBlock
 import com.v2ray.md.util.Utils
@@ -82,36 +83,43 @@ fun AboutScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_source_code_24dp),
-                title = stringResource(R.string.title_source_code),
-                onClick = { Utils.openUri(context, AppConfig.APP_URL) }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.license_24px),
-                title = stringResource(R.string.title_oss_license),
-                onClick = { showOssDialog = true }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_translate_24dp),
-                title = stringResource(R.string.title_translators),
-                onClick = onTranslatorsClick
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_feedback_24dp),
-                title = stringResource(R.string.title_pref_feedback),
-                onClick = { Utils.openUri(context, AppConfig.APP_ISSUES_URL) }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_telegram_24dp),
-                title = stringResource(R.string.title_tg_channel),
-                onClick = { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
-            )
-            SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_privacy_24dp),
-                title = stringResource(R.string.title_privacy_policy),
-                onClick = { Utils.openUri(context, AppConfig.APP_PRIVACY_POLICY) }
-            )
+            SettingsCard {
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_source_code_24dp),
+                    title = stringResource(R.string.title_source_code),
+                    onClick = { Utils.openUri(context, AppConfig.APP_URL) }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.license_24px),
+                    title = stringResource(R.string.title_oss_license),
+                    onClick = { showOssDialog = true }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_translate_24dp),
+                    title = stringResource(R.string.title_translators),
+                    onClick = onTranslatorsClick
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_feedback_24dp),
+                    title = stringResource(R.string.title_pref_feedback),
+                    onClick = { Utils.openUri(context, AppConfig.APP_ISSUES_URL) }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_telegram_24dp),
+                    title = stringResource(R.string.title_tg_channel),
+                    onClick = { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
+                )
+                SettingsCardDivider()
+                SettingsMenuItem(
+                    icon = painterResource(R.drawable.ic_privacy_24dp),
+                    title = stringResource(R.string.title_privacy_policy),
+                    onClick = { Utils.openUri(context, AppConfig.APP_PRIVACY_POLICY) }
+                )
+            }
             VersionInfoBlock(
                 versionText = versionText,
                 appIdText = appIdText
@@ -141,7 +149,6 @@ fun AboutScreen(
                     Text(stringResource(R.string.action_ok))
                 }
             },
-            containerColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier.padding(bottom = 60.dp)
         )
     }

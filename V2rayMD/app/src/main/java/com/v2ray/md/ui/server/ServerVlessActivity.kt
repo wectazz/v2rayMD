@@ -9,6 +9,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.toast
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 
@@ -58,21 +59,23 @@ class ServerVlessActivity : BaseServerActivity() {
         state: ServerUiState,
         flowOptions: List<String>
     ) {
-        FormTextField(
-            stringResource(R.string.server_lab_id),
-            state.password,
-            { state.password = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_encryption),
-            state.encryption,
-            { state.encryption = it }
-        )
-        FormDropdownField(
-            stringResource(R.string.server_lab_flow),
-            state.flow,
-            flowOptions,
-            { state.flow = it }
-        )
+        FormCard {
+            FormTextField(
+                stringResource(R.string.server_lab_id),
+                state.password,
+                { state.password = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_encryption),
+                state.encryption,
+                { state.encryption = it }
+            )
+            FormDropdownField(
+                stringResource(R.string.server_lab_flow),
+                state.flow,
+                flowOptions,
+                { state.flow = it }
+            )
+        }
     }
 }

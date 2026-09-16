@@ -45,6 +45,8 @@ import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.CollapsiblePreferenceGroupHeader
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
+import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SettingsCardDivider
 import com.v2ray.md.ui.compose.SettingsEditItem
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SettingsMenuItem
@@ -241,66 +243,74 @@ fun SettingsScreen(
                 onExpandedChange = { uiSettingsExpanded = it }
             )
             if (uiSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_speed_enabled),
-                    summary = stringResource(R.string.summary_pref_speed_enabled),
-                    checked = speedEnabled,
-                    onCheckedChange = { speedEnabled = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_confirm_remove),
-                    summary = stringResource(R.string.summary_pref_confirm_remove),
-                    checked = confirmRemove,
-                    onCheckedChange = { confirmRemove = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_double_column_display),
-                    summary = stringResource(R.string.summary_pref_double_column_display),
-                    checked = doubleColumnDisplay,
-                    onCheckedChange = {
-                        doubleColumnDisplay = it
-                        SettingsChangeManager.makeSetupGroupTab()
-                    }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_group_all_display),
-                    summary = stringResource(R.string.summary_pref_group_all_display),
-                    checked = groupAllDisplay,
-                    onCheckedChange = {
-                        groupAllDisplay = it
-                        SettingsChangeManager.makeSetupGroupTab()
-                    }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_dynamic_color),
-                    summary = stringResource(R.string.summary_pref_dynamic_color),
-                    checked = dynamicColor,
-                    enabled = dynamicColorSupported,
-                    onCheckedChange = {
-                        dynamicColor = it
-                        ThemeManager.setDynamicColorEnabled(it)
-                    }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_language),
-                    entries = languageEntries,
-                    values = languageValues,
-                    selectedValue = language,
-                    onSelected = {
-                        language = it
-                        AppLocaleManager.setApplicationLanguage(it)
-                    }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_ui_mode_night),
-                    entries = uiModeNightEntries,
-                    values = uiModeNightValues,
-                    selectedValue = uiModeNight,
-                    onSelected = {
-                        uiModeNight = it
-                        ThemeManager.setThemeMode(it)
-                    }
-                )
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_speed_enabled),
+                        summary = stringResource(R.string.summary_pref_speed_enabled),
+                        checked = speedEnabled,
+                        onCheckedChange = { speedEnabled = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_confirm_remove),
+                        summary = stringResource(R.string.summary_pref_confirm_remove),
+                        checked = confirmRemove,
+                        onCheckedChange = { confirmRemove = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_double_column_display),
+                        summary = stringResource(R.string.summary_pref_double_column_display),
+                        checked = doubleColumnDisplay,
+                        onCheckedChange = {
+                            doubleColumnDisplay = it
+                            SettingsChangeManager.makeSetupGroupTab()
+                        }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_group_all_display),
+                        summary = stringResource(R.string.summary_pref_group_all_display),
+                        checked = groupAllDisplay,
+                        onCheckedChange = {
+                            groupAllDisplay = it
+                            SettingsChangeManager.makeSetupGroupTab()
+                        }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_dynamic_color),
+                        summary = stringResource(R.string.summary_pref_dynamic_color),
+                        checked = dynamicColor,
+                        enabled = dynamicColorSupported,
+                        onCheckedChange = {
+                            dynamicColor = it
+                            ThemeManager.setDynamicColorEnabled(it)
+                        }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_language),
+                        entries = languageEntries,
+                        values = languageValues,
+                        selectedValue = language,
+                        onSelected = {
+                            language = it
+                            AppLocaleManager.setApplicationLanguage(it)
+                        }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_ui_mode_night),
+                        entries = uiModeNightEntries,
+                        values = uiModeNightValues,
+                        selectedValue = uiModeNight,
+                        onSelected = {
+                            uiModeNight = it
+                            ThemeManager.setThemeMode(it)
+                        }
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -309,95 +319,108 @@ fun SettingsScreen(
                 onExpandedChange = { vpnSettingsExpanded = it }
             )
             if (vpnSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_ipv6_enabled),
-                    summary = stringResource(R.string.summary_pref_ipv6_enabled),
-                    checked = ipv6Enabled,
-                    onCheckedChange = { ipv6Enabled = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_prefer_ipv6),
-                    summary = stringResource(R.string.summary_pref_prefer_ipv6),
-                    checked = preferIpv6,
-                    onCheckedChange = { preferIpv6 = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_local_dns_enabled),
-                    summary = stringResource(R.string.summary_pref_local_dns_enabled),
-                    checked = localDns,
-                    enabled = isVpn,
-                    onCheckedChange = { localDns = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_fake_dns_enabled),
-                    summary = stringResource(R.string.summary_pref_fake_dns_enabled),
-                    checked = fakeDns,
-                    enabled = isVpn && localDns,
-                    onCheckedChange = { fakeDns = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_vpn_dns),
-                    value = vpnDns,
-                    enabled = isVpn && !localDns,
-                    onValueChanged = { vpnDns = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_append_http_proxy),
-                    summary = stringResource(R.string.summary_pref_append_http_proxy),
-                    checked = appendHttpProxy,
-                    enabled = effectiveLocalProxy,
-                    onCheckedChange = { appendHttpProxy = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_vpn_bypass_lan),
-                    entries = bypassLanEntries,
-                    values = bypassLanValues,
-                    selectedValue = vpnBypassLan,
-                    enabled = isVpn,
-                    onSelected = { vpnBypassLan = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_vpn_interface_address),
-                    entries = interfaceAddrEntries,
-                    values = interfaceAddrValues,
-                    selectedValue = vpnInterfaceAddress,
-                    enabled = isVpn,
-                    onSelected = { vpnInterfaceAddress = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_vpn_mtu),
-                    value = vpnMtu,
-                    enabled = isVpn,
-                    keyboardNumber = true,
-                    onValueChanged = { vpnMtu = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_use_hev_tunnel),
-                    summary = stringResource(R.string.summary_pref_use_hev_tunnel),
-                    checked = useHevTun,
-                    enabled = isVpn,
-                    onCheckedChange = {
-                        useHevTun = it
-                        if (it && !enableLocalProxy) {
-                            enableLocalProxy = true
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_ipv6_enabled),
+                        summary = stringResource(R.string.summary_pref_ipv6_enabled),
+                        checked = ipv6Enabled,
+                        onCheckedChange = { ipv6Enabled = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_prefer_ipv6),
+                        summary = stringResource(R.string.summary_pref_prefer_ipv6),
+                        checked = preferIpv6,
+                        onCheckedChange = { preferIpv6 = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_local_dns_enabled),
+                        summary = stringResource(R.string.summary_pref_local_dns_enabled),
+                        checked = localDns,
+                        enabled = isVpn,
+                        onCheckedChange = { localDns = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_fake_dns_enabled),
+                        summary = stringResource(R.string.summary_pref_fake_dns_enabled),
+                        checked = fakeDns,
+                        enabled = isVpn && localDns,
+                        onCheckedChange = { fakeDns = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_vpn_dns),
+                        value = vpnDns,
+                        enabled = isVpn && !localDns,
+                        onValueChanged = { vpnDns = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_append_http_proxy),
+                        summary = stringResource(R.string.summary_pref_append_http_proxy),
+                        checked = appendHttpProxy,
+                        enabled = effectiveLocalProxy,
+                        onCheckedChange = { appendHttpProxy = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_vpn_bypass_lan),
+                        entries = bypassLanEntries,
+                        values = bypassLanValues,
+                        selectedValue = vpnBypassLan,
+                        enabled = isVpn,
+                        onSelected = { vpnBypassLan = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_vpn_interface_address),
+                        entries = interfaceAddrEntries,
+                        values = interfaceAddrValues,
+                        selectedValue = vpnInterfaceAddress,
+                        enabled = isVpn,
+                        onSelected = { vpnInterfaceAddress = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_vpn_mtu),
+                        value = vpnMtu,
+                        enabled = isVpn,
+                        keyboardNumber = true,
+                        onValueChanged = { vpnMtu = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_use_hev_tunnel),
+                        summary = stringResource(R.string.summary_pref_use_hev_tunnel),
+                        checked = useHevTun,
+                        enabled = isVpn,
+                        onCheckedChange = {
+                            useHevTun = it
+                            if (it && !enableLocalProxy) {
+                                enableLocalProxy = true
+                            }
                         }
-                    }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_hev_tunnel_loglevel),
-                    entries = hevLogEntries,
-                    values = hevLogValues,
-                    selectedValue = hevTunLogLevel,
-                    enabled = hevTunEnabled,
-                    onSelected = { hevTunLogLevel = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_hev_tunnel_rw_timeout),
-                    value = hevTunRwTimeout,
-                    enabled = hevTunEnabled,
-                    keyboardNumber = true,
-                    onValueChanged = { hevTunRwTimeout = it }
-                )
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_hev_tunnel_loglevel),
+                        entries = hevLogEntries,
+                        values = hevLogValues,
+                        selectedValue = hevTunLogLevel,
+                        enabled = hevTunEnabled,
+                        onSelected = { hevTunLogLevel = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_hev_tunnel_rw_timeout),
+                        value = hevTunRwTimeout,
+                        enabled = hevTunEnabled,
+                        keyboardNumber = true,
+                        onValueChanged = { hevTunRwTimeout = it }
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -406,102 +429,117 @@ fun SettingsScreen(
                 onExpandedChange = { coreSettingsExpanded = it }
             )
             if (coreSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_sniffing_enabled),
-                    summary = stringResource(R.string.summary_pref_sniffing_enabled),
-                    checked = sniffingEnabled,
-                    onCheckedChange = { sniffingEnabled = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_route_only_enabled),
-                    summary = stringResource(R.string.summary_pref_route_only_enabled),
-                    checked = routeOnlyEnabled,
-                    onCheckedChange = { routeOnlyEnabled = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_enable_local_proxy),
-                    summary = stringResource(R.string.summary_pref_enable_local_proxy),
-                    checked = enableLocalProxy,
-                    enabled = !localProxyForced,
-                    onCheckedChange = {
-                        if (!localProxyForced) {
-                            enableLocalProxy = it
-                            if (!it && appendHttpProxy) {
-                                appendHttpProxy = false
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_sniffing_enabled),
+                        summary = stringResource(R.string.summary_pref_sniffing_enabled),
+                        checked = sniffingEnabled,
+                        onCheckedChange = { sniffingEnabled = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_route_only_enabled),
+                        summary = stringResource(R.string.summary_pref_route_only_enabled),
+                        checked = routeOnlyEnabled,
+                        onCheckedChange = { routeOnlyEnabled = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_enable_local_proxy),
+                        summary = stringResource(R.string.summary_pref_enable_local_proxy),
+                        checked = enableLocalProxy,
+                        enabled = !localProxyForced,
+                        onCheckedChange = {
+                            if (!localProxyForced) {
+                                enableLocalProxy = it
+                                if (!it && appendHttpProxy) {
+                                    appendHttpProxy = false
+                                }
                             }
                         }
-                    }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_proxy_sharing_enabled),
-                    summary = stringResource(R.string.summary_pref_proxy_sharing_enabled),
-                    checked = proxySharing,
-                    enabled = effectiveLocalProxy,
-                    onCheckedChange = { proxySharing = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_dynamic_socks_port),
-                    summary = stringResource(R.string.summary_pref_dynamic_socks_port),
-                    checked = dynamicSocksPort,
-                    enabled = effectiveLocalProxy,
-                    onCheckedChange = { dynamicSocksPort = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_socks_port),
-                    value = socksPort,
-                    enabled = effectiveLocalProxy && !dynamicSocksPort,
-                    keyboardNumber = true,
-                    onValueChanged = { socksPort = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_socks_username),
-                    value = socksUsername,
-                    enabled = effectiveLocalProxy,
-                    onValueChanged = { socksUsername = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_socks_password),
-                    value = socksPassword,
-                    enabled = effectiveLocalProxy,
-                    isPassword = true,
-                    onValueChanged = { socksPassword = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_socks_enable_udp),
-                    summary = stringResource(R.string.summary_pref_socks_enable_udp),
-                    checked = socksEnableUdp,
-                    enabled = effectiveLocalProxy,
-                    onCheckedChange = { socksEnableUdp = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_remote_dns),
-                    value = remoteDns,
-                    onValueChanged = { remoteDns = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_domestic_dns),
-                    value = domesticDns,
-                    onValueChanged = { domesticDns = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_dns_hosts),
-                    value = dnsHosts,
-                    onValueChanged = { dnsHosts = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_core_loglevel),
-                    entries = coreLogLevelEntries,
-                    values = coreLogLevelValues,
-                    selectedValue = coreLogLevel,
-                    onSelected = { coreLogLevel = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_outbound_domain_resolve_method),
-                    entries = outboundResolveEntries,
-                    values = outboundResolveValues,
-                    selectedValue = outboundResolveMethod,
-                    onSelected = { outboundResolveMethod = it }
-                )
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_proxy_sharing_enabled),
+                        summary = stringResource(R.string.summary_pref_proxy_sharing_enabled),
+                        checked = proxySharing,
+                        enabled = effectiveLocalProxy,
+                        onCheckedChange = { proxySharing = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_dynamic_socks_port),
+                        summary = stringResource(R.string.summary_pref_dynamic_socks_port),
+                        checked = dynamicSocksPort,
+                        enabled = effectiveLocalProxy,
+                        onCheckedChange = { dynamicSocksPort = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_socks_port),
+                        value = socksPort,
+                        enabled = effectiveLocalProxy && !dynamicSocksPort,
+                        keyboardNumber = true,
+                        onValueChanged = { socksPort = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_socks_username),
+                        value = socksUsername,
+                        enabled = effectiveLocalProxy,
+                        onValueChanged = { socksUsername = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_socks_password),
+                        value = socksPassword,
+                        enabled = effectiveLocalProxy,
+                        isPassword = true,
+                        onValueChanged = { socksPassword = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_socks_enable_udp),
+                        summary = stringResource(R.string.summary_pref_socks_enable_udp),
+                        checked = socksEnableUdp,
+                        enabled = effectiveLocalProxy,
+                        onCheckedChange = { socksEnableUdp = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_remote_dns),
+                        value = remoteDns,
+                        onValueChanged = { remoteDns = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_domestic_dns),
+                        value = domesticDns,
+                        onValueChanged = { domesticDns = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_dns_hosts),
+                        value = dnsHosts,
+                        onValueChanged = { dnsHosts = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_core_loglevel),
+                        entries = coreLogLevelEntries,
+                        values = coreLogLevelValues,
+                        selectedValue = coreLogLevel,
+                        onSelected = { coreLogLevel = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_outbound_domain_resolve_method),
+                        entries = outboundResolveEntries,
+                        values = outboundResolveValues,
+                        selectedValue = outboundResolveMethod,
+                        onSelected = { outboundResolveMethod = it }
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -510,34 +548,39 @@ fun SettingsScreen(
                 onExpandedChange = { muxSettingsExpanded = it }
             )
             if (muxSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_mux_enabled),
-                    summary = stringResource(R.string.summary_pref_mux_enabled),
-                    checked = mux,
-                    onCheckedChange = { mux = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_mux_concurrency),
-                    value = muxConcurrency,
-                    enabled = mux,
-                    keyboardNumber = true,
-                    onValueChanged = { muxConcurrency = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_mux_xudp_concurrency),
-                    value = muxXudpConcurrency,
-                    enabled = mux,
-                    keyboardNumber = true,
-                    onValueChanged = { muxXudpConcurrency = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_mux_xudp_quic),
-                    entries = xudpQuicEntries,
-                    values = xudpQuicValues,
-                    selectedValue = muxXudpQuic,
-                    enabled = mux && muxXudpConcurrencyInt >= 0,
-                    onSelected = { muxXudpQuic = it }
-                )
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_mux_enabled),
+                        summary = stringResource(R.string.summary_pref_mux_enabled),
+                        checked = mux,
+                        onCheckedChange = { mux = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_mux_concurrency),
+                        value = muxConcurrency,
+                        enabled = mux,
+                        keyboardNumber = true,
+                        onValueChanged = { muxConcurrency = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_mux_xudp_concurrency),
+                        value = muxXudpConcurrency,
+                        enabled = mux,
+                        keyboardNumber = true,
+                        onValueChanged = { muxXudpConcurrency = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_mux_xudp_quic),
+                        entries = xudpQuicEntries,
+                        values = xudpQuicValues,
+                        selectedValue = muxXudpQuic,
+                        enabled = mux && muxXudpConcurrencyInt >= 0,
+                        onSelected = { muxXudpQuic = it }
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -546,38 +589,44 @@ fun SettingsScreen(
                 onExpandedChange = { fragmentSettingsExpanded = it }
             )
             if (fragmentSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_fragment_enabled),
-                    checked = fragment,
-                    onCheckedChange = { fragment = it }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_fragment_packets),
-                    entries = fragmentPacketsEntries,
-                    values = fragmentPacketsValues,
-                    selectedValue = fragmentPackets,
-                    enabled = fragment,
-                    onSelected = { fragmentPackets = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_fragment_length),
-                    value = fragmentLength,
-                    enabled = fragment,
-                    onValueChanged = { fragmentLength = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_fragment_interval),
-                    value = fragmentInterval,
-                    enabled = fragment,
-                    onValueChanged = { fragmentInterval = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_fragment_maxsplit),
-                    value = fragmentMaxSplit,
-                    enabled = fragment,
-                    keyboardNumber = true,
-                    onValueChanged = { fragmentMaxSplit = it }
-                )
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_fragment_enabled),
+                        checked = fragment,
+                        onCheckedChange = { fragment = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_fragment_packets),
+                        entries = fragmentPacketsEntries,
+                        values = fragmentPacketsValues,
+                        selectedValue = fragmentPackets,
+                        enabled = fragment,
+                        onSelected = { fragmentPackets = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_fragment_length),
+                        value = fragmentLength,
+                        enabled = fragment,
+                        onValueChanged = { fragmentLength = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_fragment_interval),
+                        value = fragmentInterval,
+                        enabled = fragment,
+                        onValueChanged = { fragmentInterval = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_fragment_maxsplit),
+                        value = fragmentMaxSplit,
+                        enabled = fragment,
+                        keyboardNumber = true,
+                        onValueChanged = { fragmentMaxSplit = it }
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -586,50 +635,56 @@ fun SettingsScreen(
                 onExpandedChange = { observatorySettingsExpanded = it }
             )
             if (observatorySettingsExpanded) {
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_observatory_least_ping_interval),
-                    value = observatoryLeastPingInterval,
-                    onValueChanged = {
-                        viewModel.validateObservatoryDuration(it)?.let { value ->
-                            observatoryLeastPingInterval = value
+                SettingsCard {
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_observatory_least_ping_interval),
+                        value = observatoryLeastPingInterval,
+                        onValueChanged = {
+                            viewModel.validateObservatoryDuration(it)?.let { value ->
+                                observatoryLeastPingInterval = value
+                            }
                         }
-                    }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_observatory_least_load_interval),
-                    value = observatoryLeastLoadInterval,
-                    onValueChanged = {
-                        viewModel.validateObservatoryDuration(it)?.let { value ->
-                            observatoryLeastLoadInterval = value
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_observatory_least_load_interval),
+                        value = observatoryLeastLoadInterval,
+                        onValueChanged = {
+                            viewModel.validateObservatoryDuration(it)?.let { value ->
+                                observatoryLeastLoadInterval = value
+                            }
                         }
-                    }
-                )
-                SettingsListItem(
-                    title = stringResource(R.string.title_pref_observatory_least_load_method),
-                    entries = observatoryLeastLoadMethodEntries,
-                    values = observatoryLeastLoadMethodValues,
-                    selectedValue = observatoryLeastLoadMethod,
-                    onSelected = { observatoryLeastLoadMethod = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_observatory_least_load_sampling),
-                    value = observatoryLeastLoadSampling,
-                    keyboardNumber = true,
-                    onValueChanged = {
-                        viewModel.validateObservatorySampling(it)?.let { value ->
-                            observatoryLeastLoadSampling = value
+                    )
+                    SettingsCardDivider()
+                    SettingsListItem(
+                        title = stringResource(R.string.title_pref_observatory_least_load_method),
+                        entries = observatoryLeastLoadMethodEntries,
+                        values = observatoryLeastLoadMethodValues,
+                        selectedValue = observatoryLeastLoadMethod,
+                        onSelected = { observatoryLeastLoadMethod = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_observatory_least_load_sampling),
+                        value = observatoryLeastLoadSampling,
+                        keyboardNumber = true,
+                        onValueChanged = {
+                            viewModel.validateObservatorySampling(it)?.let { value ->
+                                observatoryLeastLoadSampling = value
+                            }
                         }
-                    }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_observatory_least_load_timeout),
-                    value = observatoryLeastLoadTimeout,
-                    onValueChanged = {
-                        viewModel.validateObservatoryDuration(it)?.let { value ->
-                            observatoryLeastLoadTimeout = value
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_observatory_least_load_timeout),
+                        value = observatoryLeastLoadTimeout,
+                        onValueChanged = {
+                            viewModel.validateObservatoryDuration(it)?.let { value ->
+                                observatoryLeastLoadTimeout = value
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -638,35 +693,41 @@ fun SettingsScreen(
                 onExpandedChange = { advancedSettingsExpanded = it }
             )
             if (advancedSettingsExpanded) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_pref_is_booted),
-                    summary = stringResource(R.string.summary_pref_is_booted),
-                    checked = isBooted,
-                    onCheckedChange = { isBooted = it }
-                )
-                if (systemVpnSettingsAvailable) {
-                    SettingsMenuItem(
-                        title = stringResource(R.string.title_system_vpn_settings),
-                        subtitle = stringResource(R.string.summary_system_vpn_settings),
-                        onClick = onSystemVpnSettingsClicked
+                SettingsCard {
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_pref_is_booted),
+                        summary = stringResource(R.string.summary_pref_is_booted),
+                        checked = isBooted,
+                        onCheckedChange = { isBooted = it }
+                    )
+                    SettingsCardDivider()
+                    if (systemVpnSettingsAvailable) {
+                        SettingsMenuItem(
+                            title = stringResource(R.string.title_system_vpn_settings),
+                            subtitle = stringResource(R.string.summary_system_vpn_settings),
+                            onClick = onSystemVpnSettingsClicked
+                        )
+                    }
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_delay_test_url),
+                        value = delayTestUrl,
+                        onValueChanged = { delayTestUrl = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_real_ping_concurrency),
+                        value = realPingConcurrency,
+                        keyboardNumber = true,
+                        onValueChanged = { realPingConcurrency = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_ip_api_url),
+                        value = ipApiUrl,
+                        onValueChanged = { ipApiUrl = it }
                     )
                 }
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_delay_test_url),
-                    value = delayTestUrl,
-                    onValueChanged = { delayTestUrl = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_real_ping_concurrency),
-                    value = realPingConcurrency,
-                    keyboardNumber = true,
-                    onValueChanged = { realPingConcurrency = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_ip_api_url),
-                    value = ipApiUrl,
-                    onValueChanged = { ipApiUrl = it }
-                )
             }
 
             CollapsiblePreferenceGroupHeader(
@@ -675,45 +736,50 @@ fun SettingsScreen(
                 onExpandedChange = { modeSettingsExpanded = it }
             )
             if (modeSettingsExpanded) {
-                SettingsListItem(
-                    title = stringResource(R.string.title_mode),
-                    entries = modeEntries,
-                    values = modeValues,
-                    selectedValue = mode,
-                    onSelected = { mode = it }
-                )
-                SettingsMenuItem(
-                    title = stringResource(R.string.title_mode_help),
-                    onClick = onModeHelpClicked
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_root_mode_enabled),
-                    summary = stringResource(R.string.summary_root_mode_enabled),
-                    checked = enableRootMode,
-                    onCheckedChange = { newValue ->
-                        if (newValue && !RootManager.cachedRoot()) {
-                            viewModel.checkAndRequestRoot {
-                                enableRootMode = true
+                SettingsCard {
+                    SettingsListItem(
+                        title = stringResource(R.string.title_mode),
+                        entries = modeEntries,
+                        values = modeValues,
+                        selectedValue = mode,
+                        onSelected = { mode = it }
+                    )
+                    SettingsCardDivider()
+                    SettingsMenuItem(
+                        title = stringResource(R.string.title_mode_help),
+                        onClick = onModeHelpClicked
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_root_mode_enabled),
+                        summary = stringResource(R.string.summary_root_mode_enabled),
+                        checked = enableRootMode,
+                        onCheckedChange = { newValue ->
+                            if (newValue && !RootManager.cachedRoot()) {
+                                viewModel.checkAndRequestRoot {
+                                    enableRootMode = true
+                                }
+                            } else {
+                                enableRootMode = newValue
                             }
-                        } else {
-                            enableRootMode = newValue
                         }
-                    }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.title_root_lan_sharing),
-                    summary = stringResource(R.string.summary_root_lan_sharing),
-                    checked = lanSharing,
-                    onCheckedChange = { newValue ->
-                        if (newValue && !RootManager.cachedRoot()) {
-                            viewModel.checkAndRequestRoot {
-                                lanSharing = true
+                    )
+                    SettingsCardDivider()
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.title_root_lan_sharing),
+                        summary = stringResource(R.string.summary_root_lan_sharing),
+                        checked = lanSharing,
+                        onCheckedChange = { newValue ->
+                            if (newValue && !RootManager.cachedRoot()) {
+                                viewModel.checkAndRequestRoot {
+                                    lanSharing = true
+                                }
+                            } else {
+                                lanSharing = newValue
                             }
-                        } else {
-                            lanSharing = newValue
                         }
-                    }
-                )
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

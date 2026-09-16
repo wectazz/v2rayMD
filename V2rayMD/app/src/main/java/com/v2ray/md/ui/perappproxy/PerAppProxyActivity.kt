@@ -48,6 +48,7 @@ import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.ConfirmDialog
 import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
+import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 
@@ -170,7 +171,6 @@ fun PerAppProxyScreen(
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            containerColor = MaterialTheme.colorScheme.surface
                         ) {
                             AppDropdownMenuItems(PerAppMenuAction.entries, { it.labelRes }) { action ->
                                 showMenu = false
@@ -195,7 +195,7 @@ fun PerAppProxyScreen(
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceContainer
             ) {
                 Row(
                     modifier = Modifier
@@ -216,7 +216,8 @@ fun PerAppProxyScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Switch(
                             checked = perAppProxyEnabled,
-                            onCheckedChange = onPerAppProxyChanged
+                            onCheckedChange = onPerAppProxyChanged,
+                            thumbContent = { SwitchCheckThumb(perAppProxyEnabled) }
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
@@ -232,7 +233,8 @@ fun PerAppProxyScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Switch(
                             checked = bypassApps,
-                            onCheckedChange = onBypassAppsChanged
+                            onCheckedChange = onBypassAppsChanged,
+                            thumbContent = { SwitchCheckThumb(bypassApps) }
                         )
                     }
                     IconButton(onClick = onInfoClick) {

@@ -49,6 +49,7 @@ import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
+import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 import sh.calvin.reorderable.ReorderableItem
@@ -226,7 +227,8 @@ fun SubSettingScreen(
                                         val updated = subCache.subscription.copy()
                                         updated.enabled = checked
                                         viewModel.update(subCache.guid, updated)
-                                    }
+                                    },
+                                    thumbContent = { SwitchCheckThumb(subCache.subscription.enabled) }
                                 )
                             }
                         }

@@ -60,6 +60,7 @@ import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
+import com.v2ray.md.ui.compose.SettingsCard
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
@@ -313,13 +314,15 @@ internal fun UserAssetScreen(
             contentPadding = NavigationBarsBottomPadding()
         ) {
             item(key = "geo_source") {
-                SettingsListItem(
-                    title = stringResource(R.string.asset_geo_files_sources),
-                    entries = geoFilesSourcesList,
-                    values = geoFilesSourcesList,
-                    selectedValue = geoFilesSource,
-                    onSelected = { onGeoSourceSelected(it) }
-                )
+                SettingsCard {
+                    SettingsListItem(
+                        title = stringResource(R.string.asset_geo_files_sources),
+                        entries = geoFilesSourcesList,
+                        values = geoFilesSourcesList,
+                        selectedValue = geoFilesSource,
+                        onSelected = { onGeoSourceSelected(it) }
+                    )
+                }
             }
             item {
                 Text(

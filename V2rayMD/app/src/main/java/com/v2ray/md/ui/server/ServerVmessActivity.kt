@@ -9,6 +9,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.toast
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 
@@ -58,16 +59,18 @@ class ServerVmessActivity : BaseServerActivity() {
         state: ServerUiState,
         methodOptions: List<String>
     ) {
-        FormTextField(
-            stringResource(R.string.server_lab_id),
-            state.password,
-            { state.password = it }
-        )
-        FormDropdownField(
-            stringResource(R.string.server_lab_security),
-            state.method,
-            methodOptions,
-            { state.method = it }
-        )
+        FormCard {
+            FormTextField(
+                stringResource(R.string.server_lab_id),
+                state.password,
+                { state.password = it }
+            )
+            FormDropdownField(
+                stringResource(R.string.server_lab_security),
+                state.method,
+                methodOptions,
+                { state.method = it }
+            )
+        }
     }
 }

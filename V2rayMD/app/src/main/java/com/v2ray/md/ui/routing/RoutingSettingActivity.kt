@@ -56,6 +56,7 @@ import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsListItem
+import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.JsonUtil
 import com.v2ray.md.util.LogUtil
@@ -380,7 +381,8 @@ private fun RoutingRulesetItem(
             Spacer(modifier = Modifier.height(4.dp))
             Switch(
                 checked = ruleset.enabled ?: false,
-                onCheckedChange = onEnabledChange
+                onCheckedChange = onEnabledChange,
+                thumbContent = { SwitchCheckThumb(ruleset.enabled ?: false) }
             )
         }
     }

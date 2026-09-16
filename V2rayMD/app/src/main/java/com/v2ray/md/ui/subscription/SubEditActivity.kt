@@ -38,6 +38,7 @@ import com.v2ray.md.handler.SubscriptionUpdater
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
@@ -195,51 +196,50 @@ fun SubEditScreen(
                 .padding(vertical = 8.dp)
                 .padding(bottom = 36.dp)
         ) {
-            FormTextField(stringResource(R.string.sub_setting_remarks), remarks, { remarks = it })
-            FormTextField(stringResource(R.string.sub_setting_url), url, { url = it })
-            FormTextField(stringResource(R.string.sub_setting_user_agent), userAgent, { userAgent = it })
-            FormTextField(stringResource(R.string.sub_setting_request_headers), requestHeaders, { requestHeaders = it })
-            FormTextField(stringResource(R.string.sub_setting_filter), filter, { filter = it })
-            SettingsSwitchItem(
-                title = stringResource(R.string.sub_setting_enable),
-                checked = enabled,
-                onCheckedChange = { enabled = it }
-            )
-
-            SettingsSwitchItem(
-                title = stringResource(R.string.sub_auto_update),
-                checked = autoUpdate,
-                onCheckedChange = { autoUpdate = it }
-            )
-
-            FormTextField(
-                stringResource(R.string.title_pref_auto_update_interval),
-                updateInterval, { updateInterval = it }, keyboardType = KeyboardType.Number
-            )
-
-            SettingsSwitchItem(
-                title = stringResource(R.string.sub_allow_insecure_url),
-                checked = allowInsecureUrl,
-                onCheckedChange = { allowInsecureUrl = it }
-            )
-            FormDropdownField(
-                label = stringResource(R.string.sub_setting_pre_profile),
-                placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                value = prevProfile,
-                options = profileSuggestions,
-                onValueChange = { prevProfile = it },
-                editable = true,
-                supportingText = stringResource(R.string.sub_setting_entry_proxy_tip)
-            )
-            FormDropdownField(
-                label = stringResource(R.string.sub_setting_next_profile),
-                placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                value = nextProfile,
-                options = profileSuggestions,
-                onValueChange = { nextProfile = it },
-                editable = true,
-                supportingText = stringResource(R.string.sub_setting_exit_proxy_tip)
-            )
+            FormCard {
+                FormTextField(stringResource(R.string.sub_setting_remarks), remarks, { remarks = it })
+                FormTextField(stringResource(R.string.sub_setting_url), url, { url = it })
+                FormTextField(stringResource(R.string.sub_setting_user_agent), userAgent, { userAgent = it })
+                FormTextField(stringResource(R.string.sub_setting_request_headers), requestHeaders, { requestHeaders = it })
+                FormTextField(stringResource(R.string.sub_setting_filter), filter, { filter = it })
+                SettingsSwitchItem(
+                    title = stringResource(R.string.sub_setting_enable),
+                    checked = enabled,
+                    onCheckedChange = { enabled = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.sub_auto_update),
+                    checked = autoUpdate,
+                    onCheckedChange = { autoUpdate = it }
+                )
+                FormTextField(
+                    stringResource(R.string.title_pref_auto_update_interval),
+                    updateInterval, { updateInterval = it }, keyboardType = KeyboardType.Number
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.sub_allow_insecure_url),
+                    checked = allowInsecureUrl,
+                    onCheckedChange = { allowInsecureUrl = it }
+                )
+                FormDropdownField(
+                    label = stringResource(R.string.sub_setting_pre_profile),
+                    placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
+                    value = prevProfile,
+                    options = profileSuggestions,
+                    onValueChange = { prevProfile = it },
+                    editable = true,
+                    supportingText = stringResource(R.string.sub_setting_entry_proxy_tip)
+                )
+                FormDropdownField(
+                    label = stringResource(R.string.sub_setting_next_profile),
+                    placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
+                    value = nextProfile,
+                    options = profileSuggestions,
+                    onValueChange = { nextProfile = it },
+                    editable = true,
+                    supportingText = stringResource(R.string.sub_setting_exit_proxy_tip)
+                )
+            }
             NavigationBarsSpacer()
         }
     }

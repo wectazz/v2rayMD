@@ -6,6 +6,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import com.v2ray.md.R
 import com.v2ray.md.enums.EConfigType
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
 
 class ServerSocksActivity : BaseServerActivity() {
@@ -35,15 +36,17 @@ class ServerSocksActivity : BaseServerActivity() {
 
     @Composable
     private fun SocksProtocolFields(state: ServerUiState) {
-        FormTextField(
-            stringResource(R.string.server_lab_security4),
-            state.username,
-            { state.username = it }
-        )
-        FormTextField(
-            stringResource(R.string.server_lab_id4),
-            state.password,
-            { state.password = it }
-        )
+        FormCard {
+            FormTextField(
+                stringResource(R.string.server_lab_security4),
+                state.username,
+                { state.username = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_id4),
+                state.password,
+                { state.password = it }
+            )
+        }
     }
 }

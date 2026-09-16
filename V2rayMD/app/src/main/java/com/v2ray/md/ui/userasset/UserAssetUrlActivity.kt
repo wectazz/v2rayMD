@@ -31,6 +31,7 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.util.LogUtil
@@ -180,16 +181,18 @@ fun UserAssetUrlScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(vertical = 8.dp)
         ) {
-            FormTextField(
-                label = stringResource(R.string.sub_setting_remarks),
-                value = remarks,
-                onValueChange = { remarks = it }
-            )
-            FormTextField(
-                label = stringResource(R.string.title_url),
-                value = url,
-                onValueChange = { url = it }
-            )
+            FormCard {
+                FormTextField(
+                    label = stringResource(R.string.sub_setting_remarks),
+                    value = remarks,
+                    onValueChange = { remarks = it }
+                )
+                FormTextField(
+                    label = stringResource(R.string.title_url),
+                    value = url,
+                    onValueChange = { url = it }
+                )
+            }
             NavigationBarsSpacer()
         }
     }
