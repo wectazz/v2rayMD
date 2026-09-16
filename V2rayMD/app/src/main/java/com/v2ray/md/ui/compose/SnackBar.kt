@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -175,12 +175,18 @@ fun AppSnackbarHost(
         ) { data ->
             val type = (data.visuals as? AppSnackbarVisuals)?.type ?: ToastType.NORMAL
 
-            val isDark = LocalDarkTheme.current
+            val scheme = MaterialTheme.colorScheme
             val bgColor = when (type) {
-                ToastType.NORMAL -> if (isDark) toastNormalBgDark else toastNormalBgLight
-                ToastType.SUCCESS -> toastSuccessBg
-                ToastType.ERROR -> toastErrorBg
-                ToastType.INFO -> toastInfoBg
+                ToastType.NORMAL -> scheme.inverseSurface
+                ToastType.SUCCESS -> scheme.tertiaryContainer
+                ToastType.ERROR -> scheme.errorContainer
+                ToastType.INFO -> scheme.secondaryContainer
+            }
+            val contentColor = when (type) {
+                ToastType.NORMAL -> scheme.inverseOnSurface
+                ToastType.SUCCESS -> scheme.onTertiaryContainer
+                ToastType.ERROR -> scheme.onErrorContainer
+                ToastType.INFO -> scheme.onSecondaryContainer
             }
 
             Box(
@@ -207,8 +213,8 @@ fun AppSnackbarHost(
                     ) {
                         Text(
                             text = data.visuals.message,
-                            color = toastTextColor,
-                            fontSize = 14.sp,
+                            color = contentColor,
+                            style = MaterialTheme.typography.bodyMedium,
                             maxLines = ToastMaxLines,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.wrapContentWidth()

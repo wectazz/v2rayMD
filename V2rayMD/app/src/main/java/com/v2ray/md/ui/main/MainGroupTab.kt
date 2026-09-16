@@ -1,13 +1,10 @@
 package com.v2ray.md.ui.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.dto.GroupMapItem
 import com.v2ray.md.dto.entities.ServersCache
@@ -30,18 +26,10 @@ fun GroupTabBar(
     modifier: Modifier = Modifier
 ) {
     val selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex)
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = selectedIndex,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)),
-        edgePadding = 16.dp,
-        indicator = { tabPositions ->
-            TabRowDefaults.SecondaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
+        modifier = modifier.fillMaxWidth(),
+        edgePadding = 16.dp
     ) {
         groups.forEachIndexed { index, group ->
             val serverFlow = remember(group.id, mainViewModel) {

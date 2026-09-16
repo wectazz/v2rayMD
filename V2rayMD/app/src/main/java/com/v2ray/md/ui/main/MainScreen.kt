@@ -1,17 +1,29 @@
 package com.v2ray.md.ui.main
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,12 +35,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
-import com.v2ray.md.ui.compose.LocalDarkTheme
 import com.v2ray.md.ui.compose.QRCodeDialog
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -49,7 +65,6 @@ fun MainScreen(
     val confirmRemove = uiState.confirmRemove
     val shareQRCodeBitmap = uiState.shareQRCodeBitmap
 
-    val isDarkTheme = LocalDarkTheme.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showSearch by remember { mutableStateOf(false) }
@@ -178,14 +193,17 @@ fun MainScreen(
                 )
             },
             bottomBar = {
-                MainBottomBar(
+                MainStatusBar(
                     displayText = displayText,
-                    isRunning = isRunning,
-                    isDarkTheme = isDarkTheme,
                     onAction = onAction
                 )
             },
-            floatingActionButton = {},
+            floatingActionButton = {
+                MainConnectFab(
+                    isRunning = isRunning,
+                    onAction = onAction
+                )
+            },
         ) { innerPadding ->
             val layoutDirection = LocalLayoutDirection.current
 
@@ -219,7 +237,6 @@ fun MainScreen(
                         key = { page -> groups.getOrNull(page)?.id ?: "group-page-$page" }
                     ) { page ->
                         val group = groups.getOrNull(page) ?: return@HorizontalPager
-
                         GroupPagerPage(
                             groupId = group.id,
                             mainViewModel = mainViewModel,
@@ -247,7 +264,66 @@ fun MainScreen(
                         )
                     }
                 }
+            } else {
+                MainEmptyState(
+                    onImportClipboard = { onAction(MainAction.ImportClipboard) },
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun MainEmptyState(
+    onImportClipboard: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer,
+            modifier = Modifier.size(96.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_cloud_download_24dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.app_name),
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.app_tile_first_use),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        FilledTonalButton(onClick = onImportClipboard) {
+            Icon(
+                painter = painterResource(R.drawable.ic_add_24dp),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = stringResource(R.string.menu_item_import_config_clipboard))
         }
     }
 }

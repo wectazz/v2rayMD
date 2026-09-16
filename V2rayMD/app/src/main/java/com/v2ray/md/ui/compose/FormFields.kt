@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -13,7 +12,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,15 +50,6 @@ fun FormTextField(
             maxLines = maxLines,
             enabled = enabled,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.secondary,
-                selectionColors = TextSelectionColors(
-                    handleColor = MaterialTheme.colorScheme.secondary,
-                    backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
-                )
-            ),
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -107,15 +95,6 @@ fun FormDropdownField(
             placeholder = { if (placeholder != null) Text(placeholder) },
             supportingText = supportingText?.let { { Text(it) } },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.secondary,
-                selectionColors = TextSelectionColors(
-                    handleColor = MaterialTheme.colorScheme.secondary,
-                    backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
-                )
-            ),
             modifier = Modifier
                 .menuAnchor(
                     type = if (editable) ExposedDropdownMenuAnchorType.PrimaryEditable

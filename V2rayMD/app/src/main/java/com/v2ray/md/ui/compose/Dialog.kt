@@ -15,12 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -82,7 +79,6 @@ fun ConfirmDialog(
                 }
             }
         },
-        containerColor = MaterialTheme.colorScheme.surface
     )
 }
 
@@ -140,15 +136,6 @@ fun InputDialog(
                         singleLine = false,
                         maxLines = 5,
                         visualTransformation = field.visualTransformation,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            cursorColor = MaterialTheme.colorScheme.secondary,
-                            selectionColors = TextSelectionColors(
-                                handleColor = MaterialTheme.colorScheme.secondary,
-                                backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
-                            )
-                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -160,7 +147,6 @@ fun InputDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(dismissText) }
         },
-        containerColor = MaterialTheme.colorScheme.surface
     )
 }
 
@@ -184,7 +170,6 @@ fun QRCodeDialog(
         confirmButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_close)) }
         },
-        containerColor = MaterialTheme.colorScheme.surface
     )
 }
 
@@ -245,6 +230,5 @@ fun <T> SelectListDialog(
                 Text(stringResource(R.string.action_cancel))
             }
         },
-        containerColor = MaterialTheme.colorScheme.surface
     )
 }

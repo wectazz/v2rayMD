@@ -69,8 +69,7 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
 
     ModalDrawerSheet(
         drawerState = drawerState,
-        modifier = Modifier.fillMaxWidth(0.75f),
-        drawerContainerColor = MaterialTheme.colorScheme.surface
+        modifier = Modifier.fillMaxWidth(0.75f)
     ) {
         Column(
             modifier = Modifier

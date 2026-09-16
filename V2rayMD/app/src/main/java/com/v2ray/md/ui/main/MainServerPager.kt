@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -52,7 +53,6 @@ import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.ReorderableGridItem
 import com.v2ray.md.ui.compose.ReorderableListItem
-import com.v2ray.md.ui.compose.colorConfigType
 import com.v2ray.md.ui.compose.colorPing
 import com.v2ray.md.ui.compose.colorPingRed
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -317,6 +317,10 @@ private fun ServerListItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(
+                if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                else Color.Transparent
+            )
             .height(IntrinsicSize.Min)
             .semantics {
                 if (selectedStateDescription != null) {
@@ -406,7 +410,7 @@ private fun ServerListItem(
             }
             Spacer(modifier = Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(row.typeDescription, style = MaterialTheme.typography.bodySmall, color = colorConfigType, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(row.typeDescription, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(testResult, style = MaterialTheme.typography.bodySmall, color = if (row.testDelayMillis < 0L) colorPingRed else colorPing, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }

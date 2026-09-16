@@ -20,9 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,7 +32,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -100,20 +97,14 @@ fun AppTopBar(
                     }
                 }
             },
-            actions = actions,
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                actionIconContentColor = MaterialTheme.colorScheme.onSurface
-            )
+            actions = actions
         )
         AnimatedVisibility(
             visible = isLoading,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.secondary)
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -134,15 +125,8 @@ private fun SearchInputField(
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp),
             placeholder = { if (placeholder != null) Text(placeholder, style = TextStyle(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp)) },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
                 focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.secondary,
-                selectionColors = TextSelectionColors(
-                    handleColor = MaterialTheme.colorScheme.secondary,
-                    backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
-                )
+                unfocusedBorderColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             modifier = Modifier
@@ -151,7 +135,7 @@ private fun SearchInputField(
         )
         if (query.isNotEmpty()) {
             IconButton(onClick = { onQueryChange("") }) {
-                Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), "Clear")
+                Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
             }
         }
     }
@@ -213,8 +197,7 @@ fun AppListItem(
         }
         Checkbox(
             checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary)
+            onCheckedChange = onCheckedChange
         )
     }
 }
