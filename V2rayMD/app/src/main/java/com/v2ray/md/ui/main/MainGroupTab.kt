@@ -1,22 +1,30 @@
 package com.v2ray.md.ui.main
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.v2ray.md.R
 import com.v2ray.md.dto.GroupMapItem
 import com.v2ray.md.dto.entities.ServersCache
 import kotlinx.coroutines.flow.StateFlow
@@ -33,17 +41,18 @@ fun GroupTabBar(
 ) {
     val selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex)
     if (groups.size <= MAX_SEGMENTED_GROUPS) {
-        SingleChoiceSegmentedButtonRow(
+        Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             groups.forEachIndexed { index, group ->
-                SegmentedGroupButton(
+                SegmentedGroupChip(
                     group = group,
                     selected = index == selectedIndex,
-                    index = index,
-                    count = groups.size,
                     mainViewModel = mainViewModel,
                     onClick = { onTabClick(index) }
                 )
@@ -71,11 +80,9 @@ fun GroupTabBar(
 }
 
 @Composable
-private fun SegmentedGroupButton(
+private fun SegmentedGroupChip(
     group: GroupMapItem,
     selected: Boolean,
-    index: Int,
-    count: Int,
     mainViewModel: MainViewModel,
     onClick: () -> Unit
 ) {
@@ -88,10 +95,9 @@ private fun SegmentedGroupButton(
     } else {
         "${group.remarks} (${servers.size})"
     }
-    SegmentedButton(
-        shape = SegmentedButtonDefaults.itemShape(index = index, count = count),
-        onClick = onClick,
+    FilterChip(
         selected = selected,
+        onClick = onClick,
         label = {
             Text(
                 text = text,
@@ -99,6 +105,17 @@ private fun SegmentedGroupButton(
                 softWrap = false,
                 overflow = TextOverflow.Ellipsis
             )
+        },
+        leadingIcon = if (selected) {
+            {
+                Icon(
+                    painter = painterResource(R.drawable.ic_action_done),
+                    contentDescription = null,
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            }
+        } else {
+            null
         }
     )
 }
