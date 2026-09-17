@@ -200,6 +200,10 @@ dependencies {
     // Reorderable list
     implementation(libs.reorderable)
 
+    // Dynamic color backport (Monet): wallpaper seed pre-S, M3 scheme everywhere
+    implementation(libs.material.kolor)
+    implementation(libs.monet.compat)
+
     // Testing Libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

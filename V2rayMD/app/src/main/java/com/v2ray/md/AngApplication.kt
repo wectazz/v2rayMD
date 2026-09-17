@@ -9,7 +9,12 @@ import com.v2ray.md.AppConfig.ANG_PACKAGE
 import com.v2ray.md.handler.AppLocaleManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsManager
+import com.v2ray.md.ui.compose.MonetColors
 import com.v2ray.md.ui.compose.ThemeManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class AngApplication : Application() {
     companion object {
@@ -29,6 +34,8 @@ class AngApplication : Application() {
         .setDefaultProcessName("${ANG_PACKAGE}:bg")
         .build()
 
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     /**
      * Initializes the application.
      */
@@ -47,5 +54,8 @@ class AngApplication : Application() {
 
         // Initialize theme state from MMKV
         ThemeManager.refresh()
+
+        // Wallpaper seed for pre-S dynamic color (Monet backport); no-op if it fails
+        appScope.launch { MonetColors.initialize(this@AngApplication) }
     }
 }

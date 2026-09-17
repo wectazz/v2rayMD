@@ -309,7 +309,14 @@ fun SettingsMenuItem(
         enabled = true,
         onClick = onClick,
         modifier = modifier,
-        shape = shape
+        shape = shape,
+        trailing = {
+            Icon(
+                painter = painterResource(R.drawable.ic_expand_more_24dp),
+                contentDescription = null,
+                modifier = Modifier.rotate(-90f)
+            )
+        }
     )
 }
 

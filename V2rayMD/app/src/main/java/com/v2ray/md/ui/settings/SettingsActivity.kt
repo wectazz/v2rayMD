@@ -2,7 +2,6 @@ package com.v2ray.md.ui.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.viewModels
@@ -36,7 +35,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -207,9 +205,11 @@ private fun SettingsSearchBar(
         },
         expanded = false,
         onExpandedChange = {},
+        windowInsets = WindowInsets(0),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
+            .height(48.dp)
     ) {}
 }
 
@@ -307,14 +307,6 @@ fun SettingsScreen(
     val effectiveLocalProxy = enableLocalProxy || localProxyForced
     val muxXudpConcurrencyInt = muxXudpConcurrency.toIntOrNull() ?: AppConfig.DEFAULT_MUX_XUDP_CONCURRENCY.toInt()
 
-    val dynamicColorSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    LaunchedEffect(dynamicColorSupported) {
-        if (!dynamicColorSupported && dynamicColor) {
-            dynamicColor = false
-            ThemeManager.setDynamicColorEnabled(false)
-        }
-    }
-
     val languageEntries = stringArrayResource(R.array.language_select).toList()
     val languageValues = stringArrayResource(R.array.language_select_value).toList()
     val uiModeNightEntries = stringArrayResource(R.array.ui_mode_night).toList()
@@ -346,7 +338,12 @@ fun SettingsScreen(
         topBar = {
             Column {
                 LargeFlexibleTopAppBar(
-                    title = { Text(stringResource(R.string.title_settings)) },
+                    title = {
+                        Text(
+                            text = stringResource(R.string.title_settings),
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(
@@ -445,7 +442,6 @@ fun SettingsScreen(
                                 title = stringResource(R.string.title_pref_dynamic_color),
                                 summary = stringResource(R.string.summary_pref_dynamic_color),
                                 checked = dynamicColor,
-                                enabled = dynamicColorSupported,
                                 onCheckedChange = {
                                     dynamicColor = it
                                     ThemeManager.setDynamicColorEnabled(it)
