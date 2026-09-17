@@ -49,7 +49,6 @@ import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.extension.toastError
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.SearchInputField

@@ -47,7 +47,6 @@ import com.v2ray.md.extension.toastError
 import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
-import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.InputDialog
 import com.v2ray.md.ui.compose.InputField

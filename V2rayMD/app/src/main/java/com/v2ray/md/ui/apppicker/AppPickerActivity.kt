@@ -187,11 +187,10 @@ fun AppPickerScreen(
                     actions = {
                         if (!showSearch) {
                             IconButton(onClick = { showSearch = true }) {
-                                Icon(
-                                    painterResource(R.drawable.ic_search_24dp),
-                                    contentDescription = stringResource(R.string.acc_search)
-                                )
-                            }
+                            Icon(
+                                painterResource(R.drawable.ic_search_24dp),
+                                contentDescription = stringResource(R.string.acc_search)
+                            )
                         }
                     }
                     Box {
@@ -224,8 +223,9 @@ fun AppPickerScreen(
                 exit = shrinkVertically()
             ) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
             }
-        }
+        },
     ) { innerPadding ->
         LazyColumn(
             state = listState,

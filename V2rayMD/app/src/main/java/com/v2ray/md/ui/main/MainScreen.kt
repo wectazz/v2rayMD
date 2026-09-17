@@ -26,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SearchBarScrollBehavior
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -112,7 +111,6 @@ fun MainScreen(
 
     val latestGroups by rememberUpdatedState(groups)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val searchBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }
@@ -169,9 +167,7 @@ fun MainScreen(
         }
     ) {
         Scaffold(
-            modifier = Modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .nestedScroll(searchBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
             topBar = {
                 MainTopBar(
@@ -226,7 +222,6 @@ fun MainScreen(
                             searchQuery = ""
                             onAction(MainAction.Search(""))
                         },
-                        searchBehavior = searchBehavior
                     )
                     if (groups.size > 1) {
                         GroupTabBar(
@@ -356,7 +351,6 @@ private fun MainSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit,
-    searchBehavior: SearchBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -391,7 +385,6 @@ private fun MainSearchBar(
         },
         expanded = false,
         onExpandedChange = {},
-        scrollBehavior = searchBehavior,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
