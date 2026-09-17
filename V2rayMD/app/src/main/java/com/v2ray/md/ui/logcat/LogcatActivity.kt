@@ -4,6 +4,9 @@ import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -21,9 +24,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,9 +49,10 @@ import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.extension.toastError
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
+import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
+import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
@@ -139,57 +147,89 @@ fun LogcatScreen(
     var showSearch by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.title_logcat),
-                onBackClick = onBackClick,
-                isLoading = isLoading,
-                isSearchActive = showSearch,
-                searchQuery = searchQuery,
-                onSearchQueryChange = {
-                    searchQuery = it
-                    viewModel.filter(it)
-                },
-                onSearchClose = {
-                    searchQuery = ""
-                    viewModel.filter("")
-                    showSearch = false
-                },
-                searchPlaceholder = stringResource(R.string.menu_item_search),
-                actions = {
-                    if (!showSearch) {
-                        IconButton(onClick = { showSearch = true }) {
+            Column {
+                LargeFlexibleTopAppBar(
+                    title = {
+                        if (showSearch) {
+                            SearchInputField(
+                                query = searchQuery,
+                                onQueryChange = {
+                                    searchQuery = it
+                                    viewModel.filter(it)
+                                },
+                                placeholder = stringResource(R.string.menu_item_search)
+                            )
+                        } else {
+                            Text(stringResource(R.string.title_logcat))
+                        }
+                    },
+                    navigationIcon = {
+                        if (showSearch) {
+                            IconButton(onClick = {
+                                searchQuery = ""
+                                viewModel.filter("")
+                                showSearch = false
+                            }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_arrow_back_24dp),
+                                    contentDescription = stringResource(R.string.acc_back)
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = onBackClick) {
+                                Icon(
+                                    painterResource(R.drawable.ic_arrow_back_24dp),
+                                    contentDescription = stringResource(R.string.acc_back)
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (!showSearch) {
+                            IconButton(onClick = { showSearch = true }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_search_24dp),
+                                    contentDescription = stringResource(R.string.acc_search)
+                                )
+                            }
+                        }
+                        IconButton(onClick = { viewModel.copyLogcat() }) {
                             Icon(
-                                painterResource(R.drawable.ic_search_24dp),
-                                contentDescription = stringResource(R.string.acc_search)
+                                painterResource(R.drawable.ic_copy),
+                                contentDescription = stringResource(R.string.acc_copy_log)
                             )
                         }
-                    }
-                    IconButton(onClick = { viewModel.copyLogcat() }) {
-                        Icon(
-                            painterResource(R.drawable.ic_copy),
-                            contentDescription = stringResource(R.string.acc_copy_log)
-                        )
-                    }
-                    IconButton(onClick = { onShareLogcat() }) {
-                        Icon(
-                            painterResource(R.drawable.ic_share_24dp),
-                            contentDescription = stringResource(R.string.acc_share_log)
-                        )
-                    }
-                    IconButton(onClick = {
-                        scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
-                    }) {
-                        Icon(
-                            painterResource(R.drawable.ic_delete_24dp),
-                            contentDescription = stringResource(R.string.acc_clear_log)
-                        )
-                    }
+                        IconButton(onClick = { onShareLogcat() }) {
+                            Icon(
+                                painterResource(R.drawable.ic_share_24dp),
+                                contentDescription = stringResource(R.string.acc_share_log)
+                            )
+                        }
+                        IconButton(onClick = {
+                            scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
+                        }) {
+                            Icon(
+                                painterResource(R.drawable.ic_delete_24dp),
+                                contentDescription = stringResource(R.string.acc_clear_log)
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-            )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(

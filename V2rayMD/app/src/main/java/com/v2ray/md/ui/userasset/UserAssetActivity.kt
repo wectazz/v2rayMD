@@ -8,6 +8,9 @@ import android.text.format.DateFormat
 import android.text.format.Formatter
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +33,15 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,7 +71,6 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsListItem
@@ -255,6 +262,7 @@ class UserAssetActivity : HelperBaseComponentActivity() {
     private fun refreshData() = viewModel.reload(getGeoFilesSources(), extDir)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun UserAssetScreen(
     uiState: UserAssetUiState,
@@ -273,41 +281,58 @@ internal fun UserAssetScreen(
     var showAddMenu by remember { mutableStateOf(false) }
     var deleteTarget by remember { mutableStateOf<AssetDeleteTarget?>(null) }
     val listState = rememberLazyListState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.title_user_asset_setting),
-                onBackClick = onBackClick,
-                isLoading = isLoading,
-                actions = {
-                    Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                        IconButton(onClick = { showAddMenu = true }) {
-                            Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
+            Column {
+                LargeFlexibleTopAppBar(
+                    title = { Text(stringResource(R.string.title_user_asset_setting)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
                         }
-                        DropdownMenu(
-                            expanded = showAddMenu,
-                            onDismissRequest = { showAddMenu = false },
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            offset = DpOffset(x = 0.dp, y = 0.dp),
-                            modifier = Modifier.wrapContentWidth(Alignment.End)
-                        ) {
-                            AppDropdownMenuItems(AddAssetMenuAction.entries, { it.labelRes }) { action ->
-                                showAddMenu = false
-                                when (action) {
-                                    AddAssetMenuAction.File -> onAddFileClick()
-                                    AddAssetMenuAction.Url -> onAddUrlClick()
-                                    AddAssetMenuAction.QRCode -> onAddQrcodeClick()
+                    },
+                    actions = {
+                        Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
+                            IconButton(onClick = { showAddMenu = true }) {
+                                Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
+                            }
+                            DropdownMenu(
+                                expanded = showAddMenu,
+                                onDismissRequest = { showAddMenu = false },
+                                offset = DpOffset(x = 0.dp, y = 0.dp),
+                                modifier = Modifier.wrapContentWidth(Alignment.End)
+                            ) {
+                                AppDropdownMenuItems(AddAssetMenuAction.entries, { it.labelRes }) { action ->
+                                    showAddMenu = false
+                                    when (action) {
+                                        AddAssetMenuAction.File -> onAddFileClick()
+                                        AddAssetMenuAction.Url -> onAddUrlClick()
+                                        AddAssetMenuAction.QRCode -> onAddQrcodeClick()
+                                    }
                                 }
                             }
                         }
-                    }
-                    IconButton(onClick = onDownloadClick) {
-                        Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
-                    }
+                        IconButton(onClick = onDownloadClick) {
+                            Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-            )
+            }
         }
     ) { innerPadding ->
         LazyColumn(

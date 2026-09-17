@@ -111,7 +111,7 @@ fun AppTopBar(
 }
 
 @Composable
-internal fun SearchInputField(
+fun SearchInputField(
     query: String,
     onQueryChange: (String) -> Unit,
     placeholder: String?

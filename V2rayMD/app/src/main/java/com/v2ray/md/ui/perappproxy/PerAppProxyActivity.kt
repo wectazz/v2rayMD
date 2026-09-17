@@ -3,6 +3,9 @@ package com.v2ray.md.ui.perappproxy
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,13 +23,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -47,8 +55,8 @@ import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppDivider
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.ConfirmDialog
+import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
@@ -105,6 +113,7 @@ class PerAppProxyActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerAppProxyScreen(
     apps: List<AppInfo>,
@@ -129,64 +138,96 @@ fun PerAppProxyScreen(
     var showInfoDialog by rememberSaveable { mutableStateOf(false) }
     val onInfoClick = { showInfoDialog = true }
     val listState = rememberLazyListState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     LaunchedEffect(Unit) {
         onSearch(searchQuery)
     }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.per_app_proxy_settings),
-                onBackClick = onBackClick,
-                isLoading = isLoading,
-                isSearchActive = showSearch,
-                searchQuery = searchQuery,
-                onSearchQueryChange = { query ->
-                    searchQuery = query
-                    onSearch(query)
-                },
-                onSearchClose = {
-                    searchQuery = ""
-                    onSearch("")
-                    showSearch = false
-                },
-                searchPlaceholder = stringResource(R.string.menu_item_search),
-                actions = {
-                    if (!showSearch) {
-                        IconButton(onClick = { showSearch = true }) {
-                            Icon(
-                                painterResource(R.drawable.ic_search_24dp),
-                                contentDescription = stringResource(R.string.acc_search)
+            Column {
+                LargeFlexibleTopAppBar(
+                    title = {
+                        if (showSearch) {
+                            SearchInputField(
+                                query = searchQuery,
+                                onQueryChange = { query ->
+                                    searchQuery = query
+                                    onSearch(query)
+                                },
+                                placeholder = stringResource(R.string.menu_item_search)
                             )
+                        } else {
+                            Text(stringResource(R.string.per_app_proxy_settings))
                         }
-                    }
-                    Box {
-                        IconButton(onClick = { showMenu = true }) {
-                            Icon(
-                                painterResource(R.drawable.ic_more_vert_24dp),
-                                contentDescription = stringResource(R.string.acc_more)
-                            )
+                    },
+                    navigationIcon = {
+                        if (showSearch) {
+                            IconButton(onClick = {
+                                searchQuery = ""
+                                onSearch("")
+                                showSearch = false
+                            }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_arrow_back_24dp),
+                                    contentDescription = stringResource(R.string.acc_back)
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = onBackClick) {
+                                Icon(
+                                    painterResource(R.drawable.ic_arrow_back_24dp),
+                                    contentDescription = stringResource(R.string.acc_back)
+                                )
+                            }
                         }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false },
-                        ) {
-                            AppDropdownMenuItems(PerAppMenuAction.entries, { it.labelRes }) { action ->
-                                showMenu = false
-                                when (action) {
-                                    PerAppMenuAction.SelectAll -> onSelectAll()
-                                    PerAppMenuAction.InvertSelection -> onInvertSelection()
-                                    PerAppMenuAction.SelectProxyApps -> onSelectProxyAuto()
-                                    PerAppMenuAction.ImportSelection -> onImportProxyApp()
-                                    PerAppMenuAction.ExportSelection -> onExportProxyApp()
+                    },
+                    actions = {
+                        if (!showSearch) {
+                            IconButton(onClick = { showSearch = true }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_search_24dp),
+                                    contentDescription = stringResource(R.string.acc_search)
+                                )
+                            }
+                        }
+                        Box {
+                            IconButton(onClick = { showMenu = true }) {
+                                Icon(
+                                    painterResource(R.drawable.ic_more_vert_24dp),
+                                    contentDescription = stringResource(R.string.acc_more)
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = { showMenu = false },
+                            ) {
+                                AppDropdownMenuItems(PerAppMenuAction.entries, { it.labelRes }) { action ->
+                                    showMenu = false
+                                    when (action) {
+                                        PerAppMenuAction.SelectAll -> onSelectAll()
+                                        PerAppMenuAction.InvertSelection -> onInvertSelection()
+                                        PerAppMenuAction.SelectProxyApps -> onSelectProxyAuto()
+                                        PerAppMenuAction.ImportSelection -> onImportProxyApp()
+                                        PerAppMenuAction.ExportSelection -> onExportProxyApp()
+                                    }
                                 }
                             }
                         }
-                    }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-            )
+            }
         }
     ) { innerPadding ->
         Column(

@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,9 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -265,16 +270,28 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = selectedSettingsTab,
-                modifier = Modifier.fillMaxWidth(),
-                edgePadding = 16.dp
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 settingsTabTitles().forEachIndexed { index, titleRes ->
-                    Tab(
-                        selected = index == selectedSettingsTab,
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = settingsTabTitles().size
+                        ),
                         onClick = { selectedSettingsTab = index },
-                        text = { Text(stringResource(titleRes)) }
+                        selected = index == selectedSettingsTab,
+                        label = {
+                            Text(
+                                text = stringResource(titleRes),
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     )
                 }
             }
@@ -910,15 +927,41 @@ fun SettingsScreen(
             if (selectedSettingsTab == 7) {
                 SegmentedColumn {
                     item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_menu_24dp),
-                            title = stringResource(R.string.title_mode),
-                            entries = modeEntries,
-                            values = modeValues,
-                            selectedValue = mode,
-                            onSelected = { mode = it },
-                        shape = shape
-                        )
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = shape,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = stringResource(R.string.title_mode),
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                SingleChoiceSegmentedButtonRow(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    modeEntries.forEachIndexed { index, entry ->
+                                        SegmentedButton(
+                                            shape = SegmentedButtonDefaults.itemShape(
+                                                index = index,
+                                                count = modeEntries.size
+                                            ),
+                                            onClick = { mode = modeValues[index] },
+                                            selected = mode == modeValues[index],
+                                            label = {
+                                                Text(
+                                                    text = entry,
+                                                    maxLines = 1,
+                                                    softWrap = false,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                     item { shape ->
                         SettingsMenuItem(
