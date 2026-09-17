@@ -167,6 +167,7 @@ private fun CollapsibleSettingsGroup(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsSearchBar(
     query: String,
