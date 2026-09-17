@@ -25,15 +25,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -53,7 +51,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,6 +71,7 @@ import com.v2ray.md.ui.compose.CollapsiblePreferenceGroupHeader
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsEditItem
+import com.v2ray.md.ui.compose.SingleSelectConnectedRow
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.SettingsSwitchItem
@@ -240,7 +238,7 @@ private fun SettingsSearchBar(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
@@ -1077,28 +1075,12 @@ fun SettingsScreen(
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    SingleChoiceSegmentedButtonRow(
+                                    SingleSelectConnectedRow(
+                                        options = modeEntries,
+                                        selectedIndex = modeValues.indexOf(mode),
+                                        onSelect = { mode = modeValues[it] },
                                         modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        modeEntries.forEachIndexed { index, entry ->
-                                            SegmentedButton(
-                                                shape = SegmentedButtonDefaults.itemShape(
-                                                    index = index,
-                                                    count = modeEntries.size
-                                                ),
-                                                onClick = { mode = modeValues[index] },
-                                                selected = mode == modeValues[index],
-                                                label = {
-                                                    Text(
-                                                        text = entry,
-                                                        maxLines = 1,
-                                                        softWrap = false,
-                                                        overflow = TextOverflow.Ellipsis
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
+                                    )
                                 }
                             }
                     },
