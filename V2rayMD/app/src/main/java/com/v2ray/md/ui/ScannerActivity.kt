@@ -61,12 +61,15 @@ import com.google.zxing.DecodeHintType
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.enums.PermissionType
 import com.v2ray.md.extension.toast
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.QRCodeDecoder
 import java.nio.ByteBuffer
@@ -140,6 +143,7 @@ enum class ScannerUiState {
     ACTIVE
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScannerScreen(
     uiState: ScannerUiState,
@@ -154,12 +158,22 @@ fun ScannerScreen(
     var hasTorch by remember { mutableStateOf(false) }
     var torchEnabled by rememberSaveable { mutableStateOf(false) }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.menu_item_import_config_qrcode),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(stringResource(R.string.menu_item_import_config_qrcode)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = {
@@ -209,7 +223,8 @@ fun ScannerScreen(
                             contentDescription = stringResource(R.string.acc_select_image)
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->

@@ -32,6 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig.BUILTIN_OUTBOUND_TAGS
 import com.v2ray.md.AppConfig.TAG_PROXY
 import com.v2ray.md.R
@@ -42,7 +46,6 @@ import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.apppicker.AppPickerActivity
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
@@ -110,6 +113,7 @@ class RoutingEditActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutingEditScreen(
     position: Int,
@@ -179,12 +183,22 @@ fun RoutingEditScreen(
         return rulesetItem
     }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.routing_settings_rule_title),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(stringResource(R.string.routing_settings_rule_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     if (position >= 0) {
                         IconButton(onClick = { showDeleteConfirm = true }) {
@@ -200,7 +214,8 @@ fun RoutingEditScreen(
                             contentDescription = stringResource(R.string.acc_save)
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->

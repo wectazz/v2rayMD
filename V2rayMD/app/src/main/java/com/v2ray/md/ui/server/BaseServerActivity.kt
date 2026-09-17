@@ -28,6 +28,10 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig.REALITY
 import com.v2ray.md.AppConfig.TLS
 import com.v2ray.md.R
@@ -40,7 +44,6 @@ import com.v2ray.md.handler.AngConfigManager
 import com.v2ray.md.handler.CertificateFingerprintManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
@@ -441,6 +444,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
         return true
     }
 
+@OptIn(ExperimentalMaterial3Api::class)
     @Composable
     protected fun ServerEditorScaffold(
         title: String,
@@ -449,12 +453,22 @@ abstract class BaseServerActivity : BaseComponentActivity() {
     ) {
         var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
         val scrollState = rememberScrollState()
+
+        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentWindowInsets = WindowInsets(0),
             topBar = {
-                AppTopBar(
-                    title = title,
-                    onBackClick = { finish() },
+                LargeFlexibleTopAppBar(
+                    title = { Text(title) },
+                    navigationIcon = {
+                        IconButton(onClick = { finish() }) {
+                            Icon(
+                                painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
+                        }
+                    },
                     actions = {
                         if (editGuid.isNotEmpty() && !isRunning) {
                             IconButton(onClick = { showDeleteDialog = true }) {
@@ -470,7 +484,8 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                                 stringResource(R.string.acc_save)
                             )
                         }
-                    }
+                    },
+                    scrollBehavior = scrollBehavior
                 )
             }
         ) { innerPadding ->

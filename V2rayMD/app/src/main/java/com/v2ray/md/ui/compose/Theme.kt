@@ -110,14 +110,14 @@ fun AppTheme(
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
     // Monet dynamic color on all versions (system accent on S+, wallpaper seed
     // below); stock M3 baseline otherwise. No brand palette.
-    val baseScheme = when {
+    // NOTE: the lift applies only to the non-dynamic baseline fallback. Dynamic
+    // schemes keep their own tonal surfaces so the wallpaper hue reaches the
+    // background; lifting them would pin the background to fixed gray.
+    val colorScheme = when {
         dynamicColor -> MonetColors.rememberDynamicScheme(darkTheme)
-        darkTheme -> darkColorScheme()
+        darkTheme -> darkColorScheme().liftedDarkSurfaces()
         else -> lightColorScheme()
     }
-    // Dark surfaces are lifted slightly above the M3 baseline: dynamic hues and
-    // accents stay intact, only the background luminance goes up.
-    val colorScheme = if (darkTheme) baseScheme.liftedDarkSurfaces() else baseScheme
     val snackbarController = rememberAppSnackbarController()
 
     val view = LocalView.current

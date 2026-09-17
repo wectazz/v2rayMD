@@ -24,6 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.SubscriptionItem
@@ -36,7 +41,6 @@ import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.handler.SubscriptionUpdater
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
@@ -122,6 +126,7 @@ class SubEditActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubEditScreen(
     editSubId: String,
@@ -164,12 +169,22 @@ fun SubEditScreen(
         return subItem
     }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.title_sub_setting),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(stringResource(R.string.title_sub_setting)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     if (editSubId.isNotEmpty()) {
                         IconButton(onClick = {
@@ -181,7 +196,8 @@ fun SubEditScreen(
                     IconButton(onClick = { buildSubItem()?.let { onSave(it) } }) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->

@@ -29,11 +29,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.R
 import com.v2ray.md.dto.TranslatorsCredit
 import com.v2ray.md.dto.TranslatorsParser
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.util.Utils
 
@@ -49,6 +53,7 @@ class TranslatorsActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslatorsScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current
@@ -56,12 +61,23 @@ fun TranslatorsScreen(onBackClick: () -> Unit) {
         TranslatorsParser.parse(Utils.readTextFromAssets(context, "translators.json"))
     }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.title_translators),
-                onBackClick = onBackClick
+            LargeFlexibleTopAppBar(
+                title = { Text(stringResource(R.string.title_translators)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->

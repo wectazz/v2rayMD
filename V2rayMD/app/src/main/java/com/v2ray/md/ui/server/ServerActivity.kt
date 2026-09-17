@@ -30,6 +30,10 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig.DEFAULT_PORT
 import com.v2ray.md.AppConfig.REALITY
 import com.v2ray.md.AppConfig.TLS
@@ -46,7 +50,6 @@ import com.v2ray.md.handler.AngConfigManager
 import com.v2ray.md.handler.CertificateFingerprintManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
@@ -199,6 +202,7 @@ class ServerActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServerScreen(
     guid: String,
@@ -341,12 +345,22 @@ fun ServerScreen(
         pinnedCA256 = pinnedCA256
     )
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = configType.toString(),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(configType.toString()) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     if (guid.isNotEmpty() && !isRunning) {
                         IconButton(onClick = { showDeleteDialog = true }) {
@@ -358,7 +372,8 @@ fun ServerScreen(
                     }) {
                         Icon(painterResource(R.drawable.ic_fab_check), stringResource(R.string.acc_save))
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->

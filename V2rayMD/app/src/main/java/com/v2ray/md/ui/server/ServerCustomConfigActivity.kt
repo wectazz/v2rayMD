@@ -53,6 +53,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
@@ -63,7 +67,6 @@ import com.v2ray.md.fmt.CustomFmt
 import com.v2ray.md.handler.AngConfigManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
@@ -196,6 +199,7 @@ private object EditorConstants {
     val SCROLL_PADDING = 60.dp
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServerCustomConfigScreen(
     editGuid: String,
@@ -310,12 +314,22 @@ fun ServerCustomConfigScreen(
         }
     }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = EConfigType.CUSTOM.toString(),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(EConfigType.CUSTOM.toString()) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     if (showDelete) {
                         IconButton(onClick = { showDeleteConfirm = true }) {
@@ -331,7 +345,8 @@ fun ServerCustomConfigScreen(
                             contentDescription = stringResource(R.string.acc_save)
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         },
     ) { innerPadding ->

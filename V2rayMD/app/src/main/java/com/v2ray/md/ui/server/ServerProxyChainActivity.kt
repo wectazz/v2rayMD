@@ -37,6 +37,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
@@ -47,7 +51,6 @@ import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
@@ -190,6 +193,7 @@ class ServerProxyChainActivity : BaseComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProxyChainScreen(
     editGuid: String,
@@ -223,12 +227,22 @@ fun ProxyChainScreen(
         }
     }
 
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = EConfigType.PROXYCHAIN.toString(),
-                onBackClick = onBackClick,
+            LargeFlexibleTopAppBar(
+                title = { Text(EConfigType.PROXYCHAIN.toString()) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.acc_back)
+                        )
+                    }
+                },
                 actions = {
                     if (showDelete) {
                         IconButton(onClick = { showProfileDeleteConfirm = true }) {
@@ -238,7 +252,8 @@ fun ProxyChainScreen(
                     IconButton(onClick = { onSave(remarks, members) }) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
