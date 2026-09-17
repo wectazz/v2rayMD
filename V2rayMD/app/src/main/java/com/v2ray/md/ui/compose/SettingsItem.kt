@@ -116,9 +116,11 @@ private fun SettingsItemRow(
     trailing: @Composable (() -> Unit)? = null
 ) {
     // Explicit container: the default segmented container is near-invisible
-    // against the background in dark theme.
+    // against the background in dark theme. Highest in dark, High in light
+    // keeps blocks clearly tonal on both.
     val colors = ListItemDefaults.segmentedColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+        else MaterialTheme.colorScheme.surfaceContainerHigh
     )
     val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
     val leadingContent: @Composable (() -> Unit)? = if (icon != null) {

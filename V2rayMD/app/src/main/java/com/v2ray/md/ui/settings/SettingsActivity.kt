@@ -6,6 +6,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -47,7 +54,6 @@ import com.v2ray.md.handler.MmkvManager.rememberMmkvString
 import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.root.RootManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsCard
 import com.v2ray.md.ui.compose.SettingsEditItem
@@ -230,11 +236,26 @@ fun SettingsScreen(
     Scaffold(
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            AppTopBar(
-                title = stringResource(R.string.title_settings),
-                onBackClick = onBackClick,
-                isLoading = isLoading
-            )
+            Column {
+                LargeTopAppBar(
+                    title = { Text(stringResource(R.string.title_settings)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
+                        }
+                    }
+                )
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            }
         }
     ) { innerPadding ->
         Column(
