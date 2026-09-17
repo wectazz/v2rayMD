@@ -15,10 +15,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 import com.v2ray.md.ui.compose.AppDivider
 import com.v2ray.md.ui.compose.LocalDarkTheme
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.verticalScrollbar
 
 enum class MainDestination(@DrawableRes val iconRes: Int, @StringRes val labelRes: Int) {
@@ -56,13 +57,52 @@ private val primaryDrawerItems = listOf(
     MainDestination.Settings
 )
 
-private val drawerItems = primaryDrawerItems + listOf(
+private val secondaryDrawerItems = listOf(
     MainDestination.Promotion,
     MainDestination.Logcat,
     MainDestination.CheckUpdate,
     MainDestination.BackupRestore,
     MainDestination.About
 )
+
+@Composable
+private fun DrawerSegmentedItem(
+    item: MainDestination,
+    index: Int,
+    count: Int,
+    subscriptionCount: Int,
+    onNavigate: (MainDestination) -> Unit
+) {
+    // Explicit container: the default segmented container is near-invisible
+    // against the drawer sheet in dark theme (same as settings rows).
+    val colors = ListItemDefaults.segmentedColors(
+        containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+        else MaterialTheme.colorScheme.surfaceContainerHigh
+    )
+    SegmentedListItem(
+        onClick = { onNavigate(item) },
+        shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
+        leadingContent = {
+            Icon(painterResource(item.iconRes), contentDescription = null)
+        },
+        trailingContent = if (item == MainDestination.Subscriptions && subscriptionCount > 0) {
+            {
+                Badge(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                ) {
+                    Text(subscriptionCount.toString())
+                }
+            }
+        } else {
+            null
+        },
+        colors = colors,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(stringResource(item.labelRes))
+    }
+}
 
 @Composable
 fun MainDrawerContent(
@@ -112,27 +152,32 @@ fun MainDrawerContent(
                     )
                 }
             }
-            drawerItems.forEachIndexed { index, item ->
-                if (index == primaryDrawerItems.size) AppDivider()
-                NavigationDrawerItem(
-                    label = { Text(stringResource(item.labelRes)) },
-                    selected = false,
-                    onClick = { onNavigate(item) },
-                    icon = { Icon(painterResource(item.iconRes), contentDescription = null) },
-                    badge = if (item == MainDestination.Subscriptions && subscriptionCount > 0) {
-                        {
-                            Badge(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                            ) {
-                                Text(subscriptionCount.toString())
-                            }
-                        }
-                    } else {
-                        null
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
+            SegmentedColumn {
+                primaryDrawerItems.forEachIndexed { index, item ->
+                    item(key = item) {
+                        DrawerSegmentedItem(
+                            item = item,
+                            index = index,
+                            count = primaryDrawerItems.size,
+                            subscriptionCount = subscriptionCount,
+                            onNavigate = onNavigate
+                        )
+                    }
+                }
+            }
+            AppDivider()
+            SegmentedColumn {
+                secondaryDrawerItems.forEachIndexed { index, item ->
+                    item(key = item) {
+                        DrawerSegmentedItem(
+                            item = item,
+                            index = index,
+                            count = secondaryDrawerItems.size,
+                            subscriptionCount = 0,
+                            onNavigate = onNavigate
+                        )
+                    }
+                }
             }
         }
     }
