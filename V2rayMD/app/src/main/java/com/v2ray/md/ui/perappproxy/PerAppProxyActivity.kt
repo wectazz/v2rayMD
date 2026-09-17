@@ -6,11 +6,14 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,8 +49,6 @@ import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.ConfirmDialog
-import com.v2ray.md.ui.compose.ItemDivider
-import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
@@ -253,7 +254,13 @@ fun PerAppProxyScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(listState),
-                contentPadding = NavigationBarsBottomPadding()
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 8.dp,
+                    end = 16.dp,
+                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                ),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(items = apps, key = { it.packageName }) { app ->
                     val checked = blacklist.contains(app.packageName)
@@ -264,7 +271,6 @@ fun PerAppProxyScreen(
                         checked = checked,
                         onCheckedChange = { onToggleApp(app.packageName) }
                     )
-                    ItemDivider()
                 }
             }
         }

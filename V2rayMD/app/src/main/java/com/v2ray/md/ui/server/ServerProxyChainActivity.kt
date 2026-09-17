@@ -2,6 +2,7 @@ package com.v2ray.md.ui.server
 
 import android.os.Bundle
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -267,7 +268,8 @@ fun ProxyChainScreen(
                 start = 16.dp,
                 end = 16.dp,
                 bottom = 36.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            )
+            ),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item(key = "remarks_field") {
                 FormCard {

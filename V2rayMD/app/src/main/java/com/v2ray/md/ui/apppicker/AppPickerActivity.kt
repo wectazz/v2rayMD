@@ -5,9 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,9 +37,6 @@ import com.v2ray.md.dto.AppInfo
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
-import com.v2ray.md.ui.compose.AppTopBar
-import com.v2ray.md.ui.compose.ItemDivider
-import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.verticalScrollbar
 
 private enum class AppPickerMenuAction(@StringRes val labelRes: Int) {
@@ -186,7 +187,13 @@ fun AppPickerScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScrollbar(listState),
-            contentPadding = NavigationBarsBottomPadding()
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                top = 8.dp,
+                end = 16.dp,
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            ),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(items = apps, key = { it.packageName }) { app ->
                 val checked = selectedPackages.contains(app.packageName)
@@ -197,7 +204,6 @@ fun AppPickerScreen(
                     checked = checked,
                     onCheckedChange = { onToggleApp(app.packageName) }
                 )
-                ItemDivider()
             }
         }
     }
