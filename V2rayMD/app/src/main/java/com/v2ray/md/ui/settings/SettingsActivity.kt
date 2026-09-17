@@ -23,15 +23,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +44,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -61,6 +67,7 @@ import com.v2ray.md.handler.MmkvManager.rememberMmkvString
 import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.root.RootManager
 import com.v2ray.md.ui.base.BaseComponentActivity
+import com.v2ray.md.ui.compose.CollapsiblePreferenceGroupHeader
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsEditItem
@@ -112,16 +119,98 @@ class SettingsActivity : BaseComponentActivity() {
     }
 }
 
-private fun settingsTabTitles(): List<Int> = listOf(
-    R.string.title_ui_settings,
-    R.string.title_vpn_settings,
-    R.string.title_core_settings,
-    R.string.title_mux_settings,
-    R.string.title_fragment_settings,
-    R.string.title_observatory_settings,
-    R.string.title_advanced,
-    R.string.title_mode_settings
+private data class SettingsEntry(
+    val titleRes: Int,
+    val summaryRes: Int?,
+    val content: @Composable (Shape) -> Unit
 )
+
+@Composable
+private fun SettingsEntry.matches(query: String): Boolean {
+    val q = query.trim()
+    if (q.isEmpty()) return true
+    if (stringResource(titleRes).contains(q, ignoreCase = true)) return true
+    val s = summaryRes?.let { stringResource(it) } ?: return false
+    return s.contains(q, ignoreCase = true)
+}
+
+@Composable
+private fun CollapsibleSettingsGroup(
+    titleRes: Int,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    searchQuery: String,
+    entries: List<SettingsEntry>
+) {
+    if (searchQuery.isBlank()) {
+        CollapsiblePreferenceGroupHeader(
+            title = stringResource(titleRes),
+            expanded = expanded,
+            onExpandedChange = onExpandedChange
+        )
+        if (expanded) {
+            SegmentedColumn {
+                entries.forEach { entry ->
+                    item { shape -> entry.content(shape) }
+                }
+            }
+        }
+    } else {
+        val matches = entries.filter { it.matches(searchQuery) }
+        if (matches.isNotEmpty()) {
+            SegmentedColumn {
+                matches.forEach { entry ->
+                    item { shape -> entry.content(shape) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    SearchBar(
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = { keyboardController?.hide() },
+                expanded = false,
+                onExpandedChange = {},
+                placeholder = { Text(stringResource(R.string.menu_item_search)) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_search_24dp),
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = if (query.isNotEmpty()) {
+                    {
+                        IconButton(onClick = onClear) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                }
+            )
+        },
+        expanded = false,
+        onExpandedChange = {},
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    ) {}
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,7 +223,15 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val systemVpnSettingsAvailable by viewModel.systemVpnSettingsAvailable.collectAsStateWithLifecycle()
-    var selectedSettingsTab by rememberSaveable { mutableStateOf(0) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var uiSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var vpnSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var coreSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var muxSettingsExpanded by rememberSaveable { mutableStateOf(false) }
+    var fragmentSettingsExpanded by rememberSaveable { mutableStateOf(false) }
+    var observatorySettingsExpanded by rememberSaveable { mutableStateOf(false) }
+    var advancedSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var modeSettingsExpanded by rememberSaveable { mutableStateOf(true) }
 
     var localDns by rememberMmkvBool(AppConfig.PREF_LOCAL_DNS_ENABLED, false)
     var fakeDns by rememberMmkvBool(AppConfig.PREF_FAKE_DNS_ENABLED, false)
@@ -240,11 +337,14 @@ fun SettingsScreen(
     val modeEntries = stringArrayResource(R.array.mode_entries).toList()
     val modeValues = stringArrayResource(R.array.mode_value).toList()
 
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
         topBar = {
             Column {
-                LargeTopAppBar(
+                LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_settings)) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
@@ -253,7 +353,8 @@ fun SettingsScreen(
                                 contentDescription = stringResource(R.string.acc_back)
                             )
                         }
-                    }
+                    },
+                    scrollBehavior = scrollBehavior
                 )
                 AnimatedVisibility(
                     visible = isLoading,
@@ -270,31 +371,11 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                settingsTabTitles().forEachIndexed { index, titleRes ->
-                    SegmentedButton(
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = settingsTabTitles().size
-                        ),
-                        onClick = { selectedSettingsTab = index },
-                        selected = index == selectedSettingsTab,
-                        label = {
-                            Text(
-                                text = stringResource(titleRes),
-                                maxLines = 1,
-                                softWrap = false,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    )
-                }
-            }
+            SettingsSearchBar(
+                query = searchQuery,
+                onQueryChange = { searchQuery = it },
+                onClear = { searchQuery = "" }
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -305,710 +386,744 @@ fun SettingsScreen(
             Column(
                 modifier = Modifier.widthIn(max = 640.dp)
             ) {
-            if (selectedSettingsTab == 0) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_play_24dp),
-                            title = stringResource(R.string.title_pref_speed_enabled),
-                            summary = stringResource(R.string.summary_pref_speed_enabled),
-                            checked = speedEnabled,
-                            onCheckedChange = { speedEnabled = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_delete_24dp),
-                            title = stringResource(R.string.title_pref_confirm_remove),
-                            summary = stringResource(R.string.summary_pref_confirm_remove),
-                            checked = confirmRemove,
-                            onCheckedChange = { confirmRemove = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_select_all_24dp),
-                            title = stringResource(R.string.title_pref_double_column_display),
-                            summary = stringResource(R.string.summary_pref_double_column_display),
-                            checked = doubleColumnDisplay,
-                            onCheckedChange = {
-                                doubleColumnDisplay = it
-                                SettingsChangeManager.makeSetupGroupTab()
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_subscriptions_24dp),
-                            title = stringResource(R.string.title_pref_group_all_display),
-                            summary = stringResource(R.string.summary_pref_group_all_display),
-                            checked = groupAllDisplay,
-                            onCheckedChange = {
-                                groupAllDisplay = it
-                                SettingsChangeManager.makeSetupGroupTab()
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_image_24dp),
-                            title = stringResource(R.string.title_pref_dynamic_color),
-                            summary = stringResource(R.string.summary_pref_dynamic_color),
-                            checked = dynamicColor,
-                            enabled = dynamicColorSupported,
-                            onCheckedChange = {
-                                dynamicColor = it
-                                ThemeManager.setDynamicColorEnabled(it)
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_translate_24dp),
-                            title = stringResource(R.string.title_language),
-                            entries = languageEntries,
-                            values = languageValues,
-                            selectedValue = language,
-                            onSelected = {
-                                language = it
-                                AppLocaleManager.setApplicationLanguage(it)
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_flash_off_24dp),
-                            title = stringResource(R.string.title_pref_ui_mode_night),
-                            entries = uiModeNightEntries,
-                            values = uiModeNightValues,
-                            selectedValue = uiModeNight,
-                            onSelected = {
-                                uiModeNight = it
-                                ThemeManager.setThemeMode(it)
-                            },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 1) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_routing_24dp),
-                            title = stringResource(R.string.title_pref_ipv6_enabled),
-                            summary = stringResource(R.string.summary_pref_ipv6_enabled),
-                            checked = ipv6Enabled,
-                            onCheckedChange = { ipv6Enabled = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_select_all_24dp),
-                            title = stringResource(R.string.title_pref_prefer_ipv6),
-                            summary = stringResource(R.string.summary_pref_prefer_ipv6),
-                            checked = preferIpv6,
-                            onCheckedChange = { preferIpv6 = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_lock_24dp),
-                            title = stringResource(R.string.title_pref_local_dns_enabled),
-                            summary = stringResource(R.string.summary_pref_local_dns_enabled),
-                            checked = localDns,
-                            enabled = isVpn,
-                            onCheckedChange = { localDns = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_privacy_24dp),
-                            title = stringResource(R.string.title_pref_fake_dns_enabled),
-                            summary = stringResource(R.string.summary_pref_fake_dns_enabled),
-                            checked = fakeDns,
-                            enabled = isVpn && localDns,
-                            onCheckedChange = { fakeDns = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_vpn_dns),
-                            value = vpnDns,
-                            enabled = isVpn && !localDns,
-                            onValueChanged = { vpnDns = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_share_24dp),
-                            title = stringResource(R.string.title_pref_append_http_proxy),
-                            summary = stringResource(R.string.summary_pref_append_http_proxy),
-                            checked = appendHttpProxy,
-                            enabled = effectiveLocalProxy,
-                            onCheckedChange = { appendHttpProxy = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_outline_filter_alt_24),
-                            title = stringResource(R.string.title_pref_vpn_bypass_lan),
-                            entries = bypassLanEntries,
-                            values = bypassLanValues,
-                            selectedValue = vpnBypassLan,
-                            enabled = isVpn,
-                            onSelected = { vpnBypassLan = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_settings_24dp),
-                            title = stringResource(R.string.title_pref_vpn_interface_address),
-                            entries = interfaceAddrEntries,
-                            values = interfaceAddrValues,
-                            selectedValue = vpnInterfaceAddress,
-                            enabled = isVpn,
-                            onSelected = { vpnInterfaceAddress = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_vpn_mtu),
-                            value = vpnMtu,
-                            enabled = isVpn,
-                            keyboardNumber = true,
-                            onValueChanged = { vpnMtu = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_play_24dp),
-                            title = stringResource(R.string.title_pref_use_hev_tunnel),
-                            summary = stringResource(R.string.summary_pref_use_hev_tunnel),
-                            checked = useHevTun,
-                            enabled = isVpn,
-                            onCheckedChange = {
-                                useHevTun = it
-                                if (it && !enableLocalProxy) {
-                                    enableLocalProxy = true
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_logcat_24dp),
-                            title = stringResource(R.string.title_pref_hev_tunnel_loglevel),
-                            entries = hevLogEntries,
-                            values = hevLogValues,
-                            selectedValue = hevTunLogLevel,
-                            enabled = hevTunEnabled,
-                            onSelected = { hevTunLogLevel = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_restore_24dp),
-                            title = stringResource(R.string.title_pref_hev_tunnel_rw_timeout),
-                            value = hevTunRwTimeout,
-                            enabled = hevTunEnabled,
-                            keyboardNumber = true,
-                            onValueChanged = { hevTunRwTimeout = it },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 2) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_search_24dp),
-                            title = stringResource(R.string.title_pref_sniffing_enabled),
-                            summary = stringResource(R.string.summary_pref_sniffing_enabled),
-                            checked = sniffingEnabled,
-                            onCheckedChange = { sniffingEnabled = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_routing_24dp),
-                            title = stringResource(R.string.title_pref_route_only_enabled),
-                            summary = stringResource(R.string.summary_pref_route_only_enabled),
-                            checked = routeOnlyEnabled,
-                            onCheckedChange = { routeOnlyEnabled = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_share_24dp),
-                            title = stringResource(R.string.title_pref_enable_local_proxy),
-                            summary = stringResource(R.string.summary_pref_enable_local_proxy),
-                            checked = enableLocalProxy,
-                            enabled = !localProxyForced,
-                            onCheckedChange = {
-                                if (!localProxyForced) {
-                                    enableLocalProxy = it
-                                    if (!it && appendHttpProxy) {
-                                        appendHttpProxy = false
-                                    }
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_promotion_24dp),
-                            title = stringResource(R.string.title_pref_proxy_sharing_enabled),
-                            summary = stringResource(R.string.summary_pref_proxy_sharing_enabled),
-                            checked = proxySharing,
-                            enabled = effectiveLocalProxy,
-                            onCheckedChange = { proxySharing = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_restore_24dp),
-                            title = stringResource(R.string.title_pref_dynamic_socks_port),
-                            summary = stringResource(R.string.summary_pref_dynamic_socks_port),
-                            checked = dynamicSocksPort,
-                            enabled = effectiveLocalProxy,
-                            onCheckedChange = { dynamicSocksPort = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_socks_port),
-                            value = socksPort,
-                            enabled = effectiveLocalProxy && !dynamicSocksPort,
-                            keyboardNumber = true,
-                            onValueChanged = { socksPort = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_about_24dp),
-                            title = stringResource(R.string.title_pref_socks_username),
-                            value = socksUsername,
-                            enabled = effectiveLocalProxy,
-                            onValueChanged = { socksUsername = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_lock_24dp),
-                            title = stringResource(R.string.title_pref_socks_password),
-                            value = socksPassword,
-                            enabled = effectiveLocalProxy,
-                            isPassword = true,
-                            onValueChanged = { socksPassword = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_flash_on_24dp),
-                            title = stringResource(R.string.title_pref_socks_enable_udp),
-                            summary = stringResource(R.string.summary_pref_socks_enable_udp),
-                            checked = socksEnableUdp,
-                            enabled = effectiveLocalProxy,
-                            onCheckedChange = { socksEnableUdp = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_cloud_download_24dp),
-                            title = stringResource(R.string.title_pref_remote_dns),
-                            value = remoteDns,
-                            onValueChanged = { remoteDns = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_domestic_dns),
-                            value = domesticDns,
-                            onValueChanged = { domesticDns = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_file_24dp),
-                            title = stringResource(R.string.title_pref_dns_hosts),
-                            value = dnsHosts,
-                            onValueChanged = { dnsHosts = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_logcat_24dp),
-                            title = stringResource(R.string.title_core_loglevel),
-                            entries = coreLogLevelEntries,
-                            values = coreLogLevelValues,
-                            selectedValue = coreLogLevel,
-                            onSelected = { coreLogLevel = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_outline_filter_alt_24),
-                            title = stringResource(R.string.title_outbound_domain_resolve_method),
-                            entries = outboundResolveEntries,
-                            values = outboundResolveValues,
-                            selectedValue = outboundResolveMethod,
-                            onSelected = { outboundResolveMethod = it },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 3) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_play_24dp),
-                            title = stringResource(R.string.title_pref_mux_enabled),
-                            summary = stringResource(R.string.summary_pref_mux_enabled),
-                            checked = mux,
-                            onCheckedChange = { mux = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_mux_concurrency),
-                            value = muxConcurrency,
-                            enabled = mux,
-                            keyboardNumber = true,
-                            onValueChanged = { muxConcurrency = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_mux_xudp_concurrency),
-                            value = muxXudpConcurrency,
-                            enabled = mux,
-                            keyboardNumber = true,
-                            onValueChanged = { muxXudpConcurrency = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_lock_24dp),
-                            title = stringResource(R.string.title_pref_mux_xudp_quic),
-                            entries = xudpQuicEntries,
-                            values = xudpQuicValues,
-                            selectedValue = muxXudpQuic,
-                            enabled = mux && muxXudpConcurrencyInt >= 0,
-                            onSelected = { muxXudpQuic = it },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 4) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_copy),
-                            title = stringResource(R.string.title_pref_fragment_enabled),
-                            checked = fragment,
-                            onCheckedChange = { fragment = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_file_24dp),
-                            title = stringResource(R.string.title_pref_fragment_packets),
-                            entries = fragmentPacketsEntries,
-                            values = fragmentPacketsValues,
-                            selectedValue = fragmentPackets,
-                            enabled = fragment,
-                            onSelected = { fragmentPackets = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_fragment_length),
-                            value = fragmentLength,
-                            enabled = fragment,
-                            onValueChanged = { fragmentLength = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_restore_24dp),
-                            title = stringResource(R.string.title_pref_fragment_interval),
-                            value = fragmentInterval,
-                            enabled = fragment,
-                            onValueChanged = { fragmentInterval = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_fragment_maxsplit),
-                            value = fragmentMaxSplit,
-                            enabled = fragment,
-                            keyboardNumber = true,
-                            onValueChanged = { fragmentMaxSplit = it },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 5) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_restore_24dp),
-                            title = stringResource(R.string.title_pref_observatory_least_ping_interval),
-                            value = observatoryLeastPingInterval,
-                            onValueChanged = {
-                                viewModel.validateObservatoryDuration(it)?.let { value ->
-                                    observatoryLeastPingInterval = value
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_observatory_least_load_interval),
-                            value = observatoryLeastLoadInterval,
-                            onValueChanged = {
-                                viewModel.validateObservatoryDuration(it)?.let { value ->
-                                    observatoryLeastLoadInterval = value
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsListItem(
-                            icon = painterResource(R.drawable.ic_outline_filter_alt_24),
-                            title = stringResource(R.string.title_pref_observatory_least_load_method),
-                            entries = observatoryLeastLoadMethodEntries,
-                            values = observatoryLeastLoadMethodValues,
-                            selectedValue = observatoryLeastLoadMethod,
-                            onSelected = { observatoryLeastLoadMethod = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_observatory_least_load_sampling),
-                            value = observatoryLeastLoadSampling,
-                            keyboardNumber = true,
-                            onValueChanged = {
-                                viewModel.validateObservatorySampling(it)?.let { value ->
-                                    observatoryLeastLoadSampling = value
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_save_24dp),
-                            title = stringResource(R.string.title_pref_observatory_least_load_timeout),
-                            value = observatoryLeastLoadTimeout,
-                            onValueChanged = {
-                                viewModel.validateObservatoryDuration(it)?.let { value ->
-                                    observatoryLeastLoadTimeout = value
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                }
-            }
-
-            if (selectedSettingsTab == 6) {
-                SegmentedColumn {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_play_24dp),
-                            title = stringResource(R.string.title_pref_is_booted),
-                            summary = stringResource(R.string.summary_pref_is_booted),
-                            checked = isBooted,
-                            onCheckedChange = { isBooted = it },
-                        shape = shape
-                        )
-                    }
-                    item(key = "system_vpn_settings", visible = systemVpnSettingsAvailable) { shape ->
-                        SettingsMenuItem(
-                            icon = painterResource(R.drawable.ic_settings_24dp),
-                            title = stringResource(R.string.title_system_vpn_settings),
-                            subtitle = stringResource(R.string.summary_system_vpn_settings),
-                            onClick = onSystemVpnSettingsClicked,
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_ui_settings,
+                expanded = uiSettingsExpanded,
+                onExpandedChange = { uiSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_speed_enabled, R.string.summary_pref_speed_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_play_24dp),
+                                title = stringResource(R.string.title_pref_speed_enabled),
+                                summary = stringResource(R.string.summary_pref_speed_enabled),
+                                checked = speedEnabled,
+                                onCheckedChange = { speedEnabled = it },
                             shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_cloud_download_24dp),
-                            title = stringResource(R.string.title_pref_delay_test_url),
-                            value = delayTestUrl,
-                            onValueChanged = { delayTestUrl = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_edit_24dp),
-                            title = stringResource(R.string.title_pref_real_ping_concurrency),
-                            value = realPingConcurrency,
-                            keyboardNumber = true,
-                            onValueChanged = { realPingConcurrency = it },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsEditItem(
-                            icon = painterResource(R.drawable.ic_description_24dp),
-                            title = stringResource(R.string.title_pref_ip_api_url),
-                            value = ipApiUrl,
-                            onValueChanged = { ipApiUrl = it },
-                        shape = shape
-                        )
-                    }
-                }
-            }
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_confirm_remove, R.string.summary_pref_confirm_remove) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_delete_24dp),
+                                title = stringResource(R.string.title_pref_confirm_remove),
+                                summary = stringResource(R.string.summary_pref_confirm_remove),
+                                checked = confirmRemove,
+                                onCheckedChange = { confirmRemove = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_double_column_display, R.string.summary_pref_double_column_display) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_select_all_24dp),
+                                title = stringResource(R.string.title_pref_double_column_display),
+                                summary = stringResource(R.string.summary_pref_double_column_display),
+                                checked = doubleColumnDisplay,
+                                onCheckedChange = {
+                                    doubleColumnDisplay = it
+                                    SettingsChangeManager.makeSetupGroupTab()
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_group_all_display, R.string.summary_pref_group_all_display) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_subscriptions_24dp),
+                                title = stringResource(R.string.title_pref_group_all_display),
+                                summary = stringResource(R.string.summary_pref_group_all_display),
+                                checked = groupAllDisplay,
+                                onCheckedChange = {
+                                    groupAllDisplay = it
+                                    SettingsChangeManager.makeSetupGroupTab()
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_dynamic_color, R.string.summary_pref_dynamic_color) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_image_24dp),
+                                title = stringResource(R.string.title_pref_dynamic_color),
+                                summary = stringResource(R.string.summary_pref_dynamic_color),
+                                checked = dynamicColor,
+                                enabled = dynamicColorSupported,
+                                onCheckedChange = {
+                                    dynamicColor = it
+                                    ThemeManager.setDynamicColorEnabled(it)
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_language, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_translate_24dp),
+                                title = stringResource(R.string.title_language),
+                                entries = languageEntries,
+                                values = languageValues,
+                                selectedValue = language,
+                                onSelected = {
+                                    language = it
+                                    AppLocaleManager.setApplicationLanguage(it)
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_ui_mode_night, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_flash_off_24dp),
+                                title = stringResource(R.string.title_pref_ui_mode_night),
+                                entries = uiModeNightEntries,
+                                values = uiModeNightValues,
+                                selectedValue = uiModeNight,
+                                onSelected = {
+                                    uiModeNight = it
+                                    ThemeManager.setThemeMode(it)
+                                },
+                            shape = shape
+                            )
+                    },
+                )
+            )
 
-            if (selectedSettingsTab == 7) {
-                SegmentedColumn {
-                    item { shape ->
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = shape,
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    text = stringResource(R.string.title_mode),
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                SingleChoiceSegmentedButtonRow(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    modeEntries.forEachIndexed { index, entry ->
-                                        SegmentedButton(
-                                            shape = SegmentedButtonDefaults.itemShape(
-                                                index = index,
-                                                count = modeEntries.size
-                                            ),
-                                            onClick = { mode = modeValues[index] },
-                                            selected = mode == modeValues[index],
-                                            label = {
-                                                Text(
-                                                    text = entry,
-                                                    maxLines = 1,
-                                                    softWrap = false,
-                                                    overflow = TextOverflow.Ellipsis
-                                                )
-                                            }
-                                        )
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_vpn_settings,
+                expanded = vpnSettingsExpanded,
+                onExpandedChange = { vpnSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_ipv6_enabled, R.string.summary_pref_ipv6_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_routing_24dp),
+                                title = stringResource(R.string.title_pref_ipv6_enabled),
+                                summary = stringResource(R.string.summary_pref_ipv6_enabled),
+                                checked = ipv6Enabled,
+                                onCheckedChange = { ipv6Enabled = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_prefer_ipv6, R.string.summary_pref_prefer_ipv6) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_select_all_24dp),
+                                title = stringResource(R.string.title_pref_prefer_ipv6),
+                                summary = stringResource(R.string.summary_pref_prefer_ipv6),
+                                checked = preferIpv6,
+                                onCheckedChange = { preferIpv6 = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_local_dns_enabled, R.string.summary_pref_local_dns_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_lock_24dp),
+                                title = stringResource(R.string.title_pref_local_dns_enabled),
+                                summary = stringResource(R.string.summary_pref_local_dns_enabled),
+                                checked = localDns,
+                                enabled = isVpn,
+                                onCheckedChange = { localDns = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_fake_dns_enabled, R.string.summary_pref_fake_dns_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_privacy_24dp),
+                                title = stringResource(R.string.title_pref_fake_dns_enabled),
+                                summary = stringResource(R.string.summary_pref_fake_dns_enabled),
+                                checked = fakeDns,
+                                enabled = isVpn && localDns,
+                                onCheckedChange = { fakeDns = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_vpn_dns, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_vpn_dns),
+                                value = vpnDns,
+                                enabled = isVpn && !localDns,
+                                onValueChanged = { vpnDns = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_append_http_proxy, R.string.summary_pref_append_http_proxy) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_share_24dp),
+                                title = stringResource(R.string.title_pref_append_http_proxy),
+                                summary = stringResource(R.string.summary_pref_append_http_proxy),
+                                checked = appendHttpProxy,
+                                enabled = effectiveLocalProxy,
+                                onCheckedChange = { appendHttpProxy = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_vpn_bypass_lan, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_outline_filter_alt_24),
+                                title = stringResource(R.string.title_pref_vpn_bypass_lan),
+                                entries = bypassLanEntries,
+                                values = bypassLanValues,
+                                selectedValue = vpnBypassLan,
+                                enabled = isVpn,
+                                onSelected = { vpnBypassLan = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_vpn_interface_address, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_settings_24dp),
+                                title = stringResource(R.string.title_pref_vpn_interface_address),
+                                entries = interfaceAddrEntries,
+                                values = interfaceAddrValues,
+                                selectedValue = vpnInterfaceAddress,
+                                enabled = isVpn,
+                                onSelected = { vpnInterfaceAddress = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_vpn_mtu, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_vpn_mtu),
+                                value = vpnMtu,
+                                enabled = isVpn,
+                                keyboardNumber = true,
+                                onValueChanged = { vpnMtu = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_use_hev_tunnel, R.string.summary_pref_use_hev_tunnel) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_play_24dp),
+                                title = stringResource(R.string.title_pref_use_hev_tunnel),
+                                summary = stringResource(R.string.summary_pref_use_hev_tunnel),
+                                checked = useHevTun,
+                                enabled = isVpn,
+                                onCheckedChange = {
+                                    useHevTun = it
+                                    if (it && !enableLocalProxy) {
+                                        enableLocalProxy = true
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_hev_tunnel_loglevel, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_logcat_24dp),
+                                title = stringResource(R.string.title_pref_hev_tunnel_loglevel),
+                                entries = hevLogEntries,
+                                values = hevLogValues,
+                                selectedValue = hevTunLogLevel,
+                                enabled = hevTunEnabled,
+                                onSelected = { hevTunLogLevel = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_hev_tunnel_rw_timeout, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_restore_24dp),
+                                title = stringResource(R.string.title_pref_hev_tunnel_rw_timeout),
+                                value = hevTunRwTimeout,
+                                enabled = hevTunEnabled,
+                                keyboardNumber = true,
+                                onValueChanged = { hevTunRwTimeout = it },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_core_settings,
+                expanded = coreSettingsExpanded,
+                onExpandedChange = { coreSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_sniffing_enabled, R.string.summary_pref_sniffing_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_search_24dp),
+                                title = stringResource(R.string.title_pref_sniffing_enabled),
+                                summary = stringResource(R.string.summary_pref_sniffing_enabled),
+                                checked = sniffingEnabled,
+                                onCheckedChange = { sniffingEnabled = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_route_only_enabled, R.string.summary_pref_route_only_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_routing_24dp),
+                                title = stringResource(R.string.title_pref_route_only_enabled),
+                                summary = stringResource(R.string.summary_pref_route_only_enabled),
+                                checked = routeOnlyEnabled,
+                                onCheckedChange = { routeOnlyEnabled = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_enable_local_proxy, R.string.summary_pref_enable_local_proxy) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_share_24dp),
+                                title = stringResource(R.string.title_pref_enable_local_proxy),
+                                summary = stringResource(R.string.summary_pref_enable_local_proxy),
+                                checked = enableLocalProxy,
+                                enabled = !localProxyForced,
+                                onCheckedChange = {
+                                    if (!localProxyForced) {
+                                        enableLocalProxy = it
+                                        if (!it && appendHttpProxy) {
+                                            appendHttpProxy = false
+                                        }
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_proxy_sharing_enabled, R.string.summary_pref_proxy_sharing_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_promotion_24dp),
+                                title = stringResource(R.string.title_pref_proxy_sharing_enabled),
+                                summary = stringResource(R.string.summary_pref_proxy_sharing_enabled),
+                                checked = proxySharing,
+                                enabled = effectiveLocalProxy,
+                                onCheckedChange = { proxySharing = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_dynamic_socks_port, R.string.summary_pref_dynamic_socks_port) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_restore_24dp),
+                                title = stringResource(R.string.title_pref_dynamic_socks_port),
+                                summary = stringResource(R.string.summary_pref_dynamic_socks_port),
+                                checked = dynamicSocksPort,
+                                enabled = effectiveLocalProxy,
+                                onCheckedChange = { dynamicSocksPort = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_socks_port, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_socks_port),
+                                value = socksPort,
+                                enabled = effectiveLocalProxy && !dynamicSocksPort,
+                                keyboardNumber = true,
+                                onValueChanged = { socksPort = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_socks_username, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_about_24dp),
+                                title = stringResource(R.string.title_pref_socks_username),
+                                value = socksUsername,
+                                enabled = effectiveLocalProxy,
+                                onValueChanged = { socksUsername = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_socks_password, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_lock_24dp),
+                                title = stringResource(R.string.title_pref_socks_password),
+                                value = socksPassword,
+                                enabled = effectiveLocalProxy,
+                                isPassword = true,
+                                onValueChanged = { socksPassword = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_socks_enable_udp, R.string.summary_pref_socks_enable_udp) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_flash_on_24dp),
+                                title = stringResource(R.string.title_pref_socks_enable_udp),
+                                summary = stringResource(R.string.summary_pref_socks_enable_udp),
+                                checked = socksEnableUdp,
+                                enabled = effectiveLocalProxy,
+                                onCheckedChange = { socksEnableUdp = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_remote_dns, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_cloud_download_24dp),
+                                title = stringResource(R.string.title_pref_remote_dns),
+                                value = remoteDns,
+                                onValueChanged = { remoteDns = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_domestic_dns, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_domestic_dns),
+                                value = domesticDns,
+                                onValueChanged = { domesticDns = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_dns_hosts, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_file_24dp),
+                                title = stringResource(R.string.title_pref_dns_hosts),
+                                value = dnsHosts,
+                                onValueChanged = { dnsHosts = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_core_loglevel, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_logcat_24dp),
+                                title = stringResource(R.string.title_core_loglevel),
+                                entries = coreLogLevelEntries,
+                                values = coreLogLevelValues,
+                                selectedValue = coreLogLevel,
+                                onSelected = { coreLogLevel = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_outbound_domain_resolve_method, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_outline_filter_alt_24),
+                                title = stringResource(R.string.title_outbound_domain_resolve_method),
+                                entries = outboundResolveEntries,
+                                values = outboundResolveValues,
+                                selectedValue = outboundResolveMethod,
+                                onSelected = { outboundResolveMethod = it },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_mux_settings,
+                expanded = muxSettingsExpanded,
+                onExpandedChange = { muxSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_mux_enabled, R.string.summary_pref_mux_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_play_24dp),
+                                title = stringResource(R.string.title_pref_mux_enabled),
+                                summary = stringResource(R.string.summary_pref_mux_enabled),
+                                checked = mux,
+                                onCheckedChange = { mux = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_mux_concurrency, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_mux_concurrency),
+                                value = muxConcurrency,
+                                enabled = mux,
+                                keyboardNumber = true,
+                                onValueChanged = { muxConcurrency = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_mux_xudp_concurrency, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_mux_xudp_concurrency),
+                                value = muxXudpConcurrency,
+                                enabled = mux,
+                                keyboardNumber = true,
+                                onValueChanged = { muxXudpConcurrency = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_mux_xudp_quic, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_lock_24dp),
+                                title = stringResource(R.string.title_pref_mux_xudp_quic),
+                                entries = xudpQuicEntries,
+                                values = xudpQuicValues,
+                                selectedValue = muxXudpQuic,
+                                enabled = mux && muxXudpConcurrencyInt >= 0,
+                                onSelected = { muxXudpQuic = it },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_fragment_settings,
+                expanded = fragmentSettingsExpanded,
+                onExpandedChange = { fragmentSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_fragment_enabled, null) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_copy),
+                                title = stringResource(R.string.title_pref_fragment_enabled),
+                                checked = fragment,
+                                onCheckedChange = { fragment = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_fragment_packets, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_file_24dp),
+                                title = stringResource(R.string.title_pref_fragment_packets),
+                                entries = fragmentPacketsEntries,
+                                values = fragmentPacketsValues,
+                                selectedValue = fragmentPackets,
+                                enabled = fragment,
+                                onSelected = { fragmentPackets = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_fragment_length, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_fragment_length),
+                                value = fragmentLength,
+                                enabled = fragment,
+                                onValueChanged = { fragmentLength = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_fragment_interval, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_restore_24dp),
+                                title = stringResource(R.string.title_pref_fragment_interval),
+                                value = fragmentInterval,
+                                enabled = fragment,
+                                onValueChanged = { fragmentInterval = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_fragment_maxsplit, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_fragment_maxsplit),
+                                value = fragmentMaxSplit,
+                                enabled = fragment,
+                                keyboardNumber = true,
+                                onValueChanged = { fragmentMaxSplit = it },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_observatory_settings,
+                expanded = observatorySettingsExpanded,
+                onExpandedChange = { observatorySettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_observatory_least_ping_interval, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_restore_24dp),
+                                title = stringResource(R.string.title_pref_observatory_least_ping_interval),
+                                value = observatoryLeastPingInterval,
+                                onValueChanged = {
+                                    viewModel.validateObservatoryDuration(it)?.let { value ->
+                                        observatoryLeastPingInterval = value
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_observatory_least_load_interval, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_observatory_least_load_interval),
+                                value = observatoryLeastLoadInterval,
+                                onValueChanged = {
+                                    viewModel.validateObservatoryDuration(it)?.let { value ->
+                                        observatoryLeastLoadInterval = value
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_observatory_least_load_method, null) { shape ->
+                            SettingsListItem(
+                                icon = painterResource(R.drawable.ic_outline_filter_alt_24),
+                                title = stringResource(R.string.title_pref_observatory_least_load_method),
+                                entries = observatoryLeastLoadMethodEntries,
+                                values = observatoryLeastLoadMethodValues,
+                                selectedValue = observatoryLeastLoadMethod,
+                                onSelected = { observatoryLeastLoadMethod = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_observatory_least_load_sampling, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_observatory_least_load_sampling),
+                                value = observatoryLeastLoadSampling,
+                                keyboardNumber = true,
+                                onValueChanged = {
+                                    viewModel.validateObservatorySampling(it)?.let { value ->
+                                        observatoryLeastLoadSampling = value
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_observatory_least_load_timeout, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_save_24dp),
+                                title = stringResource(R.string.title_pref_observatory_least_load_timeout),
+                                value = observatoryLeastLoadTimeout,
+                                onValueChanged = {
+                                    viewModel.validateObservatoryDuration(it)?.let { value ->
+                                        observatoryLeastLoadTimeout = value
+                                    }
+                                },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_advanced,
+                expanded = advancedSettingsExpanded,
+                onExpandedChange = { advancedSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_pref_is_booted, R.string.summary_pref_is_booted) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_play_24dp),
+                                title = stringResource(R.string.title_pref_is_booted),
+                                summary = stringResource(R.string.summary_pref_is_booted),
+                                checked = isBooted,
+                                onCheckedChange = { isBooted = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_system_vpn_settings, R.string.summary_system_vpn_settings) { shape ->
+                        if (systemVpnSettingsAvailable) {
+                            SettingsMenuItem(
+                                icon = painterResource(R.drawable.ic_settings_24dp),
+                                title = stringResource(R.string.title_system_vpn_settings),
+                                subtitle = stringResource(R.string.summary_system_vpn_settings),
+                                onClick = onSystemVpnSettingsClicked,
+                                shape = shape
+                            )
+                        }
+                    },
+                    SettingsEntry(R.string.title_pref_delay_test_url, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_cloud_download_24dp),
+                                title = stringResource(R.string.title_pref_delay_test_url),
+                                value = delayTestUrl,
+                                onValueChanged = { delayTestUrl = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_real_ping_concurrency, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_edit_24dp),
+                                title = stringResource(R.string.title_pref_real_ping_concurrency),
+                                value = realPingConcurrency,
+                                keyboardNumber = true,
+                                onValueChanged = { realPingConcurrency = it },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_pref_ip_api_url, null) { shape ->
+                            SettingsEditItem(
+                                icon = painterResource(R.drawable.ic_description_24dp),
+                                title = stringResource(R.string.title_pref_ip_api_url),
+                                value = ipApiUrl,
+                                onValueChanged = { ipApiUrl = it },
+                            shape = shape
+                            )
+                    },
+                )
+            )
+
+            CollapsibleSettingsGroup(
+                titleRes = R.string.title_mode_settings,
+                expanded = modeSettingsExpanded,
+                onExpandedChange = { modeSettingsExpanded = it },
+                searchQuery = searchQuery,
+                entries = listOf(
+                    SettingsEntry(R.string.title_mode, null) { shape ->
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = shape,
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = stringResource(R.string.title_mode),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    SingleChoiceSegmentedButtonRow(
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        modeEntries.forEachIndexed { index, entry ->
+                                            SegmentedButton(
+                                                shape = SegmentedButtonDefaults.itemShape(
+                                                    index = index,
+                                                    count = modeEntries.size
+                                                ),
+                                                onClick = { mode = modeValues[index] },
+                                                selected = mode == modeValues[index],
+                                                label = {
+                                                    Text(
+                                                        text = entry,
+                                                        maxLines = 1,
+                                                        softWrap = false,
+                                                        overflow = TextOverflow.Ellipsis
+                                                    )
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }
-                    item { shape ->
-                        SettingsMenuItem(
-                            icon = painterResource(R.drawable.ic_about_24dp),
-                            title = stringResource(R.string.title_mode_help),
-                            onClick = onModeHelpClicked,
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_lock_24dp),
-                            title = stringResource(R.string.title_root_mode_enabled),
-                            summary = stringResource(R.string.summary_root_mode_enabled),
-                            checked = enableRootMode,
-                            onCheckedChange = { newValue ->
-                                if (newValue && !RootManager.cachedRoot()) {
-                                    viewModel.checkAndRequestRoot {
-                                        enableRootMode = true
+                    },
+                    SettingsEntry(R.string.title_mode_help, null) { shape ->
+                            SettingsMenuItem(
+                                icon = painterResource(R.drawable.ic_about_24dp),
+                                title = stringResource(R.string.title_mode_help),
+                                onClick = onModeHelpClicked,
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_root_mode_enabled, R.string.summary_root_mode_enabled) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_lock_24dp),
+                                title = stringResource(R.string.title_root_mode_enabled),
+                                summary = stringResource(R.string.summary_root_mode_enabled),
+                                checked = enableRootMode,
+                                onCheckedChange = { newValue ->
+                                    if (newValue && !RootManager.cachedRoot()) {
+                                        viewModel.checkAndRequestRoot {
+                                            enableRootMode = true
+                                        }
+                                    } else {
+                                        enableRootMode = newValue
                                     }
-                                } else {
-                                    enableRootMode = newValue
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            icon = painterResource(R.drawable.ic_share_24dp),
-                            title = stringResource(R.string.title_root_lan_sharing),
-                            summary = stringResource(R.string.summary_root_lan_sharing),
-                            checked = lanSharing,
-                            onCheckedChange = { newValue ->
-                                if (newValue && !RootManager.cachedRoot()) {
-                                    viewModel.checkAndRequestRoot {
-                                        lanSharing = true
+                                },
+                            shape = shape
+                            )
+                    },
+                    SettingsEntry(R.string.title_root_lan_sharing, R.string.summary_root_lan_sharing) { shape ->
+                            SettingsSwitchItem(
+                                icon = painterResource(R.drawable.ic_share_24dp),
+                                title = stringResource(R.string.title_root_lan_sharing),
+                                summary = stringResource(R.string.summary_root_lan_sharing),
+                                checked = lanSharing,
+                                onCheckedChange = { newValue ->
+                                    if (newValue && !RootManager.cachedRoot()) {
+                                        viewModel.checkAndRequestRoot {
+                                            lanSharing = true
+                                        }
+                                    } else {
+                                        lanSharing = newValue
                                     }
-                                } else {
-                                    lanSharing = newValue
-                                }
-                            },
-                        shape = shape
-                        )
-                    }
-                }
-            }
+                                },
+                            shape = shape
+                            )
+                    },
+                )
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
             NavigationBarsSpacer()

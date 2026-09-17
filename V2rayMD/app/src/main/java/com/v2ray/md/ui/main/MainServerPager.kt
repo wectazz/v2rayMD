@@ -67,7 +67,6 @@ fun GroupPagerPage(
     selectedGuid: String?,
     locateTarget: LocateTarget?,
     doubleColumnDisplay: Boolean,
-    searchQuery: String,
     lazyListStates: MutableMap<String, LazyListState>,
     lazyGridStates: MutableMap<String, LazyGridState>,
     onSelectServer: (String) -> Unit,
@@ -84,7 +83,7 @@ fun GroupPagerPage(
         mainViewModel.serverGroupState(groupId)
     }
     val groupState by groupStateFlow.collectAsStateWithLifecycle()
-    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty()
+    val canReorder = groupId.isNotEmpty()
     val actions = remember(
         onSelectServer,
         onEditServer,

@@ -1,19 +1,22 @@
 package com.v2ray.md.ui.main
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,10 +36,12 @@ fun GroupTabBar(
 ) {
     val selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex)
     if (groups.size <= MAX_SEGMENTED_GROUPS) {
-        SingleChoiceSegmentedButtonRow(
+        FlowRow(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             groups.forEachIndexed { index, group ->
                 val serverFlow = remember(group.id, mainViewModel) {
@@ -48,19 +53,23 @@ fun GroupTabBar(
                 } else {
                     "${group.remarks} (${servers.size})"
                 }
-                SegmentedButton(
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = groups.size),
-                    onClick = { onTabClick(index) },
-                    selected = index == selectedIndex,
-                    label = {
-                        Text(
-                            text = text,
-                            maxLines = 1,
-                            softWrap = false,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                )
+                ToggleButton(
+                    checked = index == selectedIndex,
+                    onCheckedChange = { onTabClick(index) },
+                    shapes = when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        groups.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                    },
+                    modifier = Modifier.semantics { role = Role.RadioButton },
+                ) {
+                    Text(
+                        text = text,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     } else {
