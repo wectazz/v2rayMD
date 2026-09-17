@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -23,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,24 +34,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
-
-/**
- * M3 expressive settings group: stack of single segmented list items with the
- * spec [ListItemDefaults.SegmentedGap] spacing. Each row draws its own container.
- */
-@Composable
-fun SettingsCard(
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
-        content = content
-    )
-}
 
 /** Check mark for switch thumbs, following the M3 selected-switch pattern. */
 @Composable
@@ -113,7 +99,8 @@ private fun SettingsItemRow(
     enabled: Boolean,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
-    trailing: @Composable (() -> Unit)? = null
+    trailing: @Composable (() -> Unit)? = null,
+    shape: Shape? = null
 ) {
     // Explicit container: the default segmented container is near-invisible
     // against the background in dark theme. Highest in dark, High in light
@@ -122,22 +109,50 @@ private fun SettingsItemRow(
         containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
         else MaterialTheme.colorScheme.surfaceContainerHigh
     )
-    val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    val titleColor = if (enabled) MaterialTheme.colorScheme.onSurface
+    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    val descriptionColor = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
+    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
     val leadingContent: @Composable (() -> Unit)? = if (icon != null) {
         {
             Icon(
                 painter = icon,
-                contentDescription = null
+                contentDescription = null,
+                tint = titleColor
             )
         }
     } else {
         null
     }
     val supportingContent: @Composable (() -> Unit)? = if (!description.isNullOrEmpty()) {
-        { Text(text = description) }
+        { Text(text = description, color = descriptionColor) }
     } else {
         null
     }
+    if (shape != null) {
+        // Connected-segment mode: the group owns the shape, the row only fills it.
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            shape = shape,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
+        ) {
+            ListItem(
+                headlineContent = {
+                    Text(text = title, color = titleColor)
+                },
+                supportingContent = supportingContent,
+                leadingContent = leadingContent,
+                trailingContent = trailing,
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                modifier = Modifier.then(
+                    if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
+                    else Modifier
+                )
+            )
+        }
+        return
+    }
+    val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
     if (onClick != null) {
         SegmentedListItem(
             onClick = onClick,
@@ -185,7 +200,8 @@ fun SettingsEditItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isPassword: Boolean = false,
-    keyboardNumber: Boolean = false
+    keyboardNumber: Boolean = false,
+    shape: Shape? = null
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val description = if (isPassword) {
@@ -205,7 +221,8 @@ fun SettingsEditItem(
         modifier = modifier,
         trailing = description?.let { value ->
             { TrailingValueText(text = value) }
-        }
+        },
+        shape = shape
     )
 
     if (showDialog) {
@@ -237,7 +254,8 @@ fun SettingsListItem(
     selectedValue: String,
     onSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    shape: Shape? = null
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val options = entries.zip(values)
@@ -255,7 +273,8 @@ fun SettingsListItem(
         modifier = modifier,
         trailing = summary.takeIf { it.isNotEmpty() }?.let { value ->
             { TrailingValueText(text = value) }
-        }
+        },
+        shape = shape
     )
 
     if (showDialog) {
@@ -280,7 +299,8 @@ fun SettingsMenuItem(
     title: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    subtitle: String? = null
+    subtitle: String? = null,
+    shape: Shape? = null
 ) {
     SettingsItemRow(
         icon = icon,
@@ -288,7 +308,8 @@ fun SettingsMenuItem(
         description = subtitle,
         enabled = true,
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shape = shape
     )
 }
 
@@ -300,7 +321,8 @@ fun SettingsSwitchItem(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    shape: Shape? = null
 ) {
     SettingsItemRow(
         icon = icon,
@@ -318,6 +340,7 @@ fun SettingsSwitchItem(
                 thumbContent = { SwitchCheckThumb(checked) },
                 enabled = enabled
             )
-        }
+        },
+        shape = shape
     )
 }

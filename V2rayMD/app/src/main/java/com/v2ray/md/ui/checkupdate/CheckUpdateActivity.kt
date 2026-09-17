@@ -27,7 +27,7 @@ import com.v2ray.md.core.CoreNativeManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
-import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.VersionInfoBlock
@@ -82,18 +82,24 @@ fun CheckUpdateScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsCard {
-                SettingsSwitchItem(
-                    icon = painterResource(R.drawable.ic_source_code_24dp),
-                    title = stringResource(R.string.update_check_pre_release),
-                    checked = checkPreRelease,
-                    onCheckedChange = { viewModel.toggleCheckPreRelease(it) }
-                )
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_check_update_24dp),
-                    title = stringResource(R.string.update_check_for_update),
-                    onClick = { viewModel.checkForUpdates() }
-                )
+            SegmentedColumn {
+                item { shape ->
+                    SettingsSwitchItem(
+                        icon = painterResource(R.drawable.ic_source_code_24dp),
+                        title = stringResource(R.string.update_check_pre_release),
+                        checked = checkPreRelease,
+                        onCheckedChange = { viewModel.toggleCheckPreRelease(it) },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_check_update_24dp),
+                        title = stringResource(R.string.update_check_for_update),
+                        onClick = { viewModel.checkForUpdates() },
+                        shape = shape
+                    )
+                }
             }
             VersionInfoBlock(versionText = versionText)
             NavigationBarsSpacer()

@@ -65,7 +65,7 @@ import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppTopBar
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
@@ -325,15 +325,18 @@ internal fun UserAssetScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item(key = "geo_source") {
-                SettingsCard {
-                    SettingsListItem(
-                        icon = painterResource(R.drawable.ic_file_24dp),
-                        title = stringResource(R.string.asset_geo_files_sources),
-                        entries = geoFilesSourcesList,
-                        values = geoFilesSourcesList,
-                        selectedValue = geoFilesSource,
-                        onSelected = { onGeoSourceSelected(it) }
-                    )
+                SegmentedColumn {
+                    item { shape ->
+                        SettingsListItem(
+                            icon = painterResource(R.drawable.ic_file_24dp),
+                            title = stringResource(R.string.asset_geo_files_sources),
+                            entries = geoFilesSourcesList,
+                            values = geoFilesSourcesList,
+                            selectedValue = geoFilesSource,
+                            onSelected = { onGeoSourceSelected(it) },
+                            shape = shape
+                        )
+                    }
                 }
             }
             item {

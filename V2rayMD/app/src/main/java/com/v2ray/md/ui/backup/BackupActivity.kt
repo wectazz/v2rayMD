@@ -41,7 +41,7 @@ import com.v2ray.md.ui.compose.InputDialog
 import com.v2ray.md.ui.compose.InputField
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SelectListDialog
-import com.v2ray.md.ui.compose.SettingsCard
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.util.LogUtil
 import kotlinx.coroutines.flow.StateFlow
@@ -217,36 +217,51 @@ fun BackupScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsCard {
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_backup_24dp),
-                    title = stringResource(R.string.title_configuration_backup),
-                    onClick = { showBackupDialog = true }
-                )
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_share_24dp),
-                    title = stringResource(R.string.title_configuration_share),
-                    onClick = onShareClick
-                )
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_restore_24dp),
-                    title = stringResource(R.string.title_configuration_restore),
-                    onClick = { showRestoreDialog = true }
-                )
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_delete_24dp),
-                    title = stringResource(R.string.title_profile_storage_cleanup),
-                    subtitle = stringResource(R.string.summary_profile_storage_cleanup),
-                    onClick = { showCleanupDialog = true }
-                )
+            SegmentedColumn {
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_backup_24dp),
+                        title = stringResource(R.string.title_configuration_backup),
+                        onClick = { showBackupDialog = true },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_share_24dp),
+                        title = stringResource(R.string.title_configuration_share),
+                        onClick = onShareClick,
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_restore_24dp),
+                        title = stringResource(R.string.title_configuration_restore),
+                        onClick = { showRestoreDialog = true },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_delete_24dp),
+                        title = stringResource(R.string.title_profile_storage_cleanup),
+                        subtitle = stringResource(R.string.summary_profile_storage_cleanup),
+                        onClick = { showCleanupDialog = true },
+                        shape = shape
+                    )
+                }
             }
-            SettingsCard {
-                SettingsMenuItem(
-                    icon = painterResource(R.drawable.ic_settings_24dp),
-                    title = stringResource(R.string.title_webdav_config_setting),
-                    subtitle = webDavSummary,
-                    onClick = { showWebDavDialog = true }
-                )
+            SegmentedColumn {
+                item { shape ->
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_settings_24dp),
+                        title = stringResource(R.string.title_webdav_config_setting),
+                        subtitle = webDavSummary,
+                        onClick = { showWebDavDialog = true },
+                        shape = shape
+                    )
+                }
             }
             NavigationBarsSpacer()
         }
