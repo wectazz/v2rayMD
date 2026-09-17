@@ -53,8 +53,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -337,15 +335,15 @@ fun SingleSelectConnectedRow(
                 checked = selected,
                 onCheckedChange = { onSelect(index) },
                 shapes = if (options.size == 1) {
-                    ToggleButtonDefaults.shapes()
+                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
                 } else {
                     when (index) {
                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                         options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     }
-                },
-                modifier = Modifier.semantics { role = Role.RadioButton }
+                }
+                // No explicit role: ToggleButton already exposes Checkbox semantics.
             ) {
                 if (selected) {
                     Icon(
