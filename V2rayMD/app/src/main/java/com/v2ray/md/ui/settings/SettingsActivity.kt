@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -280,7 +281,11 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(scrollState)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+            Column(
+                modifier = Modifier.widthIn(max = 640.dp)
             ) {
             if (selectedSettingsTab == 0) {
                 SettingsCard {
@@ -800,4 +805,5 @@ fun SettingsScreen(
             }
         }
     }
+}
 }
