@@ -12,6 +12,7 @@ V2rayMD/app/release/output.json
 
 # Ignore local properties and DS_Store files
 /local.properties
+V2rayMD/gradle/gradle-daemon-jvm.properties
 .DS_Store
 
 # Ignore build directories and captures
