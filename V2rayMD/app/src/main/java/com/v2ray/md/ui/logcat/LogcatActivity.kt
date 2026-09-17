@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -170,7 +171,7 @@ fun LogcatScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            IconButton(onClick = {
+                            FilledTonalIconButton(onClick = {
                                 searchQuery = ""
                                 viewModel.filter("")
                                 showSearch = false
@@ -181,7 +182,7 @@ fun LogcatScreen(
                                 )
                             }
                         } else {
-                            IconButton(onClick = onBackClick) {
+                            FilledTonalIconButton(onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -191,26 +192,26 @@ fun LogcatScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            IconButton(onClick = { showSearch = true }) {
+                            FilledTonalIconButton(onClick = { showSearch = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_search_24dp),
                                     contentDescription = stringResource(R.string.acc_search)
                                 )
                             }
                         }
-                        IconButton(onClick = { viewModel.copyLogcat() }) {
+                        FilledTonalIconButton(onClick = { viewModel.copyLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_copy),
                                 contentDescription = stringResource(R.string.acc_copy_log)
                             )
                         }
-                        IconButton(onClick = { onShareLogcat() }) {
+                        FilledTonalIconButton(onClick = { onShareLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_share_24dp),
                                 contentDescription = stringResource(R.string.acc_share_log)
                             )
                         }
-                        IconButton(onClick = {
+                        FilledTonalIconButton(onClick = {
                             scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
                         }) {
                             Icon(

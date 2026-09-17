@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -165,7 +166,7 @@ fun AppPickerScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            IconButton(onClick = {
+                            FilledTonalIconButton(onClick = {
                                 searchQuery = ""
                                 onSearch("")
                                 showSearch = false
@@ -176,7 +177,7 @@ fun AppPickerScreen(
                                 )
                             }
                         } else {
-                            IconButton(onClick = onBackClick) {
+                            FilledTonalIconButton(onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -186,7 +187,7 @@ fun AppPickerScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            IconButton(onClick = { showSearch = true }) {
+                            FilledTonalIconButton(onClick = { showSearch = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_search_24dp),
                                 contentDescription = stringResource(R.string.acc_search)
@@ -194,7 +195,7 @@ fun AppPickerScreen(
                         }
                     }
                     Box {
-                        IconButton(onClick = { showMenu = true }) {
+                        FilledTonalIconButton(onClick = { showMenu = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_more_vert_24dp),
                                 contentDescription = null

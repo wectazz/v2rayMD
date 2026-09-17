@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -236,7 +237,7 @@ fun ProxyChainScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(EConfigType.PROXYCHAIN.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -245,11 +246,11 @@ fun ProxyChainScreen(
                 },
                 actions = {
                     if (showDelete) {
-                        IconButton(onClick = { showProfileDeleteConfirm = true }) {
+                        FilledTonalIconButton(onClick = { showProfileDeleteConfirm = true }) {
                             Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = stringResource(R.string.acc_delete))
                         }
                     }
-                    IconButton(onClick = { onSave(remarks, members) }) {
+                    FilledTonalIconButton(onClick = { onSave(remarks, members) }) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

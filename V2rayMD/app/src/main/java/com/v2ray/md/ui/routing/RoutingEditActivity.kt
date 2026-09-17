@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -192,7 +193,7 @@ fun RoutingEditScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.routing_settings_rule_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -201,14 +202,14 @@ fun RoutingEditScreen(
                 },
                 actions = {
                     if (position >= 0) {
-                        IconButton(onClick = { showDeleteConfirm = true }) {
+                        FilledTonalIconButton(onClick = { showDeleteConfirm = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_delete_24dp),
                                 contentDescription = stringResource(R.string.acc_delete)
                             )
                         }
                     }
-                    IconButton(onClick = { onSave(buildRuleset()) }) {
+                    FilledTonalIconButton(onClick = { onSave(buildRuleset()) }) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)

@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -230,7 +231,7 @@ fun RoutingSettingScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.routing_settings_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -238,14 +239,14 @@ fun RoutingSettingScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onAddRule) {
+                    FilledTonalIconButton(onClick = onAddRule) {
                         Icon(
                             painterResource(R.drawable.ic_add_24dp),
                             contentDescription = stringResource(R.string.acc_add_rule)
                         )
                     }
                     Box {
-                        IconButton(onClick = { showMenu = true }) {
+                        FilledTonalIconButton(onClick = { showMenu = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_more_vert_24dp),
                                 contentDescription = stringResource(R.string.acc_more)

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -59,13 +60,13 @@ fun MainTopBar(
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             navigationIcon = {
-                IconButton(onClick = onMenuClick) {
+                FilledTonalIconButton(onClick = onMenuClick) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
             },
             actions = {
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    IconButton(onClick = { showImportMenu = true }) {
+                    FilledTonalIconButton(onClick = { showImportMenu = true }) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
                     DropdownMenu(
@@ -85,7 +86,7 @@ fun MainTopBar(
                     }
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    IconButton(onClick = { showMenu = true }) {
+                    FilledTonalIconButton(onClick = { showMenu = true }) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }
                     DropdownMenu(

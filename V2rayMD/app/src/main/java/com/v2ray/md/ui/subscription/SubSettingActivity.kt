@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -145,7 +146,7 @@ fun SubSettingScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        FilledTonalIconButton(onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -153,10 +154,10 @@ fun SubSettingScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = onAddClick) {
+                        FilledTonalIconButton(onClick = onAddClick) {
                             Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_subscription))
                         }
-                        IconButton(onClick = { showUpdateDialog = true }) {
+                        FilledTonalIconButton(onClick = { showUpdateDialog = true }) {
                             Icon(painterResource(R.drawable.ic_restore_24dp), contentDescription = stringResource(R.string.acc_update_subscriptions))
                         }
                     },

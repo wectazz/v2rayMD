@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -167,7 +168,7 @@ fun ScannerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.menu_item_import_config_qrcode), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -175,7 +176,7 @@ fun ScannerScreen(
                     }
                 },
                 actions = {
-                    IconButton(
+                    FilledTonalIconButton(
                         onClick = {
                             if (isScanning) {
                                 if (torchEnabled) {
@@ -199,7 +200,7 @@ fun ScannerScreen(
                         )
                     }
                     if (isScanning && hasTorch) {
-                        IconButton(
+                        FilledTonalIconButton(
                             onClick = {
                                 torchEnabled = !torchEnabled
                                 cameraControl?.enableTorch(torchEnabled)
@@ -217,7 +218,7 @@ fun ScannerScreen(
                             )
                         }
                     }
-                    IconButton(onClick = onSelectPhoto) {
+                    FilledTonalIconButton(onClick = onSelectPhoto) {
                         Icon(
                             painterResource(R.drawable.ic_image_24dp),
                             contentDescription = stringResource(R.string.acc_select_image)

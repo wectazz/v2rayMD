@@ -32,6 +32,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -291,7 +292,7 @@ internal fun UserAssetScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_user_asset_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        FilledTonalIconButton(onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -300,7 +301,7 @@ internal fun UserAssetScreen(
                     },
                     actions = {
                         Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                            IconButton(onClick = { showAddMenu = true }) {
+                            FilledTonalIconButton(onClick = { showAddMenu = true }) {
                                 Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
                             }
                             DropdownMenu(
@@ -319,7 +320,7 @@ internal fun UserAssetScreen(
                                 }
                             }
                         }
-                        IconButton(onClick = onDownloadClick) {
+                        FilledTonalIconButton(onClick = onDownloadClick) {
                             Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
                         }
                     },

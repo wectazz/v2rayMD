@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -222,7 +223,7 @@ fun BackupScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_configuration_backup_restore), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        FilledTonalIconButton(onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)

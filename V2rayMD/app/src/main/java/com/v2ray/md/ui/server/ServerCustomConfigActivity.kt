@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -323,7 +324,7 @@ fun ServerCustomConfigScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(EConfigType.CUSTOM.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -332,14 +333,14 @@ fun ServerCustomConfigScreen(
                 },
                 actions = {
                     if (showDelete) {
-                        IconButton(onClick = { showDeleteConfirm = true }) {
+                        FilledTonalIconButton(onClick = { showDeleteConfirm = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_delete_24dp),
                                 contentDescription = stringResource(R.string.acc_delete)
                             )
                         }
                     }
-                    IconButton(onClick = { onSave(remarks, textFieldState.text.toString()) }) {
+                    FilledTonalIconButton(onClick = { onSave(remarks, textFieldState.text.toString()) }) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)

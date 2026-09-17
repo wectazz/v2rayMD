@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -462,7 +463,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                 LargeFlexibleTopAppBar(
                     title = { Text(title, modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        IconButton(onClick = { finish() }) {
+                        FilledTonalIconButton(onClick = { finish() }) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -471,14 +472,14 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                     },
                     actions = {
                         if (editGuid.isNotEmpty() && !isRunning) {
-                            IconButton(onClick = { showDeleteDialog = true }) {
+                            FilledTonalIconButton(onClick = { showDeleteDialog = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_delete_24dp),
                                     stringResource(R.string.acc_delete)
                                 )
                             }
                         }
-                        IconButton(onClick = onSaveClick) {
+                        FilledTonalIconButton(onClick = onSaveClick) {
                             Icon(
                                 painterResource(R.drawable.ic_fab_check),
                                 stringResource(R.string.acc_save)
