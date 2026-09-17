@@ -61,37 +61,6 @@ fun PreferenceGroupHeader(title: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CollapsiblePreferenceGroupHeader(
-    title: String,
-    expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onExpandedChange(!expanded) }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.weight(1f)
-        )
-        Icon(
-            painter = painterResource(R.drawable.ic_expand_more_24dp),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(24.dp)
-                .rotate(if (expanded) 180f else 0f)
-        )
-    }
-}
-
-@Composable
 private fun SettingsItemRow(
     icon: Painter?,
     title: String,
