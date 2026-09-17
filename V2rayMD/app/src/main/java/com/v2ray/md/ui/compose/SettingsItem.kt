@@ -115,6 +115,11 @@ private fun SettingsItemRow(
     modifier: Modifier = Modifier,
     trailing: @Composable (() -> Unit)? = null
 ) {
+    // Explicit container: the default segmented container is near-invisible
+    // against the background in dark theme.
+    val colors = ListItemDefaults.segmentedColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    )
     val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
     val leadingContent: @Composable (() -> Unit)? = if (icon != null) {
         {
@@ -139,6 +144,7 @@ private fun SettingsItemRow(
             leadingContent = leadingContent,
             trailingContent = trailing,
             supportingContent = supportingContent,
+            colors = colors,
             modifier = modifier.fillMaxWidth()
         ) {
             Text(text = title)
@@ -150,6 +156,7 @@ private fun SettingsItemRow(
             leadingContent = leadingContent,
             trailingContent = trailing,
             supportingContent = supportingContent,
+            colors = colors,
             modifier = modifier.fillMaxWidth()
         ) {
             Text(text = title)

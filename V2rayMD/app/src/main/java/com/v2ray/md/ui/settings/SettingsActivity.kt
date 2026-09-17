@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +47,6 @@ import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.root.RootManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppTopBar
-import com.v2ray.md.ui.compose.CollapsiblePreferenceGroupHeader
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsCard
 import com.v2ray.md.ui.compose.SettingsEditItem
@@ -96,6 +98,17 @@ class SettingsActivity : BaseComponentActivity() {
     }
 }
 
+private fun settingsTabTitles(): List<Int> = listOf(
+    R.string.title_ui_settings,
+    R.string.title_vpn_settings,
+    R.string.title_core_settings,
+    R.string.title_mux_settings,
+    R.string.title_fragment_settings,
+    R.string.title_observatory_settings,
+    R.string.title_advanced,
+    R.string.title_mode_settings
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -107,14 +120,7 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val systemVpnSettingsAvailable by viewModel.systemVpnSettingsAvailable.collectAsStateWithLifecycle()
-    var uiSettingsExpanded by rememberSaveable { mutableStateOf(true) }
-    var vpnSettingsExpanded by rememberSaveable { mutableStateOf(true) }
-    var coreSettingsExpanded by rememberSaveable { mutableStateOf(true) }
-    var muxSettingsExpanded by rememberSaveable { mutableStateOf(false) }
-    var fragmentSettingsExpanded by rememberSaveable { mutableStateOf(false) }
-    var observatorySettingsExpanded by rememberSaveable { mutableStateOf(false) }
-    var advancedSettingsExpanded by rememberSaveable { mutableStateOf(true) }
-    var modeSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var selectedSettingsTab by rememberSaveable { mutableStateOf(0) }
 
     var localDns by rememberMmkvBool(AppConfig.PREF_LOCAL_DNS_ENABLED, false)
     var fakeDns by rememberMmkvBool(AppConfig.PREF_FAKE_DNS_ENABLED, false)
@@ -234,15 +240,27 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScrollbar(scrollState)
-                .verticalScroll(scrollState)
         ) {
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_ui_settings),
-                expanded = uiSettingsExpanded,
-                onExpandedChange = { uiSettingsExpanded = it }
-            )
-            if (uiSettingsExpanded) {
+            PrimaryScrollableTabRow(
+                selectedTabIndex = selectedSettingsTab,
+                modifier = Modifier.fillMaxWidth(),
+                edgePadding = 16.dp
+            ) {
+                settingsTabTitles().forEachIndexed { index, titleRes ->
+                    Tab(
+                        selected = index == selectedSettingsTab,
+                        onClick = { selectedSettingsTab = index },
+                        text = { Text(stringResource(titleRes)) }
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScrollbar(scrollState)
+                    .verticalScroll(scrollState)
+            ) {
+            if (selectedSettingsTab == 0) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_play_24dp),
@@ -314,12 +332,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_vpn_settings),
-                expanded = vpnSettingsExpanded,
-                onExpandedChange = { vpnSettingsExpanded = it }
-            )
-            if (vpnSettingsExpanded) {
+            if (selectedSettingsTab == 1) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_routing_24dp),
@@ -425,12 +438,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_core_settings),
-                expanded = coreSettingsExpanded,
-                onExpandedChange = { coreSettingsExpanded = it }
-            )
-            if (coreSettingsExpanded) {
+            if (selectedSettingsTab == 2) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_search_24dp),
@@ -545,12 +553,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_mux_settings),
-                expanded = muxSettingsExpanded,
-                onExpandedChange = { muxSettingsExpanded = it }
-            )
-            if (muxSettingsExpanded) {
+            if (selectedSettingsTab == 3) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_play_24dp),
@@ -587,12 +590,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_fragment_settings),
-                expanded = fragmentSettingsExpanded,
-                onExpandedChange = { fragmentSettingsExpanded = it }
-            )
-            if (fragmentSettingsExpanded) {
+            if (selectedSettingsTab == 4) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_copy),
@@ -634,12 +632,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_observatory_settings),
-                expanded = observatorySettingsExpanded,
-                onExpandedChange = { observatorySettingsExpanded = it }
-            )
-            if (observatorySettingsExpanded) {
+            if (selectedSettingsTab == 5) {
                 SettingsCard {
                     SettingsEditItem(
                         icon = painterResource(R.drawable.ic_restore_24dp),
@@ -693,12 +686,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_advanced),
-                expanded = advancedSettingsExpanded,
-                onExpandedChange = { advancedSettingsExpanded = it }
-            )
-            if (advancedSettingsExpanded) {
+            if (selectedSettingsTab == 6) {
                 SettingsCard {
                     SettingsSwitchItem(
                         icon = painterResource(R.drawable.ic_play_24dp),
@@ -737,12 +725,7 @@ fun SettingsScreen(
                 }
             }
 
-            CollapsiblePreferenceGroupHeader(
-                title = stringResource(R.string.title_mode_settings),
-                expanded = modeSettingsExpanded,
-                onExpandedChange = { modeSettingsExpanded = it }
-            )
-            if (modeSettingsExpanded) {
+            if (selectedSettingsTab == 7) {
                 SettingsCard {
                     SettingsListItem(
                         icon = painterResource(R.drawable.ic_menu_24dp),
@@ -792,6 +775,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
             NavigationBarsSpacer()
+            }
         }
     }
 }
