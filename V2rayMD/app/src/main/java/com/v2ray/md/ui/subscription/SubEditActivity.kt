@@ -176,7 +176,7 @@ fun SubEditScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.title_sub_setting)) },
+                title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

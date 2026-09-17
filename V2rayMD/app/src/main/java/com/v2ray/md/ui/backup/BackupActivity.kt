@@ -220,7 +220,7 @@ fun BackupScreen(
         topBar = {
             Column {
                 LargeFlexibleTopAppBar(
-                    title = { Text(stringResource(R.string.title_configuration_backup_restore)) },
+                    title = { Text(stringResource(R.string.title_configuration_backup_restore), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(

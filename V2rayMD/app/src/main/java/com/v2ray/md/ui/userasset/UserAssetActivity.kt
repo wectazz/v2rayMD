@@ -289,7 +289,7 @@ internal fun UserAssetScreen(
         topBar = {
             Column {
                 LargeFlexibleTopAppBar(
-                    title = { Text(stringResource(R.string.title_user_asset_setting)) },
+                    title = { Text(stringResource(R.string.title_user_asset_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(

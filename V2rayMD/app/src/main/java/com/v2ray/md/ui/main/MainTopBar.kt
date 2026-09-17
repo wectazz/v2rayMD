@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -55,7 +56,7 @@ fun MainTopBar(
     Column {
         MediumFlexibleTopAppBar(
             title = {
-                Text(text = stringResource(R.string.title_server))
+                Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             navigationIcon = {
                 IconButton(onClick = onMenuClick) {

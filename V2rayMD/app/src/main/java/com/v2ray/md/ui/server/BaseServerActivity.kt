@@ -460,7 +460,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
             contentWindowInsets = WindowInsets(0),
             topBar = {
                 LargeFlexibleTopAppBar(
-                    title = { Text(title) },
+                    title = { Text(title, modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(

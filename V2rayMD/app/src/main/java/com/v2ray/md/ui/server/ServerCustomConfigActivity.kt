@@ -321,7 +321,7 @@ fun ServerCustomConfigScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(EConfigType.CUSTOM.toString()) },
+                title = { Text(EConfigType.CUSTOM.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

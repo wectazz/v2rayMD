@@ -68,7 +68,7 @@ fun TranslatorsScreen(onBackClick: () -> Unit) {
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.title_translators)) },
+                title = { Text(stringResource(R.string.title_translators), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

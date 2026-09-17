@@ -79,7 +79,7 @@ fun AboutScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.title_about)) },
+                title = { Text(stringResource(R.string.title_about), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -159,7 +159,7 @@ fun AboutScreen(
     if (showOssDialog) {
         AlertDialog(
             onDismissRequest = { showOssDialog = false },
-            title = { Text(stringResource(R.string.title_oss_license)) },
+            title = { Text(stringResource(R.string.title_oss_license), modifier = Modifier.padding(start = 8.dp)) },
             text = {
                 AndroidView(
                     factory = { ctx ->

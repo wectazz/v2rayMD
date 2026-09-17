@@ -165,7 +165,7 @@ fun ScannerScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.menu_item_import_config_qrcode)) },
+                title = { Text(stringResource(R.string.menu_item_import_config_qrcode), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

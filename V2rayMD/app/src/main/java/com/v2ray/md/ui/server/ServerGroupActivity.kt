@@ -250,7 +250,7 @@ fun ServerGroupScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(EConfigType.POLICYGROUP.toString()) },
+                title = { Text(EConfigType.POLICYGROUP.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

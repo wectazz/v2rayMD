@@ -83,7 +83,7 @@ fun CheckUpdateScreen(
         topBar = {
             Column {
                 LargeFlexibleTopAppBar(
-                    title = { Text(stringResource(R.string.update_check_for_update)) },
+                    title = { Text(stringResource(R.string.update_check_for_update), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(
@@ -138,7 +138,7 @@ fun CheckUpdateScreen(
         val result = updateResult!!
         AlertDialog(
             onDismissRequest = { viewModel.dismissUpdateDialog() },
-            title = { Text(stringResource(R.string.update_new_version_found, result.latestVersion ?: "")) },
+            title = { Text(stringResource(R.string.update_new_version_found, result.latestVersion ?: ""), modifier = Modifier.padding(start = 8.dp)) },
             text = {
                 val scrollState = rememberScrollState()
                 Text(

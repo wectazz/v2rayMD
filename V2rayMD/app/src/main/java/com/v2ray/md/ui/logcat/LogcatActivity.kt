@@ -165,7 +165,7 @@ fun LogcatScreen(
                                 placeholder = stringResource(R.string.menu_item_search)
                             )
                         } else {
-                            Text(stringResource(R.string.title_logcat))
+                            Text(stringResource(R.string.title_logcat), modifier = Modifier.padding(start = 8.dp))
                         }
                     },
                     navigationIcon = {

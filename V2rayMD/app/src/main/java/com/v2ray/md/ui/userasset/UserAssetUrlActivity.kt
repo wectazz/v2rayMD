@@ -159,7 +159,7 @@ fun UserAssetUrlScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.title_user_asset_add_url)) },
+                title = { Text(stringResource(R.string.title_user_asset_add_url), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

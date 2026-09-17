@@ -160,7 +160,7 @@ fun AppPickerScreen(
                                 placeholder = stringResource(R.string.menu_item_search)
                             )
                         } else {
-                            Text(title)
+                            Text(title, modifier = Modifier.padding(start = 8.dp))
                         }
                     },
                     navigationIcon = {

@@ -234,7 +234,7 @@ fun ProxyChainScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(EConfigType.PROXYCHAIN.toString()) },
+                title = { Text(EConfigType.PROXYCHAIN.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

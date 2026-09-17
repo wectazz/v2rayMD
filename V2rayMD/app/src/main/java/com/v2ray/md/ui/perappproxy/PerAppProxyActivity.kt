@@ -161,7 +161,7 @@ fun PerAppProxyScreen(
                                 placeholder = stringResource(R.string.menu_item_search)
                             )
                         } else {
-                            Text(stringResource(R.string.per_app_proxy_settings))
+                            Text(stringResource(R.string.per_app_proxy_settings), modifier = Modifier.padding(start = 8.dp))
                         }
                     },
                     navigationIcon = {

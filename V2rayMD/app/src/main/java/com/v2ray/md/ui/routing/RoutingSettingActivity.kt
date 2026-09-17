@@ -228,7 +228,7 @@ fun RoutingSettingScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(R.string.routing_settings_title)) },
+                title = { Text(stringResource(R.string.routing_settings_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
