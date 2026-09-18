@@ -1,6 +1,5 @@
-﻿package com.v2ray.md.ui.settings
-
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+package com.v2ray.md.ui.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -36,12 +35,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearWavyProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -222,7 +219,7 @@ private fun SettingsSearchBar(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,

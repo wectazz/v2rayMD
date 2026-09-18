@@ -1,6 +1,5 @@
-﻿package com.v2ray.md.ui.perappproxy
-
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+package com.v2ray.md.ui.perappproxy
 
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -31,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearWavyProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface

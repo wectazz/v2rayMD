@@ -1,3 +1,4 @@
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 package com.v2ray.md.ui.main
 
 import androidx.compose.foundation.background
@@ -31,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
