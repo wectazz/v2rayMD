@@ -1,9 +1,19 @@
 package com.v2ray.md.ui.compose
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> AppDropdownMenuItems(
@@ -19,7 +29,7 @@ fun <T> AppDropdownMenuItems(
     }
 }
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> AppBottomSheetMenu(
     expanded: Boolean,
@@ -29,24 +39,23 @@ fun <T> AppBottomSheetMenu(
     onSelected: (T) -> Unit
 ) {
     if (expanded) {
-        val sheetState = androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        androidx.compose.material3.ModalBottomSheet(
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ModalBottomSheet(
             onDismissRequest = onDismissRequest,
-            sheetState = sheetState,
-            windowInsets = androidx.compose.foundation.layout.WindowInsets.navigationBars
+            sheetState = sheetState
         ) {
             items.forEach { item ->
-                androidx.compose.material3.ListItem(
+                ListItem(
                     headlineContent = { Text(stringResource(labelRes(item))) },
-                    modifier = androidx.compose.ui.Modifier
-                        .androidx.compose.foundation.layout.fillMaxWidth()
-                        .androidx.compose.foundation.clickable {
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
                             onSelected(item)
                             onDismissRequest()
                         }
                 )
             }
-            androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.androidx.compose.foundation.layout.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
