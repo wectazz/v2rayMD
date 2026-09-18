@@ -34,11 +34,10 @@ import androidx.graphics.shapes.toPath
 @Composable
 fun ExpressiveBackground(modifier: Modifier = Modifier) {
     val backgroundColor = MaterialTheme.colorScheme.surface
-    // Use primary, tertiary, secondary instead of their container variants
-    // so the monet colors pop more vividly in dark mode. No alpha for full color.
-    val blobColor1 = MaterialTheme.colorScheme.primary
-    val blobColor2 = MaterialTheme.colorScheme.tertiary
-    val blobColor3 = MaterialTheme.colorScheme.secondary
+    // Use only primary color for a monochromatic monet aesthetic as requested. User requested 20% opacity.
+    val blobColor1 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+    val blobColor2 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+    val blobColor3 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
 
     val infiniteTransition = rememberInfiniteTransition(label = "blobTransition")
     

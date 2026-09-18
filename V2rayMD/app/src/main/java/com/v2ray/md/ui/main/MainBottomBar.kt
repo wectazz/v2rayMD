@@ -55,6 +55,7 @@ fun MainCombinedBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(16.dp),
         horizontalArrangement = Arrangement.End,

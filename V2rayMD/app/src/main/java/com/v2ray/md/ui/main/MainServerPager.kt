@@ -250,38 +250,39 @@ private fun ServerListPage(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(listState),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-            lazySegmentColumn(
-                items = rows,
-                key = { _, item -> item.guid }
-            ) { _, row ->
-                if (canReorder && reorderableState != null) {
-                    ReorderableItem(
-                        reorderableState,
-                        key = row.guid
-                    ) { isDragging ->
-                        ReorderableListItem(
-                            scope = this,
-                            isDragging = isDragging
-                        ) {
-                            ServerListItem(
-                                row = row,
-                                isSelected = row.guid == selectedGuid,
-                                doubleColumnDisplay = false,
-                                actions = actions
-                            )
+                itemsIndexed(
+                    items = rows,
+                    key = { _, item -> item.guid }
+                ) { _, row ->
+                    if (canReorder && reorderableState != null) {
+                        ReorderableItem(
+                            reorderableState,
+                            key = row.guid
+                        ) { isDragging ->
+                            ReorderableListItem(
+                                scope = this,
+                                isDragging = isDragging
+                            ) {
+                                ServerListItem(
+                                    row = row,
+                                    isSelected = row.guid == selectedGuid,
+                                    doubleColumnDisplay = false,
+                                    actions = actions
+                                )
+                            }
                         }
+                    } else {
+                        ServerListItem(
+                            row = row,
+                            isSelected = row.guid == selectedGuid,
+                            doubleColumnDisplay = false,
+                            actions = actions
+                        )
                     }
-                } else {
-                    ServerListItem(
-                        row = row,
-                        isSelected = row.guid == selectedGuid,
-                        doubleColumnDisplay = false,
-                        actions = actions
-                    )
                 }
-            }
             }
         }
     }
@@ -350,11 +351,7 @@ private fun ServerListItem(
     } else {
         null
     }
-    val shape = if (doubleColumnDisplay) {
-        androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
-    } else {
-        com.v2ray.md.ui.compose.LocalSegmentedItemShape.current
-    }
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
     
     Row(
         modifier = Modifier
