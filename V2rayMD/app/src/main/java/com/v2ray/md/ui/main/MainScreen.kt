@@ -157,7 +157,7 @@ fun MainScreen(
         ModalBottomSheet(
             onDismissRequest = { showMenuBottomSheet = false },
             sheetState = menuSheetState,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.7f)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             MainMenuSheetContent(
                 subscriptionCount = groups.size,

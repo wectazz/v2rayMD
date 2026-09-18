@@ -34,12 +34,11 @@ import androidx.graphics.shapes.toPath
 @Composable
 fun ExpressiveBackground(modifier: Modifier = Modifier) {
     val backgroundColor = MaterialTheme.colorScheme.surface
-    // Increase transparency since blur is removed to avoid sharp solid look.
     // Use primary, tertiary, secondary instead of their container variants
-    // so the monet colors pop more vividly in dark mode.
-    val blobColor1 = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-    val blobColor2 = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f)
-    val blobColor3 = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
+    // so the monet colors pop more vividly in dark mode. No alpha for full color.
+    val blobColor1 = MaterialTheme.colorScheme.primary
+    val blobColor2 = MaterialTheme.colorScheme.tertiary
+    val blobColor3 = MaterialTheme.colorScheme.secondary
 
     val infiniteTransition = rememberInfiniteTransition(label = "blobTransition")
     

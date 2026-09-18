@@ -1,5 +1,6 @@
 package com.v2ray.md.ui.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,6 +43,7 @@ fun GroupTabBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {

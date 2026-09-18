@@ -250,8 +250,7 @@ private fun ServerListPage(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScrollbar(listState),
-                contentPadding = contentPadding,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = contentPadding
             ) {
             lazySegmentColumn(
                 items = rows,
@@ -266,21 +265,23 @@ private fun ServerListPage(
                             scope = this,
                             isDragging = isDragging
                         ) {
-                            ServerItemRow(
+                            ServerListItem(
                                 row = row,
                                 isSelected = row.guid == selectedGuid,
+                                doubleColumnDisplay = false,
                                 actions = actions
                             )
                         }
                     }
                 } else {
-                        ServerItemRow(
-                            row = row,
-                            isSelected = row.guid == selectedGuid,
-                            actions = actions
-                        )
-                    }
+                    ServerListItem(
+                        row = row,
+                        isSelected = row.guid == selectedGuid,
+                        doubleColumnDisplay = false,
+                        actions = actions
+                    )
                 }
+            }
             }
         }
     }
@@ -350,9 +351,9 @@ private fun ServerListItem(
         null
     }
     val shape = if (doubleColumnDisplay) {
-        RoundedCornerShape(24.dp)
+        androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
     } else {
-        LocalSegmentedItemShape.current
+        com.v2ray.md.ui.compose.LocalSegmentedItemShape.current
     }
     
     Row(
@@ -360,8 +361,8 @@ private fun ServerListItem(
             .fillMaxWidth()
             .clip(shape)
             .background(
-                if (isSelected) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f)
-                else MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f)
+                if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                else MaterialTheme.colorScheme.surfaceContainer
             )
             .semantics {
                 if (selectedStateDescription != null) {
