@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Text
@@ -35,7 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.verticalScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,13 +59,13 @@ fun MainTopBar(
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             navigationIcon = {
-                FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onMenuClick) {
+                MorphFilledTonalIconButton(onClick = onMenuClick) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
             },
             actions = {
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showImportMenu = true }) {
+                    MorphFilledTonalIconButton(onClick = { showImportMenu = true }) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
                     DropdownMenu(
@@ -87,7 +85,7 @@ fun MainTopBar(
                     }
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showMenu = true }) {
+                    MorphFilledTonalIconButton(onClick = { showMenu = true }) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }
                     DropdownMenu(

@@ -25,7 +25,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +49,7 @@ import com.v2ray.md.dto.AppInfo
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
 
@@ -167,7 +166,7 @@ fun AppPickerScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
+                            MorphFilledTonalIconButton(onClick = {
                                 searchQuery = ""
                                 onSearch("")
                                 showSearch = false
@@ -178,7 +177,7 @@ fun AppPickerScreen(
                                 )
                             }
                         } else {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                            MorphFilledTonalIconButton(onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -188,7 +187,7 @@ fun AppPickerScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showSearch = true }) {
+                            MorphFilledTonalIconButton(onClick = { showSearch = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_search_24dp),
                                 contentDescription = stringResource(R.string.acc_search)
@@ -196,7 +195,7 @@ fun AppPickerScreen(
                         }
                     }
                     Box {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showMenu = true }) {
+                        MorphFilledTonalIconButton(onClick = { showMenu = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_more_vert_24dp),
                                 contentDescription = null

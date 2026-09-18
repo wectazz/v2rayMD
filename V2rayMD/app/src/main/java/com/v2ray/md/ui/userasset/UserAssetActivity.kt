@@ -32,11 +32,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -73,7 +71,8 @@ import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -293,7 +292,7 @@ internal fun UserAssetScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_user_asset_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                        MorphFilledTonalIconButton(onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -302,7 +301,7 @@ internal fun UserAssetScreen(
                     },
                     actions = {
                         Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showAddMenu = true }) {
+                            MorphFilledTonalIconButton(onClick = { showAddMenu = true }) {
                                 Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
                             }
                             DropdownMenu(
@@ -321,7 +320,7 @@ internal fun UserAssetScreen(
                                 }
                             }
                         }
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onDownloadClick) {
+                        MorphFilledTonalIconButton(onClick = onDownloadClick) {
                             Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
                         }
                     },
@@ -447,7 +446,7 @@ private fun UserAssetItem(
             )
         }
         if (showEditButton) {
-            IconButton(shapes = MorphIconButtonShapes, onClick = onEdit) {
+            MorphIconButton(onClick = onEdit) {
                 Icon(
                     painter = painterResource(R.drawable.ic_edit_24dp),
                     contentDescription = stringResource(R.string.acc_edit),
@@ -455,7 +454,7 @@ private fun UserAssetItem(
                 )
             }
         }
-        IconButton(shapes = MorphIconButtonShapes, onClick = onDeleteClick) {
+        MorphIconButton(onClick = onDeleteClick) {
             Icon(
                 painter = painterResource(R.drawable.ic_delete_24dp),
                 contentDescription = stringResource(R.string.acc_delete),

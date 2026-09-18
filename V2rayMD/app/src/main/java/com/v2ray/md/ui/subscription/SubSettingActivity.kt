@@ -24,11 +24,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +56,8 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.MmkvManager.rememberMmkvBool
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.SelectListDialog
@@ -147,7 +146,7 @@ fun SubSettingScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                        MorphFilledTonalIconButton(onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -155,10 +154,10 @@ fun SubSettingScreen(
                         }
                     },
                     actions = {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onAddClick) {
+                        MorphFilledTonalIconButton(onClick = onAddClick) {
                             Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_subscription))
                         }
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showUpdateDialog = true }) {
+                        MorphFilledTonalIconButton(onClick = { showUpdateDialog = true }) {
                             Icon(painterResource(R.drawable.ic_restore_24dp), contentDescription = stringResource(R.string.acc_update_subscriptions))
                         }
                     },
@@ -236,7 +235,7 @@ fun SubSettingScreen(
                             ) {
                                 Row {
                                     if (subCache.subscription.url.isNotEmpty()) {
-                                        IconButton(shapes = MorphIconButtonShapes, onClick = {
+                                        MorphIconButton(onClick = {
                                             shareTarget = Pair(subCache.guid, subCache.subscription.url)
                                         }) {
                                             Icon(
@@ -245,13 +244,13 @@ fun SubSettingScreen(
                                             )
                                         }
                                     }
-                                    IconButton(shapes = MorphIconButtonShapes, onClick = { onEditSub(subCache.guid) }) {
+                                    MorphIconButton(onClick = { onEditSub(subCache.guid) }) {
                                         Icon(
                                             painter = painterResource(R.drawable.ic_edit_24dp),
                                             contentDescription = stringResource(R.string.acc_edit)
                                         )
                                     }
-                                    IconButton(shapes = MorphIconButtonShapes, onClick = {
+                                    MorphIconButton(onClick = {
                                         if (confirmRemove) removeTarget = subCache.guid
                                         else onRemoveSub(subCache.guid)
                                     }) {
