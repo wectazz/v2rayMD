@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -99,30 +100,16 @@ private fun SettingsItemRow(
     } else {
         null
     }
-    if (shape != null) {
-        // Connected-segment mode: the group owns the shape, the row only fills it.
-        Surface(
-            modifier = modifier.fillMaxWidth(),
-            shape = shape,
-            color = containerColor
-        ) {
-            ListItem(
-                leadingContent = leadingContent,
-                trailingContent = trailing,
-                supportingContent = supportingContent,
-                verticalAlignment = Alignment.CenterVertically,
-                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                modifier = Modifier.then(
-                    if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
-                    else Modifier
-                )
-            ) {
-                Text(text = title, color = titleColor)
-            }
-        }
-        return
+    val position = LocalSegmentedPosition.current
+    
+    val shapes = if (position != null) {
+        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        ListItemDefaults.segmentedShapes(index = 0, count = 1)
     }
-    val shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    
+    val finalModifier = if (shape != null) modifier.fillMaxWidth() else modifier.fillMaxWidth()
+    
     if (onClick != null) {
         SegmentedListItem(
             onClick = onClick,
@@ -133,7 +120,7 @@ private fun SettingsItemRow(
             supportingContent = supportingContent,
             verticalAlignment = Alignment.CenterVertically,
             colors = colors,
-            modifier = modifier.fillMaxWidth()
+            modifier = finalModifier
         ) {
             Text(text = title)
         }
@@ -146,9 +133,9 @@ private fun SettingsItemRow(
             supportingContent = supportingContent,
             verticalAlignment = Alignment.CenterVertically,
             colors = colors,
-            modifier = modifier.fillMaxWidth()
+            modifier = finalModifier
         ) {
-            Text(text = title)
+            Text(text = title, color = titleColor)
         }
     }
 }
@@ -159,7 +146,8 @@ private fun TrailingValueText(text: String) {
         text = text,
         style = MaterialTheme.typography.bodyLarge,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.widthIn(max = 160.dp)
     )
 }
 

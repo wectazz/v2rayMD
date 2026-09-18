@@ -41,9 +41,15 @@ fun FormTextField(    label: String,
     placeholder: String? = null,
     maxLines: Int = 5,
 ) {
+    val position = LocalSegmentedPosition.current
+    val shapes = if (position != null) {
+        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    }
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = shapes.shape,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Box(
@@ -84,9 +90,15 @@ fun FormDropdownField(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val position = LocalSegmentedPosition.current
+    val shapes = if (position != null) {
+        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    }
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = shapes.shape,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         ExposedDropdownMenuBox(
@@ -153,13 +165,11 @@ fun FormDropdownField(
 @Composable
 fun FormCard(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable SegmentedColumnScope.() -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+    SegmentedColumn(
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         content = content
     )
 }

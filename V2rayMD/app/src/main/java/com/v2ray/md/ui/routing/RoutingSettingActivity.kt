@@ -78,6 +78,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import com.v2ray.md.ui.compose.SegmentedPosition
+import com.v2ray.md.ui.compose.LocalSegmentedPosition
+import com.v2ray.md.ui.compose.SegmentedColumn
+import com.v2ray.md.ui.theme.LocalDarkTheme
+import androidx.compose.material3.ListItemDefaults
 
 private enum class RoutingMenuAction(@StringRes val labelRes: Int) {
     ImportPredefined(R.string.routing_settings_import_predefined_rulesets),
@@ -285,17 +290,20 @@ fun RoutingSettingScreen(
                 top = 8.dp,
                 end = 16.dp,
                 bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            )
         ) {
             item(key = "domain_strategy") {
-                SettingsListItem(
-                    title = stringResource(R.string.routing_settings_domain_strategy),
-                    entries = domainStrategies,
-                    values = domainStrategies,
-                    selectedValue = domainStrategy,
-                    onSelected = { onDomainStrategySelected(it) }
-                )
+                SegmentedColumn {
+                    item {
+                        SettingsListItem(
+                            title = stringResource(R.string.routing_settings_domain_strategy),
+                            entries = domainStrategies,
+                            values = domainStrategies,
+                            selectedValue = domainStrategy,
+                            onSelected = { onDomainStrategySelected(it) }
+                        )
+                    }
+                }
             }
             item {
                 Text(
@@ -310,18 +318,22 @@ fun RoutingSettingScreen(
                 key = { _, ruleset -> ruleset.id }
             ) { index, ruleset ->
                 ReorderableItem(reorderableState, key = ruleset.id) { isDragging ->
-                    ReorderableListItem(
-                        scope = this,
-                        isDragging = isDragging
+                    CompositionLocalProvider(
+                        LocalSegmentedPosition provides SegmentedPosition(index, rulesets.size)
                     ) {
-                        RoutingRulesetItem(
-                            ruleset = ruleset,
-                            onEdit = { onEditRule(index) },
-                            onEnabledChange = { checked ->
-                                val updated = ruleset.copy(enabled = checked)
-                                viewModel.update(index, updated)
-                            }
-                        )
+                        ReorderableListItem(
+                            scope = this,
+                            isDragging = isDragging
+                        ) {
+                            RoutingRulesetItem(
+                                ruleset = ruleset,
+                                onEdit = { onEditRule(index) },
+                                onEnabledChange = { checked ->
+                                    val updated = ruleset.copy(enabled = checked)
+                                    viewModel.update(index, updated)
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -349,11 +361,21 @@ private fun RoutingRulesetItem(
     onEdit: () -> Unit,
     onEnabledChange: (Boolean) -> Unit
 ) {
+    val position = LocalSegmentedPosition.current
+    val shapes = if (position != null) {
+        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    }
+    
+    val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+    else MaterialTheme.colorScheme.surfaceContainerHigh
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clip(shapes.shape)
+            .background(containerColor)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

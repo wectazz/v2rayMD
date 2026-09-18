@@ -148,9 +148,11 @@ class SegmentedColumnScope {
 }
 
 /**
- * Shape provided to the content of the currently composed [SegmentedColumn] item.
+ * Position provided to the content of the currently composed [SegmentedColumn] item.
  * Read it to render containers that morph together with the group.
  */
+data class SegmentedPosition(val index: Int, val count: Int)
+val LocalSegmentedPosition = compositionLocalOf<SegmentedPosition?> { null }
 val LocalSegmentedItemShape = compositionLocalOf<Shape> { RectangleShape }
 
 /**
@@ -289,13 +291,14 @@ fun SegmentedColumn(
                                     alpha = (currentProgress * 1.5f).coerceIn(0f, 1f)
                                 }
                         ) {
-                            CompositionLocalProvider(LocalSegmentedItemShape provides shape) {
+                            val position = SegmentedPosition(index, allItems.size)
+                            CompositionLocalProvider(
+                                LocalSegmentedItemShape provides shape,
+                                LocalSegmentedPosition provides position
+                            ) {
                                 Column(
                                     modifier = Modifier.padding(
-                                        top = max(
-                                            currentTopPadding,
-                                            0.dp
-                                        )
+                                        top = max(currentTopPadding, 0.dp)
                                     )
                                 ) {
                                     itemData.content(shape)

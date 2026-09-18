@@ -20,26 +20,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.handler.MmkvManager
@@ -167,11 +169,16 @@ fun TaskerScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            SettingsSwitchItem(
-                title = stringResource(R.string.tasker_start_service),
-                checked = switchState.value,
-                onCheckedChange = { switchState.value = it }
-            )
+            SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                item { shape ->
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.tasker_start_service),
+                        checked = switchState.value,
+                        onCheckedChange = { switchState.value = it },
+                        shape = shape
+                    )
+                }
+            }
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -183,11 +190,12 @@ fun TaskerScreen(
                     end = 16.dp,
                     bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
                 ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(items, key = { _, item -> item.guid }) { index, item ->
+                    val position = SegmentedPosition(index, items.size)
+                    val shapes = ListItemDefaults.segmentedShapes(index = index, count = items.size)
                     Surface(
-                        shape = RoundedCornerShape(24.dp),
+                        shape = shapes.shape,
                         color = MaterialTheme.colorScheme.surfaceContainer,
                         modifier = Modifier.fillMaxWidth()
                     ) {

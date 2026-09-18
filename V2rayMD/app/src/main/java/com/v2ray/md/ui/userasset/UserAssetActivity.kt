@@ -97,6 +97,12 @@ private enum class AddAssetMenuAction(@StringRes val labelRes: Int) {
 
 private data class AssetDeleteTarget(val guid: String, val name: String)
 
+import com.v2ray.md.ui.compose.SegmentedPosition
+import com.v2ray.md.ui.compose.LocalSegmentedPosition
+import com.v2ray.md.ui.compose.SegmentedColumn
+import com.v2ray.md.ui.theme.LocalDarkTheme
+import androidx.compose.material3.ListItemDefaults
+
 class UserAssetActivity : HelperBaseComponentActivity() {
 
     private val viewModel: UserAssetViewModel by viewModels()
@@ -350,8 +356,7 @@ internal fun UserAssetScreen(
                 top = 8.dp,
                 end = 16.dp,
                 bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            )
         ) {
             item(key = "geo_source") {
                 SegmentedColumn {
@@ -375,15 +380,19 @@ internal fun UserAssetScreen(
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            itemsIndexed(items = uiState.assets, key = { _, item -> item.guid }) { _, item ->
-                UserAssetItem(
-                    item = item,
-                    fileMetadata = uiState.fileMetadata[item.guid],
-                    onEdit = { onEditAsset(item.guid) },
-                    onDeleteClick = {
-                        deleteTarget = AssetDeleteTarget(item.guid, item.assetUrl.remarks)
-                    }
-                )
+            itemsIndexed(items = uiState.assets, key = { _, item -> item.guid }) { index, item ->
+                CompositionLocalProvider(
+                    LocalSegmentedPosition provides SegmentedPosition(index, uiState.assets.size)
+                ) {
+                    UserAssetItem(
+                        item = item,
+                        fileMetadata = uiState.fileMetadata[item.guid],
+                        onEdit = { onEditAsset(item.guid) },
+                        onDeleteClick = {
+                            deleteTarget = AssetDeleteTarget(item.guid, item.assetUrl.remarks)
+                        }
+                    )
+                }
             }
         }
     }
@@ -421,11 +430,21 @@ private fun UserAssetItem(
     }
     val showEditButton = item.assetUrl.locked != true && item.assetUrl.url != "file"
 
+    val position = LocalSegmentedPosition.current
+    val shapes = if (position != null) {
+        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    }
+    
+    val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+    else MaterialTheme.colorScheme.surfaceContainerHigh
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clip(shapes.shape)
+            .background(containerColor)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
