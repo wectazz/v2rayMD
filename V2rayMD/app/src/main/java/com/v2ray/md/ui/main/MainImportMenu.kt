@@ -72,14 +72,18 @@ internal fun serverMenuActions(
 }
 
 @Composable
-fun ImportMenuContent(onAction: (MainAction) -> Unit) = AppDropdownMenuItems(
+fun ImportMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onAction: (MainAction) -> Unit) = com.v2ray.md.ui.compose.AppBottomSheetMenu(
+    expanded = expanded,
+    onDismissRequest = onDismissRequest,
     items = ImportMenuAction.entries,
     labelRes = { it.labelRes },
     onSelected = { onAction(it.action) }
 )
 
 @Composable
-fun MoreMenuContent(onSelected: (MainMoreMenuAction) -> Unit) = AppDropdownMenuItems(
+fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected: (MainMoreMenuAction) -> Unit) = com.v2ray.md.ui.compose.AppBottomSheetMenu(
+    expanded = expanded,
+    onDismissRequest = onDismissRequest,
     items = MainMoreMenuAction.entries,
     labelRes = { it.labelRes },
     onSelected = onSelected

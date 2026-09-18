@@ -314,13 +314,12 @@ internal fun UserAssetScreen(
                             MorphFilledTonalIconButton( onClick = { showAddMenu = true }) {
                                 Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
                             }
-                            DropdownMenu(
+                            com.v2ray.md.ui.compose.AppBottomSheetMenu(
                                 expanded = showAddMenu,
                                 onDismissRequest = { showAddMenu = false },
-                                offset = DpOffset(x = 0.dp, y = 0.dp),
-                                modifier = Modifier.wrapContentWidth(Alignment.End)
-                            ) {
-                                AppDropdownMenuItems(AddAssetMenuAction.entries, { it.labelRes }) { action ->
+                                items = AddAssetMenuAction.entries,
+                                labelRes = { it.labelRes },
+                                onSelected = { action ->
                                     showAddMenu = false
                                     when (action) {
                                         AddAssetMenuAction.File -> onAddFileClick()
@@ -328,7 +327,7 @@ internal fun UserAssetScreen(
                                         AddAssetMenuAction.QRCode -> onAddQrcodeClick()
                                     }
                                 }
-                            }
+                            )
                         }
                         MorphFilledTonalIconButton( onClick = onDownloadClick, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))

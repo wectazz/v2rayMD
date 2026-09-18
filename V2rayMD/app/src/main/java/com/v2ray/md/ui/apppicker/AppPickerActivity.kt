@@ -204,19 +204,19 @@ fun AppPickerScreen(
                                 contentDescription = null
                             )
                         }
-                        DropdownMenu(
+                        com.v2ray.md.ui.compose.AppBottomSheetMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ) {
-                            AppDropdownMenuItems(AppPickerMenuAction.entries, { it.labelRes }) { action ->
+                            items = AppPickerMenuAction.entries,
+                            labelRes = { it.labelRes },
+                            onSelected = { action ->
                                 showMenu = false
                                 when (action) {
                                     AppPickerMenuAction.SelectAll -> onSelectAll()
                                     AppPickerMenuAction.InvertSelection -> onInvertSelection()
                                 }
                             }
-                        }
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior

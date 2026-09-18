@@ -83,21 +83,14 @@ fun MainTopBar(
                     ) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
-                    DropdownMenu(
+                    ImportMenuContent(
                         expanded = showImportMenu,
                         onDismissRequest = { showImportMenu = false },
-                        scrollState = importMenuScrollState,
-                        modifier = Modifier
-                            .heightIn(max = maxMenuHeight)
-                            .verticalScrollbar(importMenuScrollState)
-                    ) {
-                        ImportMenuContent(
-                            onAction = { action ->
-                                showImportMenu = false
-                                onAction(action)
-                            }
-                        )
-                    }
+                        onAction = { action ->
+                            showImportMenu = false
+                            onAction(action)
+                        }
+                    )
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                     MorphFilledTonalIconButton(
@@ -106,19 +99,14 @@ fun MainTopBar(
                     ) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }
-                    DropdownMenu(
+                    MoreMenuContent(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
-                        scrollState = moreMenuScrollState,
-                        modifier = Modifier
-                            .heightIn(max = maxMenuHeight)
-                            .verticalScrollbar(moreMenuScrollState)
-                    ) {
-                        MoreMenuContent { action ->
+                        onSelected = { action ->
                             showMenu = false
                             onMoreMenuAction(action)
                         }
-                    }
+                    )
                 }
             },
             scrollBehavior = scrollBehavior

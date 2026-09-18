@@ -205,11 +205,12 @@ fun PerAppProxyScreen(
                                     contentDescription = stringResource(R.string.acc_more)
                                 )
                             }
-                            DropdownMenu(
+                            com.v2ray.md.ui.compose.AppBottomSheetMenu(
                                 expanded = showMenu,
                                 onDismissRequest = { showMenu = false },
-                            ) {
-                                AppDropdownMenuItems(PerAppMenuAction.entries, { it.labelRes }) { action ->
+                                items = PerAppMenuAction.entries,
+                                labelRes = { it.labelRes },
+                                onSelected = { action ->
                                     showMenu = false
                                     when (action) {
                                         PerAppMenuAction.SelectAll -> onSelectAll()
@@ -219,7 +220,7 @@ fun PerAppProxyScreen(
                                         PerAppMenuAction.ExportSelection -> onExportProxyApp()
                                     }
                                 }
-                            }
+                            )
                         }
                     },
                     scrollBehavior = scrollBehavior

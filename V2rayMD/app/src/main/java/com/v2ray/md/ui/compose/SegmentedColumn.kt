@@ -214,8 +214,8 @@ fun SegmentedColumn(
                         val isLast =
                             index == lastVisibleIndex || (index == allItems.lastIndex && !itemData.visible)
 
-                        val baseTopRadius = if (isFirst) 16.dp else 5.dp
-                        val baseBottomRadius = if (isLast) 16.dp else 5.dp
+                        val baseTopRadius = if (isFirst) 28.dp else 4.dp
+                        val baseBottomRadius = if (isLast) 28.dp else 4.dp
 
                         // Blurred backgrounds must be rendered as one continuous group. Keep
                         // only the outer corners rounded, regardless of item-level overrides.

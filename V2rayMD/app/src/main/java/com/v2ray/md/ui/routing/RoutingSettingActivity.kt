@@ -260,11 +260,12 @@ fun RoutingSettingScreen(
                                 contentDescription = stringResource(R.string.acc_more)
                             )
                         }
-                        DropdownMenu(
+                        com.v2ray.md.ui.compose.AppBottomSheetMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                        ) {
-                            AppDropdownMenuItems(RoutingMenuAction.entries, { it.labelRes }) { action ->
+                            items = RoutingMenuAction.entries,
+                            labelRes = { it.labelRes },
+                            onSelected = { action ->
                                 showMenu = false
                                 when (action) {
                                     RoutingMenuAction.ImportPredefined -> showPresetDialog = true
@@ -273,7 +274,7 @@ fun RoutingSettingScreen(
                                     RoutingMenuAction.ExportClipboard -> onExportClipboard()
                                 }
                             }
-                        }
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior
