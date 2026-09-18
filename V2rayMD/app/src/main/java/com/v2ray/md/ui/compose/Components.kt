@@ -352,9 +352,15 @@ fun MorphIconButton(
         label = "shape"
     )
     val shape = RoundedCornerShape(radius)
+    val scope = rememberCoroutineScope()
     
     IconButton(
-        onClick = onClick,
+        onClick = {
+            scope.launch {
+                delay(50)
+                onClick()
+            }
+        },
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,
@@ -381,9 +387,15 @@ fun MorphFilledTonalIconButton(
         label = "shape"
     )
     val shape = RoundedCornerShape(radius)
+    val scope = rememberCoroutineScope()
     
     FilledTonalIconButton(
-        onClick = onClick,
+        onClick = {
+            scope.launch {
+                delay(50)
+                onClick()
+            }
+        },
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,

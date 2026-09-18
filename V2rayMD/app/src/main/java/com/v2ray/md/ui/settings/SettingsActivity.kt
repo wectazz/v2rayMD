@@ -958,7 +958,7 @@ fun SettingsScreen(
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             shape = shape,
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh
+                            color = MaterialTheme.colorScheme.surfaceContainer
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
