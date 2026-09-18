@@ -192,7 +192,7 @@ fun RoutingEditScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.routing_settings_rule_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick) {
+                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

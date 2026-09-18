@@ -143,7 +143,7 @@ fun TaskerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text("", modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick) {
+                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

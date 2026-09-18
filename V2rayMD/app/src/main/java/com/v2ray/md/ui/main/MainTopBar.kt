@@ -59,7 +59,7 @@ fun MainTopBar(
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             navigationIcon = {
-                MorphFilledTonalIconButton(onClick = onMenuClick) {
+                MorphFilledTonalIconButton(onClick = onMenuClick, modifier = Modifier.padding(start = 8.dp)) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
             },

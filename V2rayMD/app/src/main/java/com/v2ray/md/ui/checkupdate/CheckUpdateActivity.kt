@@ -87,7 +87,7 @@ fun CheckUpdateScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.update_check_for_update), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        MorphFilledTonalIconButton(onClick = onBackClick) {
+                        MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)

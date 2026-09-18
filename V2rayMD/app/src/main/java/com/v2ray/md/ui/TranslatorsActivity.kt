@@ -71,7 +71,7 @@ fun TranslatorsScreen(onBackClick: () -> Unit) {
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_translators), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick) {
+                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

@@ -252,7 +252,7 @@ fun ServerGroupScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(EConfigType.POLICYGROUP.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick) {
+                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

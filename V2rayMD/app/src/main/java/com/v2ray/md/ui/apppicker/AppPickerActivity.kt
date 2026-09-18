@@ -170,14 +170,16 @@ fun AppPickerScreen(
                                 searchQuery = ""
                                 onSearch("")
                                 showSearch = false
-                            }) {
+                            },
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
                                 )
                             }
                         } else {
-                            MorphFilledTonalIconButton(onClick = onBackClick) {
+                            MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)

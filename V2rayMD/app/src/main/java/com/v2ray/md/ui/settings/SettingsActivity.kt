@@ -1039,7 +1039,7 @@ fun SettingsScreen(
                         )
                     },
                     navigationIcon = {
-                        MorphFilledTonalIconButton(onClick = { if (openSectionRes != null) openSectionRes = null else onBackClick() }) {
+                        MorphFilledTonalIconButton(onClick = { if (openSectionRes != null) openSectionRes = null else onBackClick() }, modifier = Modifier.padding(start = 8.dp)) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)

@@ -98,7 +98,7 @@ fun AppTopBar(
                 if (navigationIcon != null) {
                     navigationIcon()
                 } else {
-                    MorphIconButton(onClick = if (isSearchActive) onSearchClose else onBackClick) {
+                    MorphIconButton(onClick = if (isSearchActive) onSearchClose else onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

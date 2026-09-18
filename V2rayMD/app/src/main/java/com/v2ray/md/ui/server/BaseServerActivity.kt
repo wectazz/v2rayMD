@@ -462,7 +462,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                 LargeFlexibleTopAppBar(
                     title = { Text(title, modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        MorphFilledTonalIconButton(onClick = { finish() }) {
+                        MorphFilledTonalIconButton(onClick = { finish() }, modifier = Modifier.padding(start = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
