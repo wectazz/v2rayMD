@@ -343,35 +343,21 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
+    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
         label = "shape"
     )
     val shape = RoundedCornerShape(radius)
-    val pressModifier = Modifier.pointerInput(Unit) {
-        awaitPointerEventScope {
-            while (true) {
-                awaitFirstDown(requireUnconsumed = false)
-                isPressed = true
-                waitForUpOrCancellation()
-                isPressed = false
-            }
-        }
-    }
-    
-    val scope = rememberCoroutineScope()
     
     IconButton(
-        onClick = {
-            scope.launch {
-                delay(50)
-                onClick()
-            }
-        },
-        modifier = modifier.then(if (enabled) pressModifier else Modifier),
+        onClick = onClick,
+        modifier = modifier,
         enabled = enabled,
+        interactionSource = interactionSource,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()
@@ -386,35 +372,21 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
+    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
         label = "shape"
     )
     val shape = RoundedCornerShape(radius)
-    val pressModifier = Modifier.pointerInput(Unit) {
-        awaitPointerEventScope {
-            while (true) {
-                awaitFirstDown(requireUnconsumed = false)
-                isPressed = true
-                waitForUpOrCancellation()
-                isPressed = false
-            }
-        }
-    }
-    
-    val scope = rememberCoroutineScope()
     
     FilledTonalIconButton(
-        onClick = {
-            scope.launch {
-                delay(50)
-                onClick()
-            }
-        },
-        modifier = modifier.then(if (enabled) pressModifier else Modifier),
+        onClick = onClick,
+        modifier = modifier,
         enabled = enabled,
+        interactionSource = interactionSource,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()

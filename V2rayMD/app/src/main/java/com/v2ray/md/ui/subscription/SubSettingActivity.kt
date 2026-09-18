@@ -338,7 +338,10 @@ fun SubSettingScreen(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             text = {
                 val scrollState = rememberScrollState()
-                SegmentedColumn(modifier = Modifier.verticalScroll(scrollState)) {
+                SegmentedColumn(modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .com.v2ray.md.ui.compose.verticalScrollbar(scrollState)
+                ) {
                     item { shape ->
                         SettingsSwitchItem(
                             title = stringResource(R.string.title_sub_update),

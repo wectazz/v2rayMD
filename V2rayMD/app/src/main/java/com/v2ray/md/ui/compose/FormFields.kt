@@ -1,12 +1,10 @@
 package com.v2ray.md.ui.compose
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,9 +29,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.v2ray.md.ui.compose.verticalScrollbar
 
 @Composable
-fun FormTextField(    label: String,
+fun FormTextField(
+    label: String,
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -42,34 +42,22 @@ fun FormTextField(    label: String,
     placeholder: String? = null,
     maxLines: Int = 5,
 ) {
-    val position = LocalSegmentedPosition.current
-    val shapes = if (position != null) {
-        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
-    } else {
-        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = 0, count = 1)
-    }
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = shapes.shape,
-        color = MaterialTheme.colorScheme.surfaceContainer
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp)
-        ) {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                label = { Text(label) },
-                placeholder = placeholder?.let { { Text(it) } },
-                singleLine = false,
-                maxLines = maxLines,
-                enabled = enabled,
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            placeholder = placeholder?.let { { Text(it) } },
+            singleLine = false,
+            maxLines = maxLines,
+            enabled = enabled,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -91,68 +79,56 @@ fun FormDropdownField(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val position = LocalSegmentedPosition.current
-    val shapes = if (position != null) {
-        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
-    } else {
-        androidx.compose.material3.ListItemDefaults.segmentedShapes(index = 0, count = 1)
-    }
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = shapes.shape,
-        color = MaterialTheme.colorScheme.surfaceContainer
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { newExpanded ->
+            if (!enabled) return@ExposedDropdownMenuBox
+            if (!editable && newExpanded) {
+                keyboardController?.hide()
+            }
+            expanded = newExpanded
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { newExpanded ->
-                if (!enabled) return@ExposedDropdownMenuBox
-                if (!editable && newExpanded) {
-                    keyboardController?.hide()
-                }
-                expanded = newExpanded
-            },
+        OutlinedTextField(
+            value = value,
+            onValueChange = { if (editable) onValueChange(it) },
+            readOnly = !editable,
+            enabled = enabled,
+            label = { Text(label) },
+            placeholder = { if (placeholder != null) Text(placeholder) },
+            supportingText = supportingText?.let { { Text(it) } },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
+                .menuAnchor(
+                    type = if (editable) ExposedDropdownMenuAnchorType.PrimaryEditable
+                    else ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                )
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp)
-        ) {
-            OutlinedTextField(
-                value = value,
-                onValueChange = { if (editable) onValueChange(it) },
-                readOnly = !editable,
-                enabled = enabled,
-                label = { Text(label) },
-                placeholder = { if (placeholder != null) Text(placeholder) },
-                supportingText = supportingText?.let { { Text(it) } },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier
-                    .menuAnchor(
-                        type = if (editable) ExposedDropdownMenuAnchorType.PrimaryEditable
-                        else ExposedDropdownMenuAnchorType.PrimaryNotEditable
-                    )
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (!editable && focusState.isFocused) {
-                            keyboardController?.hide()
-                        }
+                .onFocusChanged { focusState ->
+                    if (!editable && focusState.isFocused) {
+                        keyboardController?.hide()
                     }
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.verticalScrollbar(menuScrollState),
-                scrollState = menuScrollState,
-                containerColor = MaterialTheme.colorScheme.surface
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            onValueChange(option)
-                            expanded = false
-                            focusManager.clearFocus()
-                        }
-                    )
                 }
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.verticalScrollbar(menuScrollState),
+            scrollState = menuScrollState,
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onValueChange(option)
+                        expanded = false
+                        focusManager.clearFocus()
+                    }
+                )
             }
         }
     }
@@ -166,11 +142,16 @@ fun FormDropdownField(
 @Composable
 fun FormCard(
     modifier: Modifier = Modifier,
-    content: SegmentedColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    SegmentedColumn(
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        content = content
-    )
+    Surface(
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            content = content
+        )
+    }
 }

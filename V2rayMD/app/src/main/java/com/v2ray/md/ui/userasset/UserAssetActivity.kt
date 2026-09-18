@@ -84,7 +84,7 @@ import com.v2ray.md.ui.compose.LocalSegmentedPosition
 import com.v2ray.md.ui.compose.SegmentedColumn
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.CompositionLocalProvider
-import com.v2ray.md.ui.theme.LocalDarkTheme
+import com.v2ray.md.ui.compose.LocalDarkTheme
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.Dispatchers
