@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -62,6 +64,10 @@ fun MainTopBar(
             title = {
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent
+            ),
             navigationIcon = {
                 MorphFilledTonalIconButton(
                     onClick = onMenuClick,
