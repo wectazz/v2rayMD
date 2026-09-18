@@ -213,6 +213,12 @@
     <string name="title_pref_fake_dns_enabled">Использовать виртуальный DNS (FakeDNS)</string>
     <string name="summary_pref_fake_dns_enabled">FakeDNS возвращает виртуальные IP-адреса при разрешении доменов (быстрее, но может не работать с некоторыми приложениями).</string>
 
+    <string name="title_pref_auto_restart">Авто-перезапуск при смене сети</string>
+    <string name="summary_pref_auto_restart">Автоматически перезапускать службу при изменении состояния сети</string>
+
+    <string name="title_pref_send_hwid">Отправлять HWID при обновлении</string>
+    <string name="summary_pref_send_hwid">Отправлять Android ID устройства в заголовке X-HWID при обновлении подписок</string>
+
     <string name="title_pref_ipv6_enabled">Включить IPv6</string>
     <string name="summary_pref_ipv6_enabled">Добавить IPv6-адрес и маршруты в VPN-интерфейс</string>
 

@@ -414,6 +414,14 @@ object SettingsManager {
         return MmkvManager.decodeSettingsBool(AppConfig.PREF_USE_HEV_TUNNEL, true)
     }
 
+    fun isSendHwidEnabled(): Boolean {
+        return MmkvManager.decodeSettingsBool(AppConfig.PREF_SEND_HWID, false)
+    }
+
+    fun getPreferIpv6(): Boolean {
+        return MmkvManager.decodeSettingsBool(AppConfig.PREF_USE_HEV_TUNNEL, true)
+    }
+
     /**
      * Check if VPN mode is enabled.
      * @return True if VPN mode is enabled, false otherwise.

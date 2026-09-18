@@ -161,6 +161,9 @@ object HttpUtil {
                 .get()
                 .header("User-agent", finalUserAgent)
                 .header("Connection", "close")
+            if (!request.hwid.isNullOrBlank()) {
+                requestBuilder.header("X-HWID", request.hwid)
+            }
 
             applyEmbeddedBasicAuthHeader(currentUrl, requestBuilder)
 

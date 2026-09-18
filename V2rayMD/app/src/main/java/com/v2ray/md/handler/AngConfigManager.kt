@@ -487,6 +487,13 @@ object AngConfigManager {
             val requestHeaders = it.subscription.requestHeaders
             val proxyUsername = SettingsManager.getSocksUsername()
             val proxyPassword = SettingsManager.getSocksPassword()
+            
+            val hwid = if (SettingsManager.isSendHwidEnabled()) {
+                android.provider.Settings.Secure.getString(
+                    com.v2ray.md.AngApplication.application.contentResolver,
+                    android.provider.Settings.Secure.ANDROID_ID
+                )
+            } else null
 
             var configText = try {
                 val httpPort = SettingsManager.getHttpPort()
@@ -498,7 +505,8 @@ object AngConfigManager {
                         timeout = 15000,
                         httpPort = httpPort,
                         proxyUsername = proxyUsername,
-                        proxyPassword = proxyPassword
+                        proxyPassword = proxyPassword,
+                        hwid = hwid
                     )
                 )
             } catch (e: Exception) {
@@ -511,7 +519,8 @@ object AngConfigManager {
                         UrlContentRequest(
                             url = url,
                             userAgent = userAgent,
-                            requestHeaders = requestHeaders
+                            requestHeaders = requestHeaders,
+                            hwid = hwid
                         )
                     )
                 } catch (e: Exception) {
