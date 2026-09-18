@@ -1,4 +1,6 @@
-package com.v2ray.md.ui.logcat
+﻿package com.v2ray.md.ui.logcat
+
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 import android.content.ClipData
 import android.content.Intent
@@ -26,7 +28,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -228,7 +231,7 @@ fun LogcatScreen(
                     enter = expandVertically(),
                     exit = shrinkVertically()
                 ) {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    LinearWavyProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
             }
         },

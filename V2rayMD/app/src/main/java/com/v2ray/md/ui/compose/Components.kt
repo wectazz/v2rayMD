@@ -34,7 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -70,7 +70,7 @@ import com.v2ray.md.R
 import com.v2ray.md.util.AppIconFetcher
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppTopBar(
     title: String,
@@ -123,7 +123,7 @@ fun AppTopBar(
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            LinearWavyProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -365,31 +365,38 @@ fun SingleSelectConnectedRow(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
-        androidx.compose.material3.ButtonGroup(
-            overflowIndicator = {}
-        ) {
-            for (index in options.indices) {
-                val label = options[index]
-                val selected = index == selectedIndex
-                ToggleButton(
-                    checked = selected,
-                    onCheckedChange = { onSelect(index) }
-                ) {
-                    if (selected) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_action_done),
-                            contentDescription = null
-                        )
-                        Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+    ) {
+        options.forEachIndexed { index, label ->
+            val selected = index == selectedIndex
+            ToggleButton(
+                checked = selected,
+                onCheckedChange = { onSelect(index) },
+                shapes = if (options.size == 1) {
+                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
+                } else {
+                    when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     }
-                    Text(
-                        text = label,
-                        maxLines = 1,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis
-                    )
                 }
+            ) {
+                if (selected) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_action_done),
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+                }
+                Text(
+                    text = label,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
