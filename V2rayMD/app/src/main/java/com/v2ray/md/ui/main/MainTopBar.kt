@@ -77,7 +77,8 @@ fun MainTopBar(
                     FilledTonalIconButton(
                         onClick = { showImportMenu = true },
                         shape = com.v2ray.md.ui.compose.getInstantMorphShape(addInteractionSource),
-                        interactionSource = addInteractionSource
+                        interactionSource = addInteractionSource,
+                        modifier = Modifier.padding(end = 4.dp)
                     ) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
@@ -102,7 +103,8 @@ fun MainTopBar(
                     FilledTonalIconButton(
                         onClick = { showMenu = true },
                         shape = com.v2ray.md.ui.compose.getInstantMorphShape(moreInteractionSource),
-                        interactionSource = moreInteractionSource
+                        interactionSource = moreInteractionSource,
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }

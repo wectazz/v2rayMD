@@ -2,6 +2,8 @@ package com.v2ray.md.ui.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -152,11 +154,10 @@ fun SearchInputField(
         )
         if (query.isNotEmpty()) {
             val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-            val isPressed by interactionSource.collectIsPressedAsState()
-            val currentShape = if (isPressed) RoundedCornerShape(12.dp) else CircleShape
+            val currentShape = getInstantMorphShape(interactionSource)
             IconButton(
                 onClick = { onQueryChange("") },
-                modifier = Modifier.clip(currentShape),
+                modifier = Modifier.padding(end = 8.dp).clip(currentShape),
                 interactionSource = interactionSource
             ) {
                 Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
@@ -342,7 +343,12 @@ val MorphIconButtonShapes = IconButtonShapes(
 @Composable
 fun getInstantMorphShape(interactionSource: androidx.compose.foundation.interaction.InteractionSource): androidx.compose.ui.graphics.Shape {
     val isPressed by interactionSource.collectIsPressedAsState()
-    return if (isPressed) RoundedCornerShape(12.dp) else CircleShape
+    val radius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "shape"
+    )
+    return RoundedCornerShape(radius)
 }
 
 /**
@@ -359,39 +365,28 @@ fun SingleSelectConnectedRow(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
-    ) {
-        options.forEachIndexed { index, label ->
-            val selected = index == selectedIndex
-            ToggleButton(
-                checked = selected,
-                onCheckedChange = { onSelect(index) },
-                shapes = if (options.size == 1) {
-                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
-                } else {
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+    Row(modifier = modifier) {
+        androidx.compose.material3.ButtonGroup {
+            options.forEachIndexed { index, label ->
+                val selected = index == selectedIndex
+                ToggleButton(
+                    checked = selected,
+                    onCheckedChange = { onSelect(index) }
+                ) {
+                    if (selected) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_action_done),
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
                     }
-                }
-                // No explicit role: ToggleButton already exposes Checkbox semantics.
-            ) {
-                if (selected) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_action_done),
-                        contentDescription = null
+                    Text(
+                        text = label,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
                 }
-                Text(
-                    text = label,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Ellipsis
-                )
             }
         }
     }

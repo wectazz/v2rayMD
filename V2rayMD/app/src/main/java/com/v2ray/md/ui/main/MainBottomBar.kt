@@ -65,17 +65,19 @@ fun MainConnectFab(
     isRunning: Boolean,
     onAction: (MainAction) -> Unit
 ) {
-    ToggleButton(
+    androidx.compose.material3.FilledIconToggleButton(
         checked = isRunning,
         onCheckedChange = { onAction(MainAction.ToggleService) },
-        modifier = Modifier.padding(
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        )
+        modifier = Modifier
+            .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+            .size(72.dp),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp)
     ) {
         Icon(
             painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
             else painterResource(R.drawable.ic_play_24dp),
-            contentDescription = stringResource(if (isRunning) R.string.acc_stop else R.string.acc_start)
+            contentDescription = stringResource(if (isRunning) R.string.acc_stop else R.string.acc_start),
+            modifier = Modifier.size(36.dp)
         )
     }
 }
