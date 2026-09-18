@@ -453,27 +453,26 @@ fun SingleSelectButtonGroup(
     modifier: Modifier = Modifier
 ) {
     androidx.compose.material3.ButtonGroup(
-        modifier = modifier
+        modifier = modifier,
+        overflowIndicator = {}
     ) {
         options.forEachIndexed { index, label ->
             val selected = index == selectedIndex
-            ToggleButton(
+            toggleableItem(
                 checked = selected,
-                onCheckedChange = { onSelect(index) }
-            ) {
-                if (selected) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_action_done),
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+                label = label,
+                onCheckedChange = { onSelect(index) },
+                icon = if (selected) {
+                    {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_action_done),
+                            contentDescription = null
+                        )
+                    }
+                } else {
+                    null
                 }
-                Text(
-                    text = label,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            )
         }
     }
 }
