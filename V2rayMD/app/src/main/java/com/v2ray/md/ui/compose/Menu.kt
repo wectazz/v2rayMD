@@ -47,20 +47,23 @@ fun <T> AppBottomSheetMenu(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState
         ) {
-            items.forEach { item ->
-                ListItem(
-                    headlineContent = { Text(stringResource(labelRes(item))) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onDismissRequest()
-                                    onSelected(item)
+            SegmentedColumn {
+                items.forEach { item ->
+                    item { shape ->
+                        SettingsMenuItem(
+                            title = stringResource(labelRes(item)),
+                            onClick = {
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onDismissRequest()
+                                        onSelected(item)
+                                    }
                                 }
-                            }
-                        }
-                )
+                            },
+                            shape = shape
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
         }

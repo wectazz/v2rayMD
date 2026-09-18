@@ -22,6 +22,10 @@ import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.isComplexType
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
+import androidx.compose.runtime.rememberCoroutineScope
+import com.v2ray.md.ui.compose.SegmentedColumn
+import com.v2ray.md.ui.compose.SettingsMenuItem
+import kotlinx.coroutines.launch
 
 private enum class ImportMenuAction(@StringRes val labelRes: Int, val action: MainAction) {
     QRCode(R.string.menu_item_import_config_qrcode, MainAction.ImportQRcode),
@@ -103,31 +107,32 @@ fun ShareMethodDialog(
         isComplexProfile = profile.configType.isComplexType(),
         includeManagementActions = more,
     )
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState()
+        sheetState = sheetState
     ) {
-        Column(modifier = Modifier.navigationBarsPadding()) {
+        SegmentedColumn(modifier = Modifier.navigationBarsPadding()) {
             menuActions.forEach { action ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onDismiss()
-                            when (action) {
-                                ServerMenuAction.ShareQRCode -> onAction(MainAction.ShareQRCode(guid))
-                                ServerMenuAction.ShareClipboard -> onAction(MainAction.ShareClipboard(guid))
-                                ServerMenuAction.ShareFullContent -> onAction(MainAction.ShareFullContent(guid))
-                                ServerMenuAction.Edit -> onAction(MainAction.EditServer(guid, profile))
-                                ServerMenuAction.Delete -> onRemove(guid)
+                item { shape ->
+                    SettingsMenuItem(
+                        title = stringResource(action.labelRes),
+                        onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onDismiss()
+                                    when (action) {
+                                        ServerMenuAction.ShareQRCode -> onAction(MainAction.ShareQRCode(guid))
+                                        ServerMenuAction.ShareClipboard -> onAction(MainAction.ShareClipboard(guid))
+                                        ServerMenuAction.ShareFullContent -> onAction(MainAction.ShareFullContent(guid))
+                                        ServerMenuAction.Edit -> onAction(MainAction.EditServer(guid, profile))
+                                        ServerMenuAction.Delete -> onRemove(guid)
+                                    }
+                                }
                             }
-                        }
-                        .padding(horizontal = 24.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(action.labelRes),
-                        style = MaterialTheme.typography.bodyLarge
+                        },
+                        shape = shape
                     )
                 }
             }
