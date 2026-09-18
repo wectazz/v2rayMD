@@ -356,7 +356,7 @@ fun MorphIconButton(
     
     IconButton(
         onClick = onClick,
-        modifier = modifier.padding(horizontal = 8.dp).then(pressModifier),
+        modifier = modifier.then(pressModifier),
         enabled = enabled,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
@@ -392,7 +392,7 @@ fun MorphFilledTonalIconButton(
     
     FilledTonalIconButton(
         onClick = onClick,
-        modifier = modifier.padding(horizontal = 8.dp).then(pressModifier),
+        modifier = modifier.then(pressModifier),
         enabled = enabled,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {

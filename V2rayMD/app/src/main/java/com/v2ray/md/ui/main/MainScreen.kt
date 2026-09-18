@@ -106,7 +106,7 @@ fun MainScreen(
     }
 
     val latestGroups by rememberUpdatedState(groups)
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }

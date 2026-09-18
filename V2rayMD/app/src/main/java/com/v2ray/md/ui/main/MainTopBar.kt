@@ -64,7 +64,8 @@ fun MainTopBar(
             },
             navigationIcon = {
                 MorphFilledTonalIconButton(
-                    onClick = onMenuClick
+                    onClick = onMenuClick,
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
@@ -94,7 +95,8 @@ fun MainTopBar(
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                     MorphFilledTonalIconButton(
-                        onClick = { showMenu = true }
+                        onClick = { showMenu = true },
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }
