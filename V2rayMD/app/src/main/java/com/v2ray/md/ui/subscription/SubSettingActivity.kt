@@ -327,6 +327,7 @@ fun SubSettingScreen(
 
         AlertDialog(
             onDismissRequest = { showUpdateDialog = false },
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             text = {
                 SegmentedColumn {
                     item { shape ->

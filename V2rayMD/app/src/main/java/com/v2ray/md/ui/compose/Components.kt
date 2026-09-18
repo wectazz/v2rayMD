@@ -338,22 +338,14 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    
-    val radius by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 24.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
-        label = "shape"
-    )
-    val shape = RoundedCornerShape(radius)
+    val shape = RoundedCornerShape(24.dp)
+    val pressedShape = RoundedCornerShape(12.dp)
     
     IconButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        interactionSource = interactionSource,
-        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+        shapes = IconButtonShapes(shape = shape, pressedShape = pressedShape)
     ) {
         content()
     }
@@ -367,22 +359,14 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    
-    val radius by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 24.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
-        label = "shape"
-    )
-    val shape = RoundedCornerShape(radius)
+    val shape = RoundedCornerShape(24.dp)
+    val pressedShape = RoundedCornerShape(12.dp)
     
     FilledTonalIconButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        interactionSource = interactionSource,
-        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+        shapes = IconButtonShapes(shape = shape, pressedShape = pressedShape)
     ) {
         content()
     }

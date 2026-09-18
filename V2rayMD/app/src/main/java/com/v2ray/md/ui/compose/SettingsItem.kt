@@ -74,9 +74,10 @@ private fun SettingsItemRow(
     // Explicit container: the default segmented container is near-invisible
     // against the background in dark theme. Highest in dark, High in light
     // keeps blocks clearly tonal on both.
+    val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+    else MaterialTheme.colorScheme.surfaceContainerHigh
     val colors = ListItemDefaults.segmentedColors(
-        containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
-        else MaterialTheme.colorScheme.surfaceContainerHigh
+        containerColor = containerColor
     )
     val titleColor = if (enabled) MaterialTheme.colorScheme.onSurface
     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
@@ -103,7 +104,7 @@ private fun SettingsItemRow(
         Surface(
             modifier = modifier.fillMaxWidth(),
             shape = shape,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
+            color = containerColor
         ) {
             ListItem(
                 leadingContent = leadingContent,
