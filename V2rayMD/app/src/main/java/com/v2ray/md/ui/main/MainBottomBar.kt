@@ -68,7 +68,7 @@ fun MainCombinedBottomBar(
         ) {
             Surface(
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(72.dp)
@@ -120,7 +120,11 @@ fun MainConnectFab(
         checked = isRunning,
         onCheckedChange = { onAction(MainAction.ToggleService) },
         modifier = modifier,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius)
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius),
+        colors = androidx.compose.material3.IconButtonDefaults.filledIconToggleButtonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
+            checkedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+        )
     ) {
         Icon(
             painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)

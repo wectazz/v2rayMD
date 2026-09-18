@@ -119,17 +119,13 @@ fun AppTheme(
         else -> lightColorScheme()
     }
     
-    // Apply 85% opacity to background/surface/container colors to achieve Glassmorphism
-    // so the ExpressiveBackground shapes can be seen underneath EVERYWHERE.
+    // Apply 85% opacity to background/surface to achieve Glassmorphism
+    // so the ExpressiveBackground shapes can be seen underneath.
+    // We leave container colors solid in the theme, because setting alpha here
+    // breaks ModalBottomSheet and TopAppBar backgrounds (making them invisible).
     val colorScheme = baseColorScheme.copy(
         background = baseColorScheme.background.copy(alpha = 0.85f),
-        surface = baseColorScheme.surface.copy(alpha = 0.85f),
-        surfaceContainerLowest = baseColorScheme.surfaceContainerLowest.copy(alpha = 0.85f),
-        surfaceContainerLow = baseColorScheme.surfaceContainerLow.copy(alpha = 0.85f),
-        surfaceContainer = baseColorScheme.surfaceContainer.copy(alpha = 0.85f),
-        surfaceContainerHigh = baseColorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
-        surfaceContainerHighest = baseColorScheme.surfaceContainerHighest.copy(alpha = 0.85f),
-        surfaceVariant = baseColorScheme.surfaceVariant.copy(alpha = 0.85f)
+        surface = baseColorScheme.surface.copy(alpha = 0.85f)
     )
     
     val snackbarController = rememberAppSnackbarController()
