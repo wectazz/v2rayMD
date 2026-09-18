@@ -361,6 +361,7 @@ fun MorphIconButton(
 
     Box(
         modifier = modifier
+            .padding(horizontal = 4.dp)
             .minimumInteractiveComponentSize()
             .size(48.dp)
             .clip(RoundedCornerShape(cornerRadius))
@@ -408,6 +409,7 @@ fun MorphFilledTonalIconButton(
 
     Box(
         modifier = modifier
+            .padding(horizontal = 4.dp)
             .minimumInteractiveComponentSize()
             .size(48.dp)
             .clip(RoundedCornerShape(cornerRadius))
