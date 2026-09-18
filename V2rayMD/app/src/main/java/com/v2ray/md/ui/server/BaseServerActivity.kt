@@ -49,7 +49,8 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphIconButton
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -464,7 +465,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                 LargeFlexibleTopAppBar(
                     title = { Text(title, modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { finish() }) {
+                        MorphFilledTonalIconButton( onClick = { finish() }) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -473,14 +474,14 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                     },
                     actions = {
                         if (editGuid.isNotEmpty() && !isRunning) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteDialog = true }) {
+                            MorphFilledTonalIconButton( onClick = { showDeleteDialog = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_delete_24dp),
                                     stringResource(R.string.acc_delete)
                                 )
                             }
                         }
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onSaveClick) {
+                        MorphFilledTonalIconButton( onClick = onSaveClick) {
                             Icon(
                                 painterResource(R.drawable.ic_fab_check),
                                 stringResource(R.string.acc_save)

@@ -188,14 +188,9 @@ fun MainScreen(
                 )
             },
             bottomBar = {
-                MainStatusBar(
-                    displayText = displayText,
-                    onAction = onAction
-                )
-            },
-            floatingActionButton = {
-                MainConnectFab(
+                MainCombinedBottomBar(
                     isRunning = isRunning,
+                    displayText = displayText,
                     onAction = onAction
                 )
             },

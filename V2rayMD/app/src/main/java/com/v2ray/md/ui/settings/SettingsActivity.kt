@@ -76,7 +76,8 @@ import com.v2ray.md.handler.MmkvManager.rememberMmkvString
 import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.root.RootManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphIconButton
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsEditItem
@@ -205,7 +206,7 @@ private fun SettingsSearchBar(
                         innerTextField()
                     }
                     if (query.isNotEmpty()) {
-                        IconButton(shapes = MorphIconButtonShapes, onClick = onClear) {
+                        MorphIconButton( onClick = onClear) {
                             Icon(
                                 painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
                                 contentDescription = stringResource(R.string.logcat_clear),
@@ -1040,7 +1041,7 @@ fun SettingsScreen(
                         )
                     },
                     navigationIcon = {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { if (openSectionRes != null) openSectionRes = null else onBackClick() }) {
+                        MorphFilledTonalIconButton( onClick = { if (openSectionRes != null) openSectionRes = null else onBackClick() }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)

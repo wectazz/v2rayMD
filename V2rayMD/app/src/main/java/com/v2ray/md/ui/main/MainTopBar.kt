@@ -20,7 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -37,7 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.verticalScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -58,29 +58,21 @@ fun MainTopBar(
     val maxMenuHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight - navBarHeight - 20.dp
 
     Column {
-        MediumFlexibleTopAppBar(
+        TopAppBar(
             title = {
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             navigationIcon = {
-                val menuInteractionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-                FilledTonalIconButton(
-                    onClick = onMenuClick,
-                    shape = com.v2ray.md.ui.compose.getInstantMorphShape(menuInteractionSource),
-                    interactionSource = menuInteractionSource,
-                    modifier = Modifier.padding(start = 8.dp)
+                MorphFilledTonalIconButton(
+                    onClick = onMenuClick
                 ) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
             },
             actions = {
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    val addInteractionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-                    FilledTonalIconButton(
-                        onClick = { showImportMenu = true },
-                        shape = com.v2ray.md.ui.compose.getInstantMorphShape(addInteractionSource),
-                        interactionSource = addInteractionSource,
-                        modifier = Modifier.padding(end = 4.dp)
+                    MorphFilledTonalIconButton(
+                        onClick = { showImportMenu = true }
                     ) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
@@ -101,12 +93,8 @@ fun MainTopBar(
                     }
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    val moreInteractionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-                    FilledTonalIconButton(
-                        onClick = { showMenu = true },
-                        shape = com.v2ray.md.ui.compose.getInstantMorphShape(moreInteractionSource),
-                        interactionSource = moreInteractionSource,
-                        modifier = Modifier.padding(end = 8.dp)
+                    MorphFilledTonalIconButton(
+                        onClick = { showMenu = true }
                     ) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
                     }

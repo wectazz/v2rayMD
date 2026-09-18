@@ -58,7 +58,8 @@ import com.v2ray.md.ui.compose.AppDivider
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
 import com.v2ray.md.ui.compose.ConfirmDialog
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphIconButton
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -169,7 +170,7 @@ fun PerAppProxyScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
+                            MorphFilledTonalIconButton( onClick = {
                                 searchQuery = ""
                                 onSearch("")
                                 showSearch = false
@@ -180,7 +181,7 @@ fun PerAppProxyScreen(
                                 )
                             }
                         } else {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                            MorphFilledTonalIconButton( onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -190,7 +191,7 @@ fun PerAppProxyScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showSearch = true }) {
+                            MorphFilledTonalIconButton( onClick = { showSearch = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_search_24dp),
                                     contentDescription = stringResource(R.string.acc_search)
@@ -198,7 +199,7 @@ fun PerAppProxyScreen(
                             }
                         }
                         Box {
-                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showMenu = true }) {
+                            MorphFilledTonalIconButton( onClick = { showMenu = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_more_vert_24dp),
                                     contentDescription = stringResource(R.string.acc_more)
@@ -282,7 +283,7 @@ fun PerAppProxyScreen(
                             thumbContent = { SwitchCheckThumb(bypassApps) }
                         )
                     }
-                    IconButton(shapes = MorphIconButtonShapes, onClick = onInfoClick) {
+                    MorphIconButton( onClick = onInfoClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_about_24dp),
                             contentDescription = stringResource(R.string.acc_per_app_proxy_information),

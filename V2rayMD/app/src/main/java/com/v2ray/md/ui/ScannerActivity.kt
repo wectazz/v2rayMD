@@ -71,7 +71,8 @@ import com.v2ray.md.R
 import com.v2ray.md.enums.PermissionType
 import com.v2ray.md.extension.toast
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphIconButton
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.QRCodeDecoder
 import java.nio.ByteBuffer
@@ -169,7 +170,7 @@ fun ScannerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.menu_item_import_config_qrcode), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -177,7 +178,7 @@ fun ScannerScreen(
                     }
                 },
                 actions = {
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes,
+                    MorphFilledTonalIconButton(
                         onClick = {
                             if (isScanning) {
                                 if (torchEnabled) {
@@ -201,7 +202,7 @@ fun ScannerScreen(
                         )
                     }
                     if (isScanning && hasTorch) {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes,
+                        MorphFilledTonalIconButton(
                             onClick = {
                                 torchEnabled = !torchEnabled
                                 cameraControl?.enableTorch(torchEnabled)
@@ -219,7 +220,7 @@ fun ScannerScreen(
                             )
                         }
                     }
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onSelectPhoto) {
+                    MorphFilledTonalIconButton( onClick = onSelectPhoto) {
                         Icon(
                             painterResource(R.drawable.ic_image_24dp),
                             contentDescription = stringResource(R.string.acc_select_image)

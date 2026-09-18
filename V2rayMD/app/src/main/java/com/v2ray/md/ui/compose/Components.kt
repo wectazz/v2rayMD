@@ -6,7 +6,11 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +36,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.LinearWavyProgressIndicator
@@ -101,13 +106,9 @@ fun AppTopBar(
                 if (navigationIcon != null) {
                     navigationIcon()
                 } else {
-                    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-                    val isPressed by interactionSource.collectIsPressedAsState()
-                    val currentShape = if (isPressed) RoundedCornerShape(12.dp) else CircleShape
-                    IconButton(
-                        modifier = Modifier.padding(start = 8.dp).clip(currentShape),
-                        onClick = if (isSearchActive) onSearchClose else onBackClick,
-                        interactionSource = interactionSource
+                    MorphIconButton(
+                        modifier = Modifier.padding(start = 8.dp),
+                        onClick = if (isSearchActive) onSearchClose else onBackClick
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back_24dp),
@@ -153,12 +154,9 @@ fun SearchInputField(
                 .focusRequester(focusRequester)
         )
         if (query.isNotEmpty()) {
-            val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-            val currentShape = getInstantMorphShape(interactionSource)
-            IconButton(
+            MorphIconButton(
                 onClick = { onQueryChange("") },
-                modifier = Modifier.padding(end = 8.dp).clip(currentShape),
-                interactionSource = interactionSource
+                modifier = Modifier.padding(end = 8.dp)
             ) {
                 Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
             }
@@ -330,25 +328,76 @@ fun ReorderableGridItem(
     }
 }
 
-/**
- * Expressive icon-button morph (M3 specs): circle at rest, rounded square while
- * pressed. Pass as `shapes` to IconButton/FilledTonalIconButton everywhere so the
- * rounding reacts to interaction; colors stay on the dynamic (Monet) scheme.
- */
-val MorphIconButtonShapes = IconButtonShapes(
-    shape = CircleShape,
-    pressedShape = RoundedCornerShape(12.dp)
-)
-
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun getInstantMorphShape(interactionSource: androidx.compose.foundation.interaction.InteractionSource): androidx.compose.ui.graphics.Shape {
-    val isPressed by interactionSource.collectIsPressedAsState()
+fun MorphIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    var isPressed by remember { mutableStateOf(false) }
+    val pressModifier = Modifier.pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                awaitFirstDown(requireUnconsumed = false)
+                isPressed = true
+                waitForUpOrCancellation()
+                isPressed = false
+            }
+        }
+    }
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
         label = "shape"
     )
-    return RoundedCornerShape(radius)
+    val shape = RoundedCornerShape(radius)
+    
+    IconButton(
+        onClick = onClick,
+        modifier = modifier.padding(horizontal = 8.dp).then(pressModifier),
+        enabled = enabled,
+        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun MorphFilledTonalIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    var isPressed by remember { mutableStateOf(false) }
+    val pressModifier = Modifier.pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                awaitFirstDown(requireUnconsumed = false)
+                isPressed = true
+                waitForUpOrCancellation()
+                isPressed = false
+            }
+        }
+    }
+    val radius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "shape"
+    )
+    val shape = RoundedCornerShape(radius)
+    
+    FilledTonalIconButton(
+        onClick = onClick,
+        modifier = modifier.padding(horizontal = 8.dp).then(pressModifier),
+        enabled = enabled,
+        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+    ) {
+        content()
+    }
 }
 
 /**

@@ -45,7 +45,8 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
-import com.v2ray.md.ui.compose.MorphIconButtonShapes
+import com.v2ray.md.ui.compose.MorphIconButton
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 
@@ -254,7 +255,7 @@ fun ServerGroupScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(EConfigType.POLICYGROUP.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -263,11 +264,11 @@ fun ServerGroupScreen(
                 },
                 actions = {
                     if (showDelete) {
-                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteConfirm = true }) {
+                        MorphFilledTonalIconButton( onClick = { showDeleteConfirm = true }) {
                             Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = stringResource(R.string.acc_delete))
                         }
                     }
-                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
+                    MorphFilledTonalIconButton( onClick = {
                         val typeIdx = typeEntries.indexOf(typeValue).coerceAtLeast(0)
                         val subIdx = subDisplay.indexOf(subValue).coerceAtLeast(0)
                         onSave(remarks, filter, typeIdx, subIdx, testOutbounds, fallbackTag)
