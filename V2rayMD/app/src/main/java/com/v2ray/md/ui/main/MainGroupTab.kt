@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.dto.GroupMapItem
-import com.v2ray.md.ui.compose.SingleSelectConnectedRow
+import com.v2ray.md.ui.compose.SingleSelectButtonGroup
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -45,7 +45,7 @@ fun GroupTabBar(
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        SingleSelectConnectedRow(
+        SingleSelectButtonGroup(
             options = labels,
             selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex),
             onSelect = onTabClick

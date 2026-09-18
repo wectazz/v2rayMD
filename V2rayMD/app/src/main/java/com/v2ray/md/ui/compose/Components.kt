@@ -438,37 +438,26 @@ fun MorphFilledTonalIconButton(
 }
 
 /**
- * Single-select connected toggle row from the ButtonGroup family: ToggleButtons
- * joined with connected shapes, like the official SingleSelectConnectedButtonGroup
- * sample. Unlike ButtonGroup itself, extra items never overflow into a menu —
- * wrap in a horizontalScroll Row when the count can exceed the width.
+ * Single-select toggle row from the ButtonGroup family.
+ * Extra items never overflow into a menu — wrap in a horizontalScroll Row 
+ * when the count can exceed the width.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SingleSelectConnectedRow(
+fun SingleSelectButtonGroup(
     options: List<String>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+    androidx.compose.material3.ButtonGroup(
+        modifier = modifier
     ) {
         options.forEachIndexed { index, label ->
             val selected = index == selectedIndex
             ToggleButton(
                 checked = selected,
-                onCheckedChange = { onSelect(index) },
-                shapes = if (options.size == 1) {
-                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
-                } else {
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    }
-                }
+                onCheckedChange = { onSelect(index) }
             ) {
                 if (selected) {
                     Icon(
@@ -480,7 +469,6 @@ fun SingleSelectConnectedRow(
                 Text(
                     text = label,
                     maxLines = 1,
-                    softWrap = false,
                     overflow = TextOverflow.Ellipsis
                 )
             }

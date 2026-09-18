@@ -84,7 +84,7 @@ import com.v2ray.md.ui.compose.SettingsEditItem
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.SettingsSwitchItem
-import com.v2ray.md.ui.compose.SingleSelectConnectedRow
+import com.v2ray.md.ui.compose.SingleSelectButtonGroup
 import com.v2ray.md.ui.compose.ThemeManager
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
@@ -966,7 +966,7 @@ fun SettingsScreen(
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                SingleSelectConnectedRow(
+                                SingleSelectButtonGroup(
                                     options = modeEntries,
                                     selectedIndex = modeValues.indexOf(mode),
                                     onSelect = { mode = modeValues[it] },
