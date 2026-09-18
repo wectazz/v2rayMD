@@ -85,8 +85,8 @@ private fun DrawerSegmentedItem(
         leadingContent = {
             Icon(painterResource(item.iconRes), contentDescription = null)
         },
-        trailingContent = if (item == MainDestination.Subscriptions && subscriptionCount > 0) {
-            {
+        verticalAlignment = Alignment.CenterVertically,
+        trailingContent = if (item == MainDestination.Subscriptions && subscriptionCount > 0) {            {
                 Badge(
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     contentColor = MaterialTheme.colorScheme.onTertiaryContainer

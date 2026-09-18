@@ -6,9 +6,16 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -1083,22 +1090,42 @@ fun SettingsScreen(
                             }
                         }
                     }
-                } else if (openSection == null) {
-                    SegmentedColumn {
-                        sections.forEach { section ->
-                            item(key = section.titleRes) { shape ->
-                                SettingsMenuItem(
-                                    title = stringResource(section.titleRes),
-                                    onClick = { openSectionRes = section.titleRes },
-                                    shape = shape
-                                )
-                            }
-                        }
-                    }
                 } else {
-                    SegmentedColumn {
-                        openSection.entries.forEach { entry ->
-                            item { shape -> entry.content(shape) }
+                    AnimatedContent(
+                        targetState = openSection,
+                        transitionSpec = {
+                            // Into a sub-page: new content slides from the end;
+                            // back to overview: slides back from the start.
+                            if (targetState != null) {
+                                (slideInHorizontally { width -> width / 3 } + fadeIn()) togetherWith
+                                    (slideOutHorizontally { width -> -width / 3 } + fadeOut()) using
+                                    SizeTransform(clip = false)
+                            } else {
+                                (slideInHorizontally { width -> -width / 3 } + fadeIn()) togetherWith
+                                    (slideOutHorizontally { width -> width / 3 } + fadeOut()) using
+                                    SizeTransform(clip = false)
+                            }
+                        },
+                        label = "settings-section"
+                    ) { section ->
+                        if (section == null) {
+                            SegmentedColumn {
+                                sections.forEach { overview ->
+                                    item(key = overview.titleRes) { shape ->
+                                        SettingsMenuItem(
+                                            title = stringResource(overview.titleRes),
+                                            onClick = { openSectionRes = overview.titleRes },
+                                            shape = shape
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            SegmentedColumn {
+                                section.entries.forEach { entry ->
+                                    item { shape -> entry.content(shape) }
+                                }
+                            }
                         }
                     }
                 }

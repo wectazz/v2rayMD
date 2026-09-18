@@ -112,6 +112,7 @@ private fun SettingsItemRow(
                 supportingContent = supportingContent,
                 leadingContent = leadingContent,
                 trailingContent = trailing,
+                verticalAlignment = Alignment.CenterVertically,
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 modifier = Modifier.then(
                     if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
@@ -130,6 +131,7 @@ private fun SettingsItemRow(
             leadingContent = leadingContent,
             trailingContent = trailing,
             supportingContent = supportingContent,
+            verticalAlignment = Alignment.CenterVertically,
             colors = colors,
             modifier = modifier.fillMaxWidth()
         ) {
@@ -142,6 +144,7 @@ private fun SettingsItemRow(
             leadingContent = leadingContent,
             trailingContent = trailing,
             supportingContent = supportingContent,
+            verticalAlignment = Alignment.CenterVertically,
             colors = colors,
             modifier = modifier.fillMaxWidth()
         ) {
