@@ -193,7 +193,7 @@ fun AppListItem(
     val context = LocalContext.current
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = LocalSegmentedItemShape.current,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Row(

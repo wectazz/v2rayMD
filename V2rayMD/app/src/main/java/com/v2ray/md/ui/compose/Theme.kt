@@ -121,14 +121,10 @@ fun AppTheme(
     
     // Apply 85% opacity to background/surface colors to achieve Glassmorphism
     // so the ExpressiveBackground shapes can be seen underneath.
+    // Container colors are kept solid so sheets and dialogs don't become transparent.
     val colorScheme = baseColorScheme.copy(
         background = baseColorScheme.background.copy(alpha = 0.85f),
-        surface = baseColorScheme.surface.copy(alpha = 0.85f),
-        surfaceContainerLowest = baseColorScheme.surfaceContainerLowest.copy(alpha = 0.85f),
-        surfaceContainerLow = baseColorScheme.surfaceContainerLow.copy(alpha = 0.85f),
-        surfaceContainer = baseColorScheme.surfaceContainer.copy(alpha = 0.85f),
-        surfaceContainerHigh = baseColorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
-        surfaceContainerHighest = baseColorScheme.surfaceContainerHighest.copy(alpha = 0.85f)
+        surface = baseColorScheme.surface.copy(alpha = 0.85f)
     )
     
     val snackbarController = rememberAppSnackbarController()

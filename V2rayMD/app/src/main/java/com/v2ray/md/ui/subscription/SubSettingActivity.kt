@@ -65,6 +65,8 @@ import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.ReorderableListItem
+import com.v2ray.md.ui.compose.LocalSegmentedItemShape
+import com.v2ray.md.ui.compose.lazySegmentColumn
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
@@ -192,16 +194,13 @@ fun SubSettingScreen(
                 .padding(innerPadding)
                 .verticalScrollbar(lazyListState),
             contentPadding = PaddingValues(
-                start = 16.dp,
-                top = 8.dp,
-                end = 16.dp,
-                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 80.dp
+            )
         ) {
-            itemsIndexed(
+            lazySegmentColumn(
                 items = subscriptions,
-                key = { _, item -> item.guid }
+                key = { _, item -> item.guid },
+                noHorizontalPadding = false
             ) { _, subCache ->
                 ReorderableItem(reorderableState, key = subCache.guid) { isDragging ->
                     ReorderableListItem(
@@ -211,7 +210,7 @@ fun SubSettingScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(24.dp))
+                                .clip(LocalSegmentedItemShape.current)
                                 .background(MaterialTheme.colorScheme.surfaceContainer)
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically

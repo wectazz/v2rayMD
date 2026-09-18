@@ -52,6 +52,9 @@ import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.ui.compose.QRCodeDialog
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +73,8 @@ fun MainScreen(
     val confirmRemove = uiState.confirmRemove
     val shareQRCodeBitmap = uiState.shareQRCodeBitmap
 
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    var showMenuBottomSheet by remember { mutableStateOf(false) }
+    val menuSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showDelAllConfirm by remember { mutableStateOf(false) }
     var showDelDuplicateConfirm by remember { mutableStateOf(false) }
@@ -149,26 +153,34 @@ fun MainScreen(
         QRCodeDialog(bitmap = shareQRCodeBitmap, onDismiss = { onAction(MainAction.DismissQRCodeDialog) })
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            MainDrawerContent(
-                drawerState = drawerState,
+    if (showMenuBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showMenuBottomSheet = false },
+            sheetState = menuSheetState,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ) {
+            MainMenuSheetContent(
                 subscriptionCount = groups.size,
                 onNavigate = { route ->
-                    scope.launch { drawerState.close() }
+                    scope.launch { menuSheetState.hide() }.invokeOnCompletion {
+                        if (!menuSheetState.isVisible) {
+                            showMenuBottomSheet = false
+                        }
+                    }
                     onNavigate(route)
                 }
             )
         }
-    ) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
+    }
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
+        containerColor = Color.Transparent,
             topBar = {
                 MainTopBar(
                     isLoading = isLoading,
-                    onMenuClick = { scope.launch { drawerState.open() } },
+                    onMenuClick = { showMenuBottomSheet = true },
                     onAction = onAction,
                     onMoreMenuAction = { action ->
                         when (action) {
@@ -267,7 +279,6 @@ fun MainScreen(
                 )
             }
         }
-    }
 }
 
 @Composable

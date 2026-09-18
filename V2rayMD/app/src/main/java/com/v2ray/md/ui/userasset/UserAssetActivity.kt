@@ -82,6 +82,8 @@ import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.ui.compose.SegmentedPosition
 import com.v2ray.md.ui.compose.LocalSegmentedPosition
 import com.v2ray.md.ui.compose.SegmentedColumn
+import com.v2ray.md.ui.compose.lazySegmentColumn
+import com.v2ray.md.ui.compose.LocalSegmentedItemShape
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.CompositionLocalProvider
 import com.v2ray.md.ui.compose.LocalDarkTheme
@@ -380,19 +382,15 @@ internal fun UserAssetScreen(
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            itemsIndexed(items = uiState.assets, key = { _, item -> item.guid }) { index, item ->
-                CompositionLocalProvider(
-                    LocalSegmentedPosition provides SegmentedPosition(index, uiState.assets.size)
-                ) {
-                    UserAssetItem(
-                        item = item,
-                        fileMetadata = uiState.fileMetadata[item.guid],
-                        onEdit = { onEditAsset(item.guid) },
-                        onDeleteClick = {
-                            deleteTarget = AssetDeleteTarget(item.guid, item.assetUrl.remarks)
-                        }
-                    )
-                }
+            lazySegmentColumn(items = uiState.assets, key = { _, item -> item.guid }) { _, item ->
+                UserAssetItem(
+                    item = item,
+                    fileMetadata = uiState.fileMetadata[item.guid],
+                    onEdit = { onEditAsset(item.guid) },
+                    onDeleteClick = {
+                        deleteTarget = AssetDeleteTarget(item.guid, item.assetUrl.remarks)
+                    }
+                )
             }
         }
     }
@@ -430,20 +428,13 @@ private fun UserAssetItem(
     }
     val showEditButton = item.assetUrl.locked != true && item.assetUrl.url != "file"
 
-    val position = LocalSegmentedPosition.current
-    val shapes = if (position != null) {
-        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
-    } else {
-        ListItemDefaults.segmentedShapes(index = 0, count = 1)
-    }
-    
     val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
     else MaterialTheme.colorScheme.surfaceContainerHigh
     
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shapes.shape)
+            .clip(LocalSegmentedItemShape.current)
             .background(containerColor)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically

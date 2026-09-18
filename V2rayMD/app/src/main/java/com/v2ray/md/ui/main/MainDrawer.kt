@@ -13,12 +13,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Badge
-import androidx.compose.material3.DrawerState
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -106,22 +105,19 @@ private fun DrawerSegmentedItem(
 }
 
 @Composable
-fun MainDrawerContent(
-    drawerState: DrawerState,
+fun MainMenuSheetContent(
     subscriptionCount: Int = 0,
     onNavigate: (MainDestination) -> Unit
 ) {
     val drawerScrollState = rememberScrollState()
 
-    ModalDrawerSheet(
-        drawerState = drawerState,
-        modifier = Modifier.fillMaxWidth(0.75f)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .verticalScroll(drawerScrollState)
+            .verticalScrollbar(drawerScrollState)
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(drawerScrollState)
-                .verticalScrollbar(drawerScrollState)
-        ) {
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -182,4 +178,3 @@ fun MainDrawerContent(
             }
         }
     }
-}

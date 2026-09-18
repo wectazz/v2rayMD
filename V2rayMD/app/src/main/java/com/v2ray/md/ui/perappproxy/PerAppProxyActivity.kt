@@ -56,6 +56,7 @@ import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.AppDivider
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
+import com.v2ray.md.ui.compose.lazySegmentColumn
 import com.v2ray.md.ui.compose.AppListItem
 import com.v2ray.md.ui.compose.ConfirmDialog
 import com.v2ray.md.ui.compose.MorphIconButton
@@ -301,14 +302,14 @@ fun PerAppProxyScreen(
                     .fillMaxSize()
                     .verticalScrollbar(listState),
                 contentPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 8.dp,
-                    end = 16.dp,
-                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 80.dp
+                )
             ) {
-                items(items = apps, key = { it.packageName }) { app ->
+                lazySegmentColumn(
+                    items = apps,
+                    key = { _, it -> it.packageName },
+                    noHorizontalPadding = false
+                ) { _, app ->
                     val checked = blacklist.contains(app.packageName)
                     AppListItem(
                         appName = app.appName,

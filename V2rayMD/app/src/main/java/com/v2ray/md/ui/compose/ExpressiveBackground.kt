@@ -34,8 +34,10 @@ import androidx.graphics.shapes.toPath
 @Composable
 fun ExpressiveBackground(modifier: Modifier = Modifier) {
     val backgroundColor = MaterialTheme.colorScheme.surface
-    val blobColor1 = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-    val blobColor2 = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f)
+    // Increase alpha to make shapes pop more
+    val blobColor1 = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.85f)
+    val blobColor2 = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.85f)
+    val blobColor3 = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.85f)
 
     val infiniteTransition = rememberInfiniteTransition(label = "blobTransition")
     
@@ -77,17 +79,18 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
         )
     }
 
-    val shapeC = remember {
+    val shapeCookie = remember {
         RoundedPolygon.star(
-            numVerticesPerRadius = 7,
-            innerRadius = 0.7f,
-            rounding = CornerRounding(0.5f),
-            innerRounding = CornerRounding(0.5f)
+            numVerticesPerRadius = 12,
+            innerRadius = 0.85f,
+            rounding = CornerRounding(0.15f),
+            innerRounding = CornerRounding(0.15f)
         )
     }
 
     val morph1 = remember(shapeA, shapeB) { Morph(shapeA, shapeB) }
-    val morph2 = remember(shapeB, shapeC) { Morph(shapeB, shapeC) }
+    val morph2 = remember(shapeB, shapeCookie) { Morph(shapeB, shapeCookie) }
+    val morph3 = remember(shapeCookie, shapeA) { Morph(shapeCookie, shapeA) }
 
     Box(
         modifier = modifier
@@ -97,12 +100,12 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 80.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                .alpha(0.8f)
+                .blur(radius = 60.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                .alpha(1f) // Fully opaque here, controlled by the colors above
         ) {
             val canvasWidth = size.width
             val canvasHeight = size.height
-            val scale = minOf(canvasWidth, canvasHeight) * 0.8f
+            val scale = minOf(canvasWidth, canvasHeight) * 0.85f
 
             val path1 = morph1.toPath(progress).asComposePath()
             
@@ -119,11 +122,22 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
             
             translate(left = canvasWidth * 0.7f, top = canvasHeight * 0.8f) {
                 val matrix = Matrix()
-                matrix.scale(scale * 0.8f, scale * 0.8f)
+                matrix.scale(scale * 0.9f, scale * 0.9f)
                 matrix.rotateZ(-rotation * 1.2f)
                 path2.transform(matrix)
                 
                 drawPath(path = path2, color = blobColor2)
+            }
+
+            val path3 = morph3.toPath(Math.abs(progress - 0.5f) * 2f).asComposePath()
+            
+            translate(left = canvasWidth * 0.5f, top = canvasHeight * 0.5f) {
+                val matrix = Matrix()
+                matrix.scale(scale * 0.7f, scale * 0.7f)
+                matrix.rotateZ(rotation * 0.5f)
+                path3.transform(matrix)
+                
+                drawPath(path = path3, color = blobColor3)
             }
         }
     }

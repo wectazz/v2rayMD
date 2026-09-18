@@ -53,6 +53,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.R
 import com.v2ray.md.dto.LocateTarget
 import com.v2ray.md.dto.entities.ProfileItem
+import com.v2ray.md.ui.compose.lazySegmentColumn
+import com.v2ray.md.ui.compose.LocalSegmentedItemShape
+import androidx.compose.material3.ListItemDefaults
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.ReorderableGridItem
 import com.v2ray.md.ui.compose.ReorderableListItem
@@ -248,32 +251,35 @@ private fun ServerListPage(
                 contentPadding = contentPadding,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                itemsIndexed(items = rows, key = { _, item -> item.guid }) { _, row ->
-                    if (canReorder && reorderableState != null) {
-                        ReorderableItem(
-                            reorderableState,
-                            key = row.guid
-                        ) { isDragging ->
-                            ReorderableListItem(
-                                scope = this,
-                                isDragging = isDragging
-                            ) {
-                                ServerItemRow(
-                                    row = row,
-                                    isSelected = row.guid == selectedGuid,
-                                    actions = actions
-                                )
-                            }
+            lazySegmentColumn(
+                items = rows,
+                key = { _, item -> item.guid }
+            ) { _, row ->
+                if (canReorder && reorderableState != null) {
+                    ReorderableItem(
+                        reorderableState,
+                        key = row.guid
+                    ) { isDragging ->
+                        ReorderableListItem(
+                            scope = this,
+                            isDragging = isDragging
+                        ) {
+                            ServerItemRow(
+                                row = row,
+                                isSelected = row.guid == selectedGuid,
+                                actions = actions
+                            )
                         }
-                    } else {
+                    }
+                } else {
                         ServerItemRow(
                             row = row,
                             isSelected = row.guid == selectedGuid,
                             actions = actions
                         )
+                    }
                 }
             }
-        }
         }
     }
 }
@@ -341,10 +347,16 @@ private fun ServerListItem(
     } else {
         null
     }
+    val shape = if (doubleColumnDisplay) {
+        RoundedCornerShape(24.dp)
+    } else {
+        LocalSegmentedItemShape.current
+    }
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
+            .clip(shape)
             .background(
                 if (isSelected) MaterialTheme.colorScheme.secondaryContainer
                 else MaterialTheme.colorScheme.surfaceContainer
@@ -364,37 +376,6 @@ private fun ServerListItem(
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(row.remarks, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge.copy(lineBreak = LineBreak.Paragraph), maxLines = 2, overflow = TextOverflow.Ellipsis)
-                if (doubleColumnDisplay) {
-                    MorphIconButton(onClick = { actions.more(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
-                        Icon(
-                            painterResource(R.drawable.ic_more_vert_24dp),
-                            stringResource(R.string.acc_more),
-                            Modifier.size(24.dp)
-                        )
-                    }
-                } else {
-                    MorphIconButton(onClick = { actions.share(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
-                        Icon(
-                            painterResource(R.drawable.ic_share_24dp),
-                            stringResource(R.string.title_configuration_share),
-                            Modifier.size(24.dp)
-                        )
-                    }
-                    MorphIconButton(onClick = { actions.edit(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
-                        Icon(
-                            painterResource(R.drawable.ic_edit_24dp),
-                            stringResource(R.string.acc_edit),
-                            Modifier.size(24.dp)
-                        )
-                    }
-                    MorphIconButton(onClick = { actions.remove(row.guid) }, modifier = Modifier.size(36.dp)) {
-                        Icon(
-                            painterResource(R.drawable.ic_delete_24dp),
-                            stringResource(R.string.acc_delete),
-                            Modifier.size(24.dp)
-                        )
-                    }
-                }
             }
             Spacer(modifier = Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -421,6 +402,40 @@ private fun ServerListItem(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(row.typeDescription, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(testResult, style = MaterialTheme.typography.bodySmall, color = if (row.testDelayMillis < 0L) colorPingRed else colorPing, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
+        
+        if (doubleColumnDisplay) {
+            MorphIconButton(onClick = { actions.more(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_more_vert_24dp),
+                    stringResource(R.string.acc_more),
+                    Modifier.size(24.dp)
+                )
+            }
+        } else {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MorphIconButton(onClick = { actions.share(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+                    Icon(
+                        painterResource(R.drawable.ic_share_24dp),
+                        stringResource(R.string.title_configuration_share),
+                        Modifier.size(24.dp)
+                    )
+                }
+                MorphIconButton(onClick = { actions.edit(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+                    Icon(
+                        painterResource(R.drawable.ic_edit_24dp),
+                        stringResource(R.string.acc_edit),
+                        Modifier.size(24.dp)
+                    )
+                }
+                MorphIconButton(onClick = { actions.remove(row.guid) }, modifier = Modifier.size(36.dp)) {
+                    Icon(
+                        painterResource(R.drawable.ic_delete_24dp),
+                        stringResource(R.string.acc_delete),
+                        Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

@@ -78,6 +78,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import com.v2ray.md.ui.compose.lazySegmentColumn
+import com.v2ray.md.ui.compose.LocalSegmentedItemShape
 import com.v2ray.md.ui.compose.SegmentedPosition
 import com.v2ray.md.ui.compose.LocalSegmentedPosition
 import com.v2ray.md.ui.compose.SegmentedColumn
@@ -315,27 +317,23 @@ fun RoutingSettingScreen(
                 )
             }
 
-            itemsIndexed(
+            lazySegmentColumn(
                 items = rulesets,
                 key = { _, ruleset -> ruleset.id }
             ) { index, ruleset ->
                 ReorderableItem(reorderableState, key = ruleset.id) { isDragging ->
-                    CompositionLocalProvider(
-                        LocalSegmentedPosition provides SegmentedPosition(index, rulesets.size)
+                    ReorderableListItem(
+                        scope = this,
+                        isDragging = isDragging
                     ) {
-                        ReorderableListItem(
-                            scope = this,
-                            isDragging = isDragging
-                        ) {
-                            RoutingRulesetItem(
-                                ruleset = ruleset,
-                                onEdit = { onEditRule(index) },
-                                onEnabledChange = { checked ->
-                                    val updated = ruleset.copy(enabled = checked)
-                                    viewModel.update(index, updated)
-                                }
-                            )
-                        }
+                        RoutingRulesetItem(
+                            ruleset = ruleset,
+                            onEdit = { onEditRule(index) },
+                            onEnabledChange = { checked ->
+                                val updated = ruleset.copy(enabled = checked)
+                                viewModel.update(index, updated)
+                            }
+                        )
                     }
                 }
             }
@@ -363,20 +361,13 @@ private fun RoutingRulesetItem(
     onEdit: () -> Unit,
     onEnabledChange: (Boolean) -> Unit
 ) {
-    val position = LocalSegmentedPosition.current
-    val shapes = if (position != null) {
-        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
-    } else {
-        ListItemDefaults.segmentedShapes(index = 0, count = 1)
-    }
-    
     val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
     else MaterialTheme.colorScheme.surfaceContainerHigh
     
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shapes.shape)
+            .clip(LocalSegmentedItemShape.current)
             .background(containerColor)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
