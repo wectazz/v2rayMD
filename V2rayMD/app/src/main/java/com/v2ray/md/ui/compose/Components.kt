@@ -335,7 +335,6 @@ fun ReorderableGridItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MorphIconButton(
     onClick: () -> Unit,
@@ -343,29 +342,43 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val scope = rememberCoroutineScope()
-    
-    IconButton(
-        onClick = {
-            scope.launch {
-                delay(50)
-                onClick()
+    var isPressed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    val cornerRadius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(dampingRatio = 0.8f, stiffness = 1000f),
+        label = "radius"
+    )
+
+    androidx.compose.foundation.layout.Box(
+        modifier = modifier
+            .androidx.compose.material3.minimumInteractiveComponentSize()
+            .size(40.dp)
+            .androidx.compose.ui.draw.clip(RoundedCornerShape(cornerRadius))
+            .androidx.compose.ui.input.pointer.pointerInput(enabled) {
+                if (!enabled) return@pointerInput
+                androidx.compose.foundation.gestures.awaitEachGesture {
+                    awaitFirstDown(requireUnconsumed = false)
+                    isPressed = true
+                    waitForUpOrCancellation()
+                    isPressed = false
+                }
             }
-        },
-        modifier = modifier,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        shapes = IconButtonShapes(
-            shape = RoundedCornerShape(24.dp),
-            pressedShape = RoundedCornerShape(12.dp)
-        )
+            .clickable(
+                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                indication = androidx.compose.foundation.LocalIndication.current,
+                enabled = enabled,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        content()
+        androidx.compose.runtime.CompositionLocalProvider(
+            androidx.compose.material3.LocalContentColor provides androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+        ) {
+            content()
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MorphFilledTonalIconButton(
     onClick: () -> Unit,
@@ -373,25 +386,44 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val scope = rememberCoroutineScope()
-    
-    FilledTonalIconButton(
-        onClick = {
-            scope.launch {
-                delay(50)
-                onClick()
+    var isPressed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    val cornerRadius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(dampingRatio = 0.8f, stiffness = 1000f),
+        label = "radius"
+    )
+
+    val containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
+    val contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer
+
+    androidx.compose.foundation.layout.Box(
+        modifier = modifier
+            .androidx.compose.material3.minimumInteractiveComponentSize()
+            .size(40.dp)
+            .androidx.compose.ui.draw.clip(RoundedCornerShape(cornerRadius))
+            .androidx.compose.foundation.background(containerColor)
+            .androidx.compose.ui.input.pointer.pointerInput(enabled) {
+                if (!enabled) return@pointerInput
+                androidx.compose.foundation.gestures.awaitEachGesture {
+                    awaitFirstDown(requireUnconsumed = false)
+                    isPressed = true
+                    waitForUpOrCancellation()
+                    isPressed = false
+                }
             }
-        },
-        modifier = modifier,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        shapes = IconButtonShapes(
-            shape = RoundedCornerShape(24.dp),
-            pressedShape = RoundedCornerShape(12.dp)
-        )
+            .clickable(
+                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                indication = androidx.compose.foundation.LocalIndication.current,
+                enabled = enabled,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        content()
+        androidx.compose.runtime.CompositionLocalProvider(
+            androidx.compose.material3.LocalContentColor provides contentColor
+        ) {
+            content()
+        }
     }
 }
 
