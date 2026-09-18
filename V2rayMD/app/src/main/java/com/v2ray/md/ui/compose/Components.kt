@@ -344,7 +344,7 @@ fun MorphIconButton(
     content: @Composable () -> Unit
 ) {
     val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    val isPressed by interactionSource.collectIsPressedAsState()
     
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
@@ -373,7 +373,7 @@ fun MorphFilledTonalIconButton(
     content: @Composable () -> Unit
 ) {
     val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    val isPressed by interactionSource.collectIsPressedAsState()
     
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,

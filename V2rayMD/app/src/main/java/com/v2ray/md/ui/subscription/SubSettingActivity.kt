@@ -340,7 +340,7 @@ fun SubSettingScreen(
                 val scrollState = rememberScrollState()
                 SegmentedColumn(modifier = Modifier
                     .verticalScroll(scrollState)
-                    .com.v2ray.md.ui.compose.verticalScrollbar(scrollState)
+                    .verticalScrollbar(scrollState)
                 ) {
                     item { shape ->
                         SettingsSwitchItem(
