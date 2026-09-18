@@ -362,7 +362,7 @@ fun MorphIconButton(
     Box(
         modifier = modifier
             .minimumInteractiveComponentSize()
-            .size(40.dp)
+            .size(48.dp)
             .clip(RoundedCornerShape(cornerRadius))
             .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
@@ -409,7 +409,7 @@ fun MorphFilledTonalIconButton(
     Box(
         modifier = modifier
             .minimumInteractiveComponentSize()
-            .size(40.dp)
+            .size(48.dp)
             .clip(RoundedCornerShape(cornerRadius))
             .background(containerColor)
             .pointerInput(enabled) {
