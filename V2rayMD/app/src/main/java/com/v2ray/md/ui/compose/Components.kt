@@ -366,7 +366,9 @@ fun SingleSelectConnectedRow(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
-        androidx.compose.material3.ButtonGroup {
+        androidx.compose.material3.ButtonGroup(
+            overflowIndicator = {}
+        ) {
             options.forEachIndexed { index, label ->
                 val selected = index == selectedIndex
                 ToggleButton(
