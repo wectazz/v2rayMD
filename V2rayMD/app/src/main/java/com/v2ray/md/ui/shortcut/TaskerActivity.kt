@@ -48,6 +48,9 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.SegmentedPosition
+import com.v2ray.md.ui.compose.LocalSegmentedPosition
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil

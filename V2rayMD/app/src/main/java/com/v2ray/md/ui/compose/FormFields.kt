@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -165,7 +166,7 @@ fun FormDropdownField(
 @Composable
 fun FormCard(
     modifier: Modifier = Modifier,
-    content: @Composable SegmentedColumnScope.() -> Unit
+    content: SegmentedColumnScope.() -> Unit
 ) {
     SegmentedColumn(
         modifier = modifier.fillMaxWidth(),

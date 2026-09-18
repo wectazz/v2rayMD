@@ -79,6 +79,12 @@ import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.verticalScrollbar
+import com.v2ray.md.ui.compose.SegmentedPosition
+import com.v2ray.md.ui.compose.LocalSegmentedPosition
+import com.v2ray.md.ui.compose.SegmentedColumn
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.runtime.CompositionLocalProvider
+import com.v2ray.md.ui.theme.LocalDarkTheme
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -97,11 +103,6 @@ private enum class AddAssetMenuAction(@StringRes val labelRes: Int) {
 
 private data class AssetDeleteTarget(val guid: String, val name: String)
 
-import com.v2ray.md.ui.compose.SegmentedPosition
-import com.v2ray.md.ui.compose.LocalSegmentedPosition
-import com.v2ray.md.ui.compose.SegmentedColumn
-import com.v2ray.md.ui.theme.LocalDarkTheme
-import androidx.compose.material3.ListItemDefaults
 
 class UserAssetActivity : HelperBaseComponentActivity() {
 
