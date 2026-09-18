@@ -341,7 +341,7 @@ val MorphIconButtonShapes = IconButtonShapes(
 
 @Composable
 fun getInstantMorphShape(interactionSource: androidx.compose.foundation.interaction.InteractionSource): androidx.compose.ui.graphics.Shape {
-    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    val isPressed by interactionSource.collectIsPressedAsState()
     return if (isPressed) RoundedCornerShape(12.dp) else CircleShape
 }
 
