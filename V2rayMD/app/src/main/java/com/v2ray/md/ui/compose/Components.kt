@@ -11,6 +11,8 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -336,17 +338,9 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    val pressModifier = Modifier.pointerInput(Unit) {
-        awaitPointerEventScope {
-            while (true) {
-                awaitFirstDown(requireUnconsumed = false)
-                isPressed = true
-                waitForUpOrCancellation()
-                isPressed = false
-            }
-        }
-    }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
@@ -356,8 +350,9 @@ fun MorphIconButton(
     
     IconButton(
         onClick = onClick,
-        modifier = modifier.then(pressModifier),
+        modifier = modifier,
         enabled = enabled,
+        interactionSource = interactionSource,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()
@@ -372,17 +367,9 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    val pressModifier = Modifier.pointerInput(Unit) {
-        awaitPointerEventScope {
-            while (true) {
-                awaitFirstDown(requireUnconsumed = false)
-                isPressed = true
-                waitForUpOrCancellation()
-                isPressed = false
-            }
-        }
-    }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    
     val radius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMedium),
@@ -392,8 +379,9 @@ fun MorphFilledTonalIconButton(
     
     FilledTonalIconButton(
         onClick = onClick,
-        modifier = modifier.then(pressModifier),
+        modifier = modifier,
         enabled = enabled,
+        interactionSource = interactionSource,
         shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()
