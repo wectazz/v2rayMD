@@ -344,14 +344,6 @@ fun MorphIconButton(
     content: @Composable () -> Unit
 ) {
     val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    
-    val radius by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 24.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
-        label = "shape"
-    )
-    val shape = RoundedCornerShape(radius)
     val scope = rememberCoroutineScope()
     
     IconButton(
@@ -364,7 +356,10 @@ fun MorphIconButton(
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,
-        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+        shapes = IconButtonShapes(
+            shape = RoundedCornerShape(24.dp),
+            pressedShape = RoundedCornerShape(12.dp)
+        )
     ) {
         content()
     }
@@ -379,14 +374,6 @@ fun MorphFilledTonalIconButton(
     content: @Composable () -> Unit
 ) {
     val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    
-    val radius by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 24.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
-        label = "shape"
-    )
-    val shape = RoundedCornerShape(radius)
     val scope = rememberCoroutineScope()
     
     FilledTonalIconButton(
@@ -399,7 +386,10 @@ fun MorphFilledTonalIconButton(
         modifier = modifier,
         enabled = enabled,
         interactionSource = interactionSource,
-        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
+        shapes = IconButtonShapes(
+            shape = RoundedCornerShape(24.dp),
+            pressedShape = RoundedCornerShape(12.dp)
+        )
     ) {
         content()
     }
