@@ -9,6 +9,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -329,7 +331,8 @@ fun SubSettingScreen(
             onDismissRequest = { showUpdateDialog = false },
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             text = {
-                SegmentedColumn {
+                val scrollState = rememberScrollState()
+                SegmentedColumn(modifier = Modifier.verticalScroll(scrollState)) {
                     item { shape ->
                         SettingsSwitchItem(
                             title = stringResource(R.string.title_sub_update),
