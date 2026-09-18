@@ -369,7 +369,8 @@ fun SingleSelectConnectedRow(
         androidx.compose.material3.ButtonGroup(
             overflowIndicator = {}
         ) {
-            options.forEachIndexed { index, label ->
+            for (index in options.indices) {
+                val label = options[index]
                 val selected = index == selectedIndex
                 ToggleButton(
                     checked = selected,
