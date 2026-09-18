@@ -100,7 +100,6 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 60.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
                 .alpha(1f) // Fully opaque here, controlled by the colors above
         ) {
             val canvasWidth = size.width
