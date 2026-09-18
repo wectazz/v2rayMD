@@ -38,6 +38,7 @@ import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
@@ -162,7 +163,7 @@ fun UserAssetUrlScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_user_asset_add_url), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -171,14 +172,14 @@ fun UserAssetUrlScreen(
                 },
                 actions = {
                     if (editAssetId.isNotEmpty()) {
-                        FilledTonalIconButton(onClick = { showDeleteConfirm = true }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteConfirm = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_delete_24dp),
                                 contentDescription = stringResource(R.string.acc_delete)
                             )
                         }
                     }
-                    FilledTonalIconButton(onClick = { onSave(remarks, url) }) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { onSave(remarks, url) }) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)

@@ -73,6 +73,7 @@ import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -292,7 +293,7 @@ internal fun UserAssetScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_user_asset_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        FilledTonalIconButton(onClick = onBackClick) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -301,7 +302,7 @@ internal fun UserAssetScreen(
                     },
                     actions = {
                         Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                            FilledTonalIconButton(onClick = { showAddMenu = true }) {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showAddMenu = true }) {
                                 Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_asset))
                             }
                             DropdownMenu(
@@ -320,7 +321,7 @@ internal fun UserAssetScreen(
                                 }
                             }
                         }
-                        FilledTonalIconButton(onClick = onDownloadClick) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onDownloadClick) {
                             Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
                         }
                     },
@@ -446,7 +447,7 @@ private fun UserAssetItem(
             )
         }
         if (showEditButton) {
-            IconButton(onClick = onEdit) {
+            IconButton(shapes = MorphIconButtonShapes, onClick = onEdit) {
                 Icon(
                     painter = painterResource(R.drawable.ic_edit_24dp),
                     contentDescription = stringResource(R.string.acc_edit),
@@ -454,7 +455,7 @@ private fun UserAssetItem(
                 )
             }
         }
-        IconButton(onClick = onDeleteClick) {
+        IconButton(shapes = MorphIconButtonShapes, onClick = onDeleteClick) {
             Icon(
                 painter = painterResource(R.drawable.ic_delete_24dp),
                 contentDescription = stringResource(R.string.acc_delete),

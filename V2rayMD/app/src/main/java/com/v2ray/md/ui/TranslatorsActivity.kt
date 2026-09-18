@@ -39,6 +39,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.TranslatorsCredit
 import com.v2ray.md.dto.TranslatorsParser
 import com.v2ray.md.ui.base.BaseComponentActivity
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.util.Utils
 
@@ -71,7 +72,7 @@ fun TranslatorsScreen(onBackClick: () -> Unit) {
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_translators), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)

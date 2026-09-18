@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonGroupDefaults
@@ -29,6 +30,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -95,7 +97,7 @@ fun AppTopBar(
                 if (navigationIcon != null) {
                     navigationIcon()
                 } else {
-                    IconButton(onClick = if (isSearchActive) onSearchClose else onBackClick) {
+                    IconButton(shapes = MorphIconButtonShapes, onClick = if (isSearchActive) onSearchClose else onBackClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -140,7 +142,7 @@ fun SearchInputField(
                 .focusRequester(focusRequester)
         )
         if (query.isNotEmpty()) {
-            IconButton(onClick = { onQueryChange("") }) {
+            IconButton(shapes = MorphIconButtonShapes, onClick = { onQueryChange("") }) {
                 Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
             }
         }
@@ -310,6 +312,16 @@ fun ReorderableGridItem(
         content()
     }
 }
+
+/**
+ * Expressive icon-button morph (M3 specs): circle at rest, rounded square while
+ * pressed. Pass as `shapes` to IconButton/FilledTonalIconButton everywhere so the
+ * rounding reacts to interaction; colors stay on the dynamic (Monet) scheme.
+ */
+val MorphIconButtonShapes = IconButtonShapes(
+    shape = CircleShape,
+    pressedShape = RoundedCornerShape(12.dp)
+)
 
 /**
  * Single-select connected toggle row from the ButtonGroup family: ToggleButtons

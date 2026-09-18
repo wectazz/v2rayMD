@@ -58,6 +58,7 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.MmkvManager.rememberMmkvBool
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.ReorderableListItem
 import com.v2ray.md.ui.compose.SelectListDialog
@@ -146,7 +147,7 @@ fun SubSettingScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        FilledTonalIconButton(onClick = onBackClick) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -154,10 +155,10 @@ fun SubSettingScreen(
                         }
                     },
                     actions = {
-                        FilledTonalIconButton(onClick = onAddClick) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onAddClick) {
                             Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add_subscription))
                         }
-                        FilledTonalIconButton(onClick = { showUpdateDialog = true }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showUpdateDialog = true }) {
                             Icon(painterResource(R.drawable.ic_restore_24dp), contentDescription = stringResource(R.string.acc_update_subscriptions))
                         }
                     },
@@ -235,7 +236,7 @@ fun SubSettingScreen(
                             ) {
                                 Row {
                                     if (subCache.subscription.url.isNotEmpty()) {
-                                        IconButton(onClick = {
+                                        IconButton(shapes = MorphIconButtonShapes, onClick = {
                                             shareTarget = Pair(subCache.guid, subCache.subscription.url)
                                         }) {
                                             Icon(
@@ -244,13 +245,13 @@ fun SubSettingScreen(
                                             )
                                         }
                                     }
-                                    IconButton(onClick = { onEditSub(subCache.guid) }) {
+                                    IconButton(shapes = MorphIconButtonShapes, onClick = { onEditSub(subCache.guid) }) {
                                         Icon(
                                             painter = painterResource(R.drawable.ic_edit_24dp),
                                             contentDescription = stringResource(R.string.acc_edit)
                                         )
                                     }
-                                    IconButton(onClick = {
+                                    IconButton(shapes = MorphIconButtonShapes, onClick = {
                                         if (confirmRemove) removeTarget = subCache.guid
                                         else onRemoveSub(subCache.guid)
                                     }) {

@@ -46,6 +46,7 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -179,7 +180,7 @@ fun SubEditScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -188,13 +189,13 @@ fun SubEditScreen(
                 },
                 actions = {
                     if (editSubId.isNotEmpty()) {
-                        FilledTonalIconButton(onClick = {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                             if (confirmRemove) showDeleteConfirm = true else onDelete()
                         }) {
                             Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = stringResource(R.string.acc_delete))
                         }
                     }
-                    FilledTonalIconButton(onClick = { buildSubItem()?.let { onSave(it) } }) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { buildSubItem()?.let { onSave(it) } }) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

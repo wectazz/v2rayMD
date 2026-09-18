@@ -55,6 +55,7 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.JsonUtil
@@ -355,7 +356,7 @@ fun ServerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(configType.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    FilledTonalIconButton(onClick = onBackClick) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -364,11 +365,11 @@ fun ServerScreen(
                 },
                 actions = {
                     if (guid.isNotEmpty() && !isRunning) {
-                        FilledTonalIconButton(onClick = { showDeleteDialog = true }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteDialog = true }) {
                             Icon(painterResource(R.drawable.ic_delete_24dp), stringResource(R.string.acc_delete))
                         }
                     }
-                    FilledTonalIconButton(onClick = {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                         onSave(buildProfileItem())
                     }) {
                         Icon(painterResource(R.drawable.ic_fab_check), stringResource(R.string.acc_save))

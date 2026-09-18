@@ -51,6 +51,7 @@ import com.v2ray.md.R
 import com.v2ray.md.extension.toastError
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.ItemDivider
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -171,7 +172,7 @@ fun LogcatScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            FilledTonalIconButton(onClick = {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                                 searchQuery = ""
                                 viewModel.filter("")
                                 showSearch = false
@@ -182,7 +183,7 @@ fun LogcatScreen(
                                 )
                             }
                         } else {
-                            FilledTonalIconButton(onClick = onBackClick) {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -192,26 +193,26 @@ fun LogcatScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            FilledTonalIconButton(onClick = { showSearch = true }) {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showSearch = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_search_24dp),
                                     contentDescription = stringResource(R.string.acc_search)
                                 )
                             }
                         }
-                        FilledTonalIconButton(onClick = { viewModel.copyLogcat() }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { viewModel.copyLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_copy),
                                 contentDescription = stringResource(R.string.acc_copy_log)
                             )
                         }
-                        FilledTonalIconButton(onClick = { onShareLogcat() }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { onShareLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_share_24dp),
                                 contentDescription = stringResource(R.string.acc_share_log)
                             )
                         }
-                        FilledTonalIconButton(onClick = {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                             scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
                         }) {
                             Icon(
