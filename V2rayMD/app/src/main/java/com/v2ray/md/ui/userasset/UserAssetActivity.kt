@@ -295,7 +295,7 @@ internal fun UserAssetScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_user_asset_setting), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        MorphFilledTonalIconButton( onClick = onBackClick) {
+                        MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -323,7 +323,7 @@ internal fun UserAssetScreen(
                                 }
                             }
                         }
-                        MorphFilledTonalIconButton( onClick = onDownloadClick) {
+                        MorphFilledTonalIconButton( onClick = onDownloadClick, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(painterResource(R.drawable.ic_cloud_download_24dp), contentDescription = stringResource(R.string.acc_download_file))
                         }
                     },

@@ -357,7 +357,7 @@ fun ServerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(configType.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -372,7 +372,7 @@ fun ServerScreen(
                     }
                     MorphFilledTonalIconButton( onClick = {
                         onSave(buildProfileItem())
-                    }) {
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(painterResource(R.drawable.ic_fab_check), stringResource(R.string.acc_save))
                     }
                 },

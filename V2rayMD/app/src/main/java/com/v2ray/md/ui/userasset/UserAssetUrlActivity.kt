@@ -164,7 +164,7 @@ fun UserAssetUrlScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_user_asset_add_url), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -180,7 +180,7 @@ fun UserAssetUrlScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { onSave(remarks, url) }) {
+                    MorphFilledTonalIconButton( onClick = { onSave(remarks, url) }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)

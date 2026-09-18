@@ -465,7 +465,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                 LargeFlexibleTopAppBar(
                     title = { Text(title, modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        MorphFilledTonalIconButton( onClick = { finish() }) {
+                        MorphFilledTonalIconButton( onClick = { finish() }, modifier = Modifier.padding(start = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
@@ -481,7 +481,7 @@ abstract class BaseServerActivity : BaseComponentActivity() {
                                 )
                             }
                         }
-                        MorphFilledTonalIconButton( onClick = onSaveClick) {
+                        MorphFilledTonalIconButton( onClick = onSaveClick, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_fab_check),
                                 stringResource(R.string.acc_save)

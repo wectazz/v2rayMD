@@ -146,7 +146,7 @@ fun TaskerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text("", modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -154,7 +154,7 @@ fun TaskerScreen(
                     }
                 },
                 actions = {
-                    MorphFilledTonalIconButton( onClick = onSave) {
+                    MorphFilledTonalIconButton( onClick = onSave, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

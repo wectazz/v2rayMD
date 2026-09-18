@@ -255,7 +255,7 @@ fun ServerGroupScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(EConfigType.POLICYGROUP.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -272,7 +272,7 @@ fun ServerGroupScreen(
                         val typeIdx = typeEntries.indexOf(typeValue).coerceAtLeast(0)
                         val subIdx = subDisplay.indexOf(subValue).coerceAtLeast(0)
                         onSave(remarks, filter, typeIdx, subIdx, testOutbounds, fallbackTag)
-                    }) {
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

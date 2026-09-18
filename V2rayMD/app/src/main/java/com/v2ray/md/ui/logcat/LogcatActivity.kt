@@ -178,7 +178,7 @@ fun LogcatScreen(
                                 searchQuery = ""
                                 viewModel.filter("")
                                 showSearch = false
-                            }) {
+                            }, modifier = Modifier.padding(start = 8.dp)) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -216,7 +216,7 @@ fun LogcatScreen(
                         }
                         MorphFilledTonalIconButton( onClick = {
                             scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
-                        }) {
+                        }, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_delete_24dp),
                                 contentDescription = stringResource(R.string.acc_clear_log)

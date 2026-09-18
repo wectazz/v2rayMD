@@ -181,7 +181,7 @@ fun SubEditScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.title_sub_setting), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -196,7 +196,7 @@ fun SubEditScreen(
                             Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = stringResource(R.string.acc_delete))
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { buildSubItem()?.let { onSave(it) } }) {
+                    MorphFilledTonalIconButton( onClick = { buildSubItem()?.let { onSave(it) } }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

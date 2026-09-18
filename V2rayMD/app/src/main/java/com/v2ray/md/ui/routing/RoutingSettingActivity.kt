@@ -233,7 +233,7 @@ fun RoutingSettingScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.routing_settings_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -248,7 +248,7 @@ fun RoutingSettingScreen(
                         )
                     }
                     Box {
-                        MorphFilledTonalIconButton( onClick = { showMenu = true }) {
+                        MorphFilledTonalIconButton( onClick = { showMenu = true }, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(
                                 painterResource(R.drawable.ic_more_vert_24dp),
                                 contentDescription = stringResource(R.string.acc_more)

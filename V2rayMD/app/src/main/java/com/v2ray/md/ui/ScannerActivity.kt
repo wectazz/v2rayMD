@@ -170,7 +170,7 @@ fun ScannerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.menu_item_import_config_qrcode), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton( onClick = onBackClick) {
+                    MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -220,7 +220,7 @@ fun ScannerScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = onSelectPhoto) {
+                    MorphFilledTonalIconButton( onClick = onSelectPhoto, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_image_24dp),
                             contentDescription = stringResource(R.string.acc_select_image)
