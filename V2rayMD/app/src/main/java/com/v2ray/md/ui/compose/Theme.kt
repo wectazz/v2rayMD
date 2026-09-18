@@ -113,11 +113,24 @@ fun AppTheme(
     // NOTE: the lift applies only to the non-dynamic baseline fallback. Dynamic
     // schemes keep their own tonal surfaces so the wallpaper hue reaches the
     // background; lifting them would pin the background to fixed gray.
-    val colorScheme = when {
+    val baseColorScheme = when {
         dynamicColor -> MonetColors.rememberDynamicScheme(darkTheme)
         darkTheme -> darkColorScheme().liftedDarkSurfaces()
         else -> lightColorScheme()
     }
+    
+    // Apply 85% opacity to background/surface colors to achieve Glassmorphism
+    // so the ExpressiveBackground shapes can be seen underneath.
+    val colorScheme = baseColorScheme.copy(
+        background = baseColorScheme.background.copy(alpha = 0.85f),
+        surface = baseColorScheme.surface.copy(alpha = 0.85f),
+        surfaceContainerLowest = baseColorScheme.surfaceContainerLowest.copy(alpha = 0.85f),
+        surfaceContainerLow = baseColorScheme.surfaceContainerLow.copy(alpha = 0.85f),
+        surfaceContainer = baseColorScheme.surfaceContainer.copy(alpha = 0.85f),
+        surfaceContainerHigh = baseColorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+        surfaceContainerHighest = baseColorScheme.surfaceContainerHighest.copy(alpha = 0.85f)
+    )
+    
     val snackbarController = rememberAppSnackbarController()
 
     val view = LocalView.current
@@ -142,6 +155,7 @@ fun AppTheme(
             shapes = AppShapes
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
+                ExpressiveBackground()
                 AppSnackbarBridge(controller = snackbarController)
                 content()
                 AppSnackbarHost(hostState = snackbarController.hostState)

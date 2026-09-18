@@ -162,6 +162,8 @@ dependencies {
     // Compose Libraries
     implementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.graphics.shapes)
+    implementation(libs.androidx.graphics.path)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui)
