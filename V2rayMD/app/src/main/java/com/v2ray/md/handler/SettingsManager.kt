@@ -415,7 +415,7 @@ object SettingsManager {
     }
 
     fun isSendHwidEnabled(): Boolean {
-        return MmkvManager.decodeSettingsBool(AppConfig.PREF_SEND_HWID, false)
+        return MmkvManager.decodeSettingsBool(AppConfig.PREF_SEND_HWID, true)
     }
 
     fun getPreferIpv6(): Boolean {

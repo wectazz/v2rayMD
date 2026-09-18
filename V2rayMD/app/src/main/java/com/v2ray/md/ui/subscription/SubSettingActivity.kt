@@ -63,6 +63,7 @@ import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.ReorderableListItem
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.SwitchCheckThumb
@@ -318,47 +319,62 @@ fun SubSettingScreen(
 
     if (showUpdateDialog) {
 
-        var updateSubscription by rememberMmkvBool(AppConfig.PREF_UPDATE_SUBSCRIPTION, false)
+        var updateSubscription by rememberMmkvBool(AppConfig.PREF_UPDATE_SUBSCRIPTION, true)
         var autoTestAfterUpdateSubscription by rememberMmkvBool(AppConfig.PREF_AUTO_TEST_AFTER_UPDATE_SUBSCRIPTION, false)
         var autoRemoveInvalidAfterTest by rememberMmkvBool(AppConfig.PREF_AUTO_REMOVE_INVALID_AFTER_TEST, false)
         var autoSortAfterTest by rememberMmkvBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, false)
-        var sendHwid by rememberMmkvBool(AppConfig.PREF_SEND_HWID, false)
+        var sendHwid by rememberMmkvBool(AppConfig.PREF_SEND_HWID, true)
 
         AlertDialog(
             onDismissRequest = { showUpdateDialog = false },
             text = {
-                Column {
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_sub_update),
-                        checked = updateSubscription,
-                        onCheckedChange = { updateSubscription = it }
-                    )
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_pref_auto_test_after_update_subscription),
-                        summary = stringResource(R.string.summary_pref_auto_test_after_update_subscription),
-                        checked = autoTestAfterUpdateSubscription,
-                        onCheckedChange = { autoTestAfterUpdateSubscription = it }
-                    )
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_pref_auto_remove_invalid_after_test),
-                        summary = stringResource(R.string.summary_pref_auto_remove_invalid_after_test),
-                        checked = autoRemoveInvalidAfterTest,
-                        enabled = autoTestAfterUpdateSubscription,
-                        onCheckedChange = { autoRemoveInvalidAfterTest = it }
-                    )
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_pref_auto_sort_after_test),
-                        summary = stringResource(R.string.summary_pref_auto_sort_after_test),
-                        checked = autoSortAfterTest,
-                        enabled = autoTestAfterUpdateSubscription,
-                        onCheckedChange = { autoSortAfterTest = it }
-                    )
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_pref_send_hwid),
-                        summary = stringResource(R.string.summary_pref_send_hwid),
-                        checked = sendHwid,
-                        onCheckedChange = { sendHwid = it }
-                    )
+                SegmentedColumn {
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.title_sub_update),
+                            checked = updateSubscription,
+                            onCheckedChange = { updateSubscription = it },
+                            shape = shape
+                        )
+                    }
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.title_pref_auto_test_after_update_subscription),
+                            summary = stringResource(R.string.summary_pref_auto_test_after_update_subscription),
+                            checked = autoTestAfterUpdateSubscription,
+                            onCheckedChange = { autoTestAfterUpdateSubscription = it },
+                            shape = shape
+                        )
+                    }
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.title_pref_auto_remove_invalid_after_test),
+                            summary = stringResource(R.string.summary_pref_auto_remove_invalid_after_test),
+                            checked = autoRemoveInvalidAfterTest,
+                            enabled = autoTestAfterUpdateSubscription,
+                            onCheckedChange = { autoRemoveInvalidAfterTest = it },
+                            shape = shape
+                        )
+                    }
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.title_pref_auto_sort_after_test),
+                            summary = stringResource(R.string.summary_pref_auto_sort_after_test),
+                            checked = autoSortAfterTest,
+                            enabled = autoTestAfterUpdateSubscription,
+                            onCheckedChange = { autoSortAfterTest = it },
+                            shape = shape
+                        )
+                    }
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.title_pref_send_hwid),
+                            summary = stringResource(R.string.summary_pref_send_hwid),
+                            checked = sendHwid,
+                            onCheckedChange = { sendHwid = it },
+                            shape = shape
+                        )
+                    }
                 }
             },
             confirmButton = {
