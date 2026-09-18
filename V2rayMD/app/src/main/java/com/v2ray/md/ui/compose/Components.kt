@@ -338,14 +338,29 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val shape = RoundedCornerShape(24.dp)
-    val pressedShape = RoundedCornerShape(12.dp)
+    var isPressed by remember { mutableStateOf(false) }
+    val radius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "shape"
+    )
+    val shape = RoundedCornerShape(radius)
+    val pressModifier = Modifier.pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                awaitFirstDown(requireUnconsumed = false)
+                isPressed = true
+                waitForUpOrCancellation()
+                isPressed = false
+            }
+        }
+    }
     
     IconButton(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.then(if (enabled) pressModifier else Modifier),
         enabled = enabled,
-        shapes = IconButtonShapes(shape = shape, pressedShape = pressedShape)
+        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()
     }
@@ -359,14 +374,29 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val shape = RoundedCornerShape(24.dp)
-    val pressedShape = RoundedCornerShape(12.dp)
+    var isPressed by remember { mutableStateOf(false) }
+    val radius by animateDpAsState(
+        targetValue = if (isPressed) 12.dp else 24.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "shape"
+    )
+    val shape = RoundedCornerShape(radius)
+    val pressModifier = Modifier.pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                awaitFirstDown(requireUnconsumed = false)
+                isPressed = true
+                waitForUpOrCancellation()
+                isPressed = false
+            }
+        }
+    }
     
     FilledTonalIconButton(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.then(if (enabled) pressModifier else Modifier),
         enabled = enabled,
-        shapes = IconButtonShapes(shape = shape, pressedShape = pressedShape)
+        shapes = IconButtonShapes(shape = shape, pressedShape = shape)
     ) {
         content()
     }
