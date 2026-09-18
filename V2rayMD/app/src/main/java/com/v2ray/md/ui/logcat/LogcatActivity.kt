@@ -20,9 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +51,7 @@ import com.v2ray.md.R
 import com.v2ray.md.extension.toastError
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.ItemDivider
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
 import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -170,20 +172,18 @@ fun LogcatScreen(
                     },
                     navigationIcon = {
                         if (showSearch) {
-                            MorphFilledTonalIconButton(onClick = {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                                 searchQuery = ""
                                 viewModel.filter("")
                                 showSearch = false
-                            },
-                                modifier = Modifier.padding(start = 8.dp)
-                            ) {
+                            }) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
                                 )
                             }
                         } else {
-                            MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_back_24dp),
                                     contentDescription = stringResource(R.string.acc_back)
@@ -193,26 +193,26 @@ fun LogcatScreen(
                     },
                     actions = {
                         if (!showSearch) {
-                            MorphFilledTonalIconButton(onClick = { showSearch = true }) {
+                            FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showSearch = true }) {
                                 Icon(
                                     painterResource(R.drawable.ic_search_24dp),
                                     contentDescription = stringResource(R.string.acc_search)
                                 )
                             }
                         }
-                        MorphFilledTonalIconButton(onClick = { viewModel.copyLogcat() }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { viewModel.copyLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_copy),
                                 contentDescription = stringResource(R.string.acc_copy_log)
                             )
                         }
-                        MorphFilledTonalIconButton(onClick = { onShareLogcat() }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { onShareLogcat() }) {
                             Icon(
                                 painterResource(R.drawable.ic_share_24dp),
                                 contentDescription = stringResource(R.string.acc_share_log)
                             )
                         }
-                        MorphFilledTonalIconButton(onClick = {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                             scope.launch(Dispatchers.IO) { viewModel.clearLogcat() }
                         }) {
                             Icon(

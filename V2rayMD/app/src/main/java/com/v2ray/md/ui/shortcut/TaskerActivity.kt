@@ -20,7 +20,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -42,7 +44,7 @@ import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
@@ -143,7 +145,7 @@ fun TaskerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text("", modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -151,7 +153,7 @@ fun TaskerScreen(
                     }
                 },
                 actions = {
-                    MorphFilledTonalIconButton(onClick = onSave) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onSave) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },

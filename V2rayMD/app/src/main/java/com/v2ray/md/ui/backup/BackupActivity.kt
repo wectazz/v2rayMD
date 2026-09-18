@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -50,7 +51,7 @@ import com.v2ray.md.ui.base.HelperBaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.InputDialog
 import com.v2ray.md.ui.compose.InputField
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SelectListDialog
@@ -223,7 +224,7 @@ fun BackupScreen(
                 LargeFlexibleTopAppBar(
                     title = { Text(stringResource(R.string.title_configuration_backup_restore), modifier = Modifier.padding(start = 8.dp)) },
                     navigationIcon = {
-                        MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)

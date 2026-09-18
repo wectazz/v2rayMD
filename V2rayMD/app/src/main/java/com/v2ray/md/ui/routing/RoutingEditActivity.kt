@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -49,7 +51,7 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -192,7 +194,7 @@ fun RoutingEditScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.routing_settings_rule_title), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -201,14 +203,14 @@ fun RoutingEditScreen(
                 },
                 actions = {
                     if (position >= 0) {
-                        MorphFilledTonalIconButton(onClick = { showDeleteConfirm = true }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteConfirm = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_delete_24dp),
                                 contentDescription = stringResource(R.string.acc_delete)
                             )
                         }
                     }
-                    MorphFilledTonalIconButton(onClick = { onSave(buildRuleset()) }) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { onSave(buildRuleset()) }) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)

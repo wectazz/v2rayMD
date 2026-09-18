@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,7 +55,7 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.JsonUtil
@@ -354,7 +356,7 @@ fun ServerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(configType.toString(), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -363,11 +365,11 @@ fun ServerScreen(
                 },
                 actions = {
                     if (guid.isNotEmpty() && !isRunning) {
-                        MorphFilledTonalIconButton(onClick = { showDeleteDialog = true }) {
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = { showDeleteDialog = true }) {
                             Icon(painterResource(R.drawable.ic_delete_24dp), stringResource(R.string.acc_delete))
                         }
                     }
-                    MorphFilledTonalIconButton(onClick = {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = {
                         onSave(buildProfileItem())
                     }) {
                         Icon(painterResource(R.drawable.ic_fab_check), stringResource(R.string.acc_save))

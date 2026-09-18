@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -70,7 +71,7 @@ import com.v2ray.md.R
 import com.v2ray.md.enums.PermissionType
 import com.v2ray.md.extension.toast
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
-import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
+import com.v2ray.md.ui.compose.MorphIconButtonShapes
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.QRCodeDecoder
 import java.nio.ByteBuffer
@@ -168,7 +169,7 @@ fun ScannerScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(R.string.menu_item_import_config_qrcode), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
-                    MorphFilledTonalIconButton(onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onBackClick) {
                         Icon(
                             painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -176,7 +177,7 @@ fun ScannerScreen(
                     }
                 },
                 actions = {
-                    MorphFilledTonalIconButton(
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes,
                         onClick = {
                             if (isScanning) {
                                 if (torchEnabled) {
@@ -200,7 +201,7 @@ fun ScannerScreen(
                         )
                     }
                     if (isScanning && hasTorch) {
-                        MorphFilledTonalIconButton(
+                        FilledTonalIconButton(shapes = MorphIconButtonShapes,
                             onClick = {
                                 torchEnabled = !torchEnabled
                                 cameraControl?.enableTorch(torchEnabled)
@@ -218,7 +219,7 @@ fun ScannerScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton(onClick = onSelectPhoto) {
+                    FilledTonalIconButton(shapes = MorphIconButtonShapes, onClick = onSelectPhoto) {
                         Icon(
                             painterResource(R.drawable.ic_image_24dp),
                             contentDescription = stringResource(R.string.acc_select_image)
