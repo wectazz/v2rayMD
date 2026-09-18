@@ -209,21 +209,19 @@ fun MainScreen(
                         .padding(innerPadding)
                 ) {
 
-                    if (groups.size > 1) {
-                        GroupTabBar(
-                            groups = groups,
-                            selectedTabIndex = pagerState.currentPage.coerceIn(0, groups.lastIndex),
-                            mainViewModel = mainViewModel,
-                            onTabClick = { targetIndex ->
-                                scope.launch {
-                                    pagerState.navigateToPageOptimized(
-                                        targetPage = targetIndex,
-                                        animateAdjacentPage = true
-                                    )
-                                }
+                    GroupTabBar(
+                        groups = groups,
+                        selectedTabIndex = pagerState.currentPage.coerceIn(0, groups.lastIndex),
+                        mainViewModel = mainViewModel,
+                        onTabClick = { targetIndex ->
+                            scope.launch {
+                                pagerState.navigateToPageOptimized(
+                                    targetPage = targetIndex,
+                                    animateAdjacentPage = true
+                                )
                             }
-                        )
-                    }
+                        }
+                    )
 
                     HorizontalPager(
                         state = pagerState,

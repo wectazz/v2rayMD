@@ -165,7 +165,7 @@ fun MainDrawerContent(
                     }
                 }
             }
-            AppDivider()
+            Spacer(modifier = Modifier.height(16.dp))
             SegmentedColumn {
                 secondaryDrawerItems.forEachIndexed { index, item ->
                     item(key = item) {

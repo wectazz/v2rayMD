@@ -97,7 +97,14 @@ fun AppTopBar(
                 if (navigationIcon != null) {
                     navigationIcon()
                 } else {
-                    IconButton(shapes = MorphIconButtonShapes, onClick = if (isSearchActive) onSearchClose else onBackClick) {
+                    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+                    val isPressed by interactionSource.collectIsPressedAsState()
+                    val currentShape = if (isPressed) RoundedCornerShape(12.dp) else CircleShape
+                    IconButton(
+                        modifier = Modifier.padding(start = 8.dp).clip(currentShape),
+                        onClick = if (isSearchActive) onSearchClose else onBackClick,
+                        interactionSource = interactionSource
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back_24dp),
                             contentDescription = stringResource(R.string.acc_back)
@@ -142,7 +149,14 @@ fun SearchInputField(
                 .focusRequester(focusRequester)
         )
         if (query.isNotEmpty()) {
-            IconButton(shapes = MorphIconButtonShapes, onClick = { onQueryChange("") }) {
+            val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+            val isPressed by interactionSource.collectIsPressedAsState()
+            val currentShape = if (isPressed) RoundedCornerShape(12.dp) else CircleShape
+            IconButton(
+                onClick = { onQueryChange("") },
+                modifier = Modifier.clip(currentShape),
+                interactionSource = interactionSource
+            ) {
                 Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
             }
         }
@@ -322,6 +336,12 @@ val MorphIconButtonShapes = IconButtonShapes(
     shape = CircleShape,
     pressedShape = RoundedCornerShape(12.dp)
 )
+
+@Composable
+fun getInstantMorphShape(interactionSource: androidx.compose.foundation.interaction.InteractionSource): androidx.compose.ui.graphics.Shape {
+    val isPressed by androidx.compose.foundation.interaction.collectIsPressedAsState(interactionSource)
+    return if (isPressed) RoundedCornerShape(12.dp) else CircleShape
+}
 
 /**
  * Single-select connected toggle row from the ButtonGroup family: ToggleButtons

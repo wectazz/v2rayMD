@@ -25,6 +25,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 import com.v2ray.md.ui.compose.AppDivider
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ToggleButton
 
 @Composable
 fun MainStatusBar(
@@ -57,28 +59,23 @@ fun MainStatusBar(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MainConnectFab(
     isRunning: Boolean,
     onAction: (MainAction) -> Unit
 ) {
-    ExtendedFloatingActionButton(
+    ToggleButton(
+        checked = isRunning,
+        onCheckedChange = { onAction(MainAction.ToggleService) },
         modifier = Modifier.padding(
             bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        ),
-        text = {            Text(
-                stringResource(
-                    if (isRunning) R.string.acc_stop else R.string.acc_start
-                )
-            )
-        },
-        icon = {
-            Icon(
-                painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
-                else painterResource(R.drawable.ic_play_24dp),
-                contentDescription = null
-            )
-        },
-        onClick = { onAction(MainAction.ToggleService) }
-    )
+        )
+    ) {
+        Icon(
+            painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
+            else painterResource(R.drawable.ic_play_24dp),
+            contentDescription = stringResource(if (isRunning) R.string.acc_stop else R.string.acc_start)
+        )
+    }
 }
