@@ -958,7 +958,7 @@ fun SettingsScreen(
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             shape = shape,
-                            color = MaterialTheme.colorScheme.surfaceContainer
+                            color = if (com.v2ray.md.ui.compose.LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainerHigh
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
