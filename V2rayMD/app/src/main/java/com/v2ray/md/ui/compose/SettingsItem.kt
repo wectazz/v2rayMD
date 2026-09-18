@@ -106,19 +106,18 @@ private fun SettingsItemRow(
             color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             ListItem(
-                headlineContent = {
-                    Text(text = title, color = titleColor)
-                },
-                supportingContent = supportingContent,
                 leadingContent = leadingContent,
                 trailingContent = trailing,
+                supportingContent = supportingContent,
                 verticalAlignment = Alignment.CenterVertically,
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 modifier = Modifier.then(
                     if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick)
                     else Modifier
                 )
-            )
+            ) {
+                Text(text = title, color = titleColor)
+            }
         }
         return
     }
