@@ -6,11 +6,20 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.clickable
@@ -342,21 +351,21 @@ fun MorphIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var isPressed by remember { mutableStateOf(false) }
     val cornerRadius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 1000f),
         label = "radius"
     )
 
-    androidx.compose.foundation.layout.Box(
+    Box(
         modifier = modifier
-            .androidx.compose.material3.minimumInteractiveComponentSize()
+            .minimumInteractiveComponentSize()
             .size(40.dp)
-            .androidx.compose.ui.draw.clip(RoundedCornerShape(cornerRadius))
-            .androidx.compose.ui.input.pointer.pointerInput(enabled) {
+            .clip(RoundedCornerShape(cornerRadius))
+            .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
-                androidx.compose.foundation.gestures.awaitEachGesture {
+                awaitEachGesture {
                     awaitFirstDown(requireUnconsumed = false)
                     isPressed = true
                     waitForUpOrCancellation()
@@ -364,15 +373,15 @@ fun MorphIconButton(
                 }
             }
             .clickable(
-                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                indication = androidx.compose.foundation.LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current,
                 enabled = enabled,
                 onClick = onClick
             ),
         contentAlignment = Alignment.Center
     ) {
-        androidx.compose.runtime.CompositionLocalProvider(
-            androidx.compose.material3.LocalContentColor provides androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant
         ) {
             content()
         }
@@ -386,25 +395,25 @@ fun MorphFilledTonalIconButton(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var isPressed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var isPressed by remember { mutableStateOf(false) }
     val cornerRadius by animateDpAsState(
         targetValue = if (isPressed) 12.dp else 24.dp,
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 1000f),
         label = "radius"
     )
 
-    val containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
-    val contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer
+    val containerColor = MaterialTheme.colorScheme.secondaryContainer
+    val contentColor = MaterialTheme.colorScheme.onSecondaryContainer
 
-    androidx.compose.foundation.layout.Box(
+    Box(
         modifier = modifier
-            .androidx.compose.material3.minimumInteractiveComponentSize()
+            .minimumInteractiveComponentSize()
             .size(40.dp)
-            .androidx.compose.ui.draw.clip(RoundedCornerShape(cornerRadius))
-            .androidx.compose.foundation.background(containerColor)
-            .androidx.compose.ui.input.pointer.pointerInput(enabled) {
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(containerColor)
+            .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
-                androidx.compose.foundation.gestures.awaitEachGesture {
+                awaitEachGesture {
                     awaitFirstDown(requireUnconsumed = false)
                     isPressed = true
                     waitForUpOrCancellation()
@@ -412,15 +421,15 @@ fun MorphFilledTonalIconButton(
                 }
             }
             .clickable(
-                interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                indication = androidx.compose.foundation.LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current,
                 enabled = enabled,
                 onClick = onClick
             ),
         contentAlignment = Alignment.Center
     ) {
-        androidx.compose.runtime.CompositionLocalProvider(
-            androidx.compose.material3.LocalContentColor provides contentColor
+        CompositionLocalProvider(
+            LocalContentColor provides contentColor
         ) {
             content()
         }
