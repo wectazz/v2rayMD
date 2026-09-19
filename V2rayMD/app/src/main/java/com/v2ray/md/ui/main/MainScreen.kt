@@ -1,6 +1,7 @@
 package com.v2ray.md.ui.main
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -180,26 +181,52 @@ fun MainScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
         containerColor = Color.Transparent,
             topBar = {
-                MainTopBar(
-                    isLoading = isLoading,
-                    onMenuClick = { showMenuBottomSheet = true },
-                    onAction = onAction,
-                    onMoreMenuAction = { action ->
-                        when (action) {
-                            MainMoreMenuAction.RestartService -> onAction(MainAction.RestartService)
-                            MainMoreMenuAction.DeleteAll -> showDelAllConfirm = true
-                            MainMoreMenuAction.DeleteDuplicate -> showDelDuplicateConfirm = true
-                            MainMoreMenuAction.DeleteInvalid -> showDelInvalidConfirm = true
-                            MainMoreMenuAction.ExportAll -> onAction(MainAction.ExportAll)
-                            MainMoreMenuAction.LocateSelected -> onAction(MainAction.LocateSelectedServer)
-                            MainMoreMenuAction.SortByTestResults -> onAction(MainAction.SortByTestResults)
-                            MainMoreMenuAction.TestAll -> onAction(MainAction.TestAllServers)
-                            MainMoreMenuAction.TestAllRealPing -> onAction(MainAction.TestRealAllServers)
-                            MainMoreMenuAction.UpdateSubscriptions -> onAction(MainAction.UpdateSubscriptions)
-                        }
-                    },
-                    scrollBehavior = scrollBehavior
-                )
+                Column(
+                    modifier = Modifier.background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(
+                                androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f),
+                                androidx.compose.ui.graphics.Color.Transparent
+                            )
+                        )
+                    )
+                ) {
+                    MainTopBar(
+                        isLoading = isLoading,
+                        onMenuClick = { showMenuBottomSheet = true },
+                        onAction = onAction,
+                        onMoreMenuAction = { action ->
+                            when (action) {
+                                MainMoreMenuAction.RestartService -> onAction(MainAction.RestartService)
+                                MainMoreMenuAction.DeleteAll -> showDelAllConfirm = true
+                                MainMoreMenuAction.DeleteDuplicate -> showDelDuplicateConfirm = true
+                                MainMoreMenuAction.DeleteInvalid -> showDelInvalidConfirm = true
+                                MainMoreMenuAction.ExportAll -> onAction(MainAction.ExportAll)
+                                MainMoreMenuAction.LocateSelected -> onAction(MainAction.LocateSelectedServer)
+                                MainMoreMenuAction.SortByTestResults -> onAction(MainAction.SortByTestResults)
+                                MainMoreMenuAction.TestAll -> onAction(MainAction.TestAllServers)
+                                MainMoreMenuAction.TestAllRealPing -> onAction(MainAction.TestRealAllServers)
+                                MainMoreMenuAction.UpdateSubscriptions -> onAction(MainAction.UpdateSubscriptions)
+                            }
+                        },
+                        scrollBehavior = scrollBehavior
+                    )
+                    if (groups.isNotEmpty()) {
+                        GroupTabBar(
+                            groups = groups,
+                            selectedTabIndex = pagerState.currentPage.coerceIn(0, groups.lastIndex),
+                            mainViewModel = mainViewModel,
+                            onTabClick = { targetIndex ->
+                                scope.launch {
+                                    pagerState.navigateToPageOptimized(
+                                        targetPage = targetIndex,
+                                        animateAdjacentPage = true
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
             },
             bottomBar = {
                 MainCombinedBottomBar(
@@ -271,7 +298,7 @@ fun MainScreen(
                             },
                             contentPadding = PaddingValues(
                                 start = 16.dp,
-                                top = 8.dp,
+                                top = innerPadding.calculateTopPadding(),
                                 end = 16.dp,
                                 bottom = innerPadding.calculateBottomPadding() + 16.dp
                             )

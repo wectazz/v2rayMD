@@ -291,7 +291,7 @@ fun SegmentedColumn(
                                     alpha = (currentProgress * 1.5f).coerceIn(0f, 1f)
                                 }
                         ) {
-                            val position = SegmentedPosition(index, allItems.size)
+                            val visibleItems = allItems.filter { it.visible }; val visibleIndex = visibleItems.indexOf(itemData); val position = if (itemData.visible && visibleIndex >= 0) SegmentedPosition(visibleIndex, visibleItems.size) else SegmentedPosition(index, allItems.size)
                             CompositionLocalProvider(
                                 LocalSegmentedItemShape provides shape,
                                 LocalSegmentedPosition provides position
