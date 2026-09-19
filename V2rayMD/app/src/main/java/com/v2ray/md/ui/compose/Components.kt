@@ -464,7 +464,10 @@ fun SingleSelectButtonGroup(
     modifier: Modifier = Modifier
 ) {
     androidx.compose.material3.ButtonGroup(
-        modifier = modifier,
+        modifier = modifier.background(
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+            shape = androidx.compose.foundation.shape.CircleShape
+        ),
         overflowIndicator = {}
     ) {
         options.forEachIndexed { index, label ->
