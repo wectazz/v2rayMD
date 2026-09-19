@@ -6,6 +6,7 @@
 2. **Импорты и совместимость:** Добавь недостающие `import` (Compose, M3, Koin). Проверь типы, модификаторы и соответствие API проекта (сверяйся с `build.gradle.kts`).
 3. **Компиляция:** Код обязан собираться без ошибок на этапе `gradle assemble / build`.
 4. **Внешние источники:** Всегда читай предоставленные URL и документацию перед генерацией кода.
+5. **Не пиши об ошибке компиляции изза libv2ray, я знаю об этом, не трать токены изза этой заметки мне**
    
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.

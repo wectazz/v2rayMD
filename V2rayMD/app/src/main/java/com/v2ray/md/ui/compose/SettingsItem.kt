@@ -1,5 +1,6 @@
 package com.v2ray.md.ui.compose
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -89,7 +90,7 @@ private fun SettingsItemRow(
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .androidx.compose.foundation.background(
+                    .background(
                         MaterialTheme.colorScheme.secondaryContainer,
                         com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
                     ),
