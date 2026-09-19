@@ -217,22 +217,12 @@ fun SubEditScreen(
                 .padding(vertical = 8.dp)
                 .padding(bottom = 36.dp)
         ) {
-            SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
-                item { shape ->
-                    SettingsEditItem(title = stringResource(R.string.sub_setting_remarks), value = remarks, onValueChanged = { remarks = it }, shape = shape)
-                }
-                item { shape ->
-                    SettingsEditItem(title = stringResource(R.string.sub_setting_url), value = url, onValueChanged = { url = it }, shape = shape)
-                }
-                item { shape ->
-                    SettingsEditItem(title = stringResource(R.string.sub_setting_user_agent), value = userAgent, onValueChanged = { userAgent = it }, shape = shape)
-                }
-                item { shape ->
-                    SettingsEditItem(title = stringResource(R.string.sub_setting_request_headers), value = requestHeaders, onValueChanged = { requestHeaders = it }, shape = shape)
-                }
-                item { shape ->
-                    SettingsEditItem(title = stringResource(R.string.sub_setting_filter), value = filter, onValueChanged = { filter = it }, shape = shape)
-                }
+            SegmentedColumn {
+                item { shape -> androidx.compose.material3.TextField(value = remarks, onValueChange = { remarks = it }, label = { androidx.compose.material3.Text(stringResource(R.string.sub_setting_remarks)) }, modifier = Modifier.fillMaxWidth(), shape = shape, colors = androidx.compose.material3.TextFieldDefaults.colors(focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent, unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent)) }
+                item { shape -> androidx.compose.material3.TextField(value = url, onValueChange = { url = it }, label = { androidx.compose.material3.Text(stringResource(R.string.sub_setting_url)) }, modifier = Modifier.fillMaxWidth(), shape = shape, colors = androidx.compose.material3.TextFieldDefaults.colors(focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent, unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent)) }
+                item { shape -> androidx.compose.material3.TextField(value = userAgent, onValueChange = { userAgent = it }, label = { androidx.compose.material3.Text(stringResource(R.string.sub_setting_user_agent)) }, modifier = Modifier.fillMaxWidth(), shape = shape, colors = androidx.compose.material3.TextFieldDefaults.colors(focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent, unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent)) }
+                item { shape -> androidx.compose.material3.TextField(value = requestHeaders, onValueChange = { requestHeaders = it }, label = { androidx.compose.material3.Text(stringResource(R.string.sub_setting_request_headers)) }, modifier = Modifier.fillMaxWidth(), shape = shape, colors = androidx.compose.material3.TextFieldDefaults.colors(focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent, unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent)) }
+                item { shape -> androidx.compose.material3.TextField(value = filter, onValueChange = { filter = it }, label = { androidx.compose.material3.Text(stringResource(R.string.sub_setting_filter)) }, modifier = Modifier.fillMaxWidth(), shape = shape, colors = androidx.compose.material3.TextFieldDefaults.colors(focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent, unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent)) }
                 item { shape ->
                     SettingsSwitchItem(
                         title = stringResource(R.string.sub_setting_enable),

@@ -172,7 +172,7 @@ fun TaskerScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            SegmentedColumn(modifier = Modifier.padding(vertical = 8.dp)) {
                 item { shape ->
                     SettingsSwitchItem(
                         title = stringResource(R.string.tasker_start_service),

@@ -164,7 +164,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                     androidx.compose.foundation.layout.Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer, com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)),
+                            .background(MaterialTheme.colorScheme.secondaryContainer, com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(

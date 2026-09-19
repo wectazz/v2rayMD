@@ -437,11 +437,7 @@ fun SettingsScreen(
             iconVector = Icons.Filled.VpnKey, entries = listOf(
                 SettingsEntry(R.string.per_app_proxy_settings, null) { shape ->
                     val context = LocalContext.current
-                    SettingsMenuItem(
-                        title = stringResource(R.string.per_app_proxy_settings),
-                        onClick = { context.startActivity(Intent(context, PerAppProxyActivity::class.java)) },
-                        shape = shape
-                    )
+                    SettingsMenuItem(icon = painterResource(R.drawable.ic_per_apps_24dp), title = stringResource(R.string.per_app_proxy_settings), onClick = { context.startActivity(Intent(context, PerAppProxyActivity::class.java)) }, shape = shape)
                 },
                 SettingsEntry(R.string.title_pref_ipv6_enabled, R.string.summary_pref_ipv6_enabled) { shape ->
                         SettingsSwitchItem(
