@@ -8,7 +8,7 @@ Fork of [2dust/v2rayNG](https://github.com/2dust/v2rayNG), rebranded and moderni
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-2.4.10-blue.svg)](https://kotlinlang.org)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/wectazz/v2rayMD)](https://github.com/wectazz/v2rayMD/commits/master)
 [![GitHub Releases](https://img.shields.io/github/downloads/wectazz/v2rayMD/latest/total?logo=github)](https://github.com/wectazz/v2rayMD/releases)
-[![Chat on Telegram](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](https://t.me/v2rayn)
+[![Telegram Channel](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](https://t.me/v2ray_md)
 
 ---
 
