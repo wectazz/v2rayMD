@@ -48,9 +48,12 @@ fun MainCombinedBottomBar(
     
     val fabWidth by androidx.compose.animation.core.animateDpAsState(
         targetValue = if (isRunning) 72.dp else fullWidth,
-        animationSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMedium),
+        animationSpec = androidx.compose.animation.core.tween(durationMillis = 500, easing = androidx.compose.animation.core.FastOutSlowInEasing),
         label = "fabWidth"
     )
+
+    val notConnectedStr = androidx.compose.ui.res.stringResource(com.v2ray.md.R.string.connection_not_connected)
+    val statsText = if (displayText == notConnectedStr) "" else displayText
 
     Row(
         modifier = Modifier
@@ -68,22 +71,22 @@ fun MainCombinedBottomBar(
             exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkHorizontally()
         ) {
             Surface(
+                onClick = { onAction(MainAction.TestCurrentServer) },
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(72.dp)
-                    .clickable(onClick = { onAction(MainAction.TestCurrentServer) })
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = displayText,
+                        text = statsText,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.semantics {
-                            contentDescription = displayText
+                            contentDescription = statsText
                         }
                     )
                 }

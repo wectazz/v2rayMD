@@ -58,6 +58,8 @@ import com.v2ray.md.ui.compose.lazySegmentColumn
 import com.v2ray.md.ui.compose.LocalSegmentedItemShape
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Surface
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.ReorderableGridItem
 import com.v2ray.md.ui.compose.ReorderableListItem
@@ -353,89 +355,92 @@ private fun ServerListItem(
     }
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
     
-    Row(
+    Surface(
+        onClick = { actions.select(row.guid) },
+        shape = shape,
+        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                else MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape)
-            .background(
-                if (isSelected) MaterialTheme.colorScheme.secondaryContainer
-                else MaterialTheme.colorScheme.surfaceContainer
-            )
             .semantics {
                 if (selectedStateDescription != null) {
                     stateDescription = selectedStateDescription
                 }
             }
-            .clickable { actions.select(row.guid) }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            Modifier
-                .weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text(row.remarks, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge.copy(lineBreak = LineBreak.Paragraph), maxLines = 2, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurface)
-            }
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                if (row.subscriptionBadge.isNotBlank()) {
-                    Box(
-                        Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)), Alignment.Center
-                    ) {
-                        Text(row.subscriptionBadge.uppercase(), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Column(
+                Modifier
+                    .weight(1f)
+            ) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(row.remarks, Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge.copy(lineBreak = LineBreak.Paragraph), maxLines = 2, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurface)
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    if (row.subscriptionBadge.isNotBlank()) {
+                        Box(
+                            Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)), Alignment.Center
+                        ) {
+                            Text(row.subscriptionBadge.uppercase(), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                        }
+                        Spacer(Modifier.width(8.dp))
                     }
-                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        row.statistics,
+                        Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
-                Text(
-                    row.statistics,
-                    Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(row.typeDescription, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(testResult, style = MaterialTheme.typography.bodySmall, color = if (row.testDelayMillis < 0L) colorPingRed else colorPing, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(row.typeDescription, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(testResult, style = MaterialTheme.typography.bodySmall, color = if (row.testDelayMillis < 0L) colorPingRed else colorPing, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-        }
-        
-        if (doubleColumnDisplay) {
-            MorphIconButton(onClick = { actions.more(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
-                Icon(
-                    painterResource(R.drawable.ic_more_vert_24dp),
-                    stringResource(R.string.acc_more),
-                    Modifier.size(24.dp)
-                )
-            }
-        } else {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                MorphIconButton(onClick = { actions.share(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+            
+            if (doubleColumnDisplay) {
+                MorphIconButton(onClick = { actions.more(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
                     Icon(
-                        painterResource(R.drawable.ic_share_24dp),
-                        stringResource(R.string.title_configuration_share),
+                        painterResource(R.drawable.ic_more_vert_24dp),
+                        stringResource(R.string.acc_more),
                         Modifier.size(24.dp)
                     )
                 }
-                MorphIconButton(onClick = { actions.edit(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
-                    Icon(
-                        painterResource(R.drawable.ic_edit_24dp),
-                        stringResource(R.string.acc_edit),
-                        Modifier.size(24.dp)
-                    )
-                }
-                MorphIconButton(onClick = { actions.remove(row.guid) }, modifier = Modifier.size(36.dp)) {
-                    Icon(
-                        painterResource(R.drawable.ic_delete_24dp),
-                        stringResource(R.string.acc_delete),
-                        Modifier.size(24.dp)
-                    )
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    MorphIconButton(onClick = { actions.share(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+                        Icon(
+                            painterResource(R.drawable.ic_share_24dp),
+                            stringResource(R.string.title_configuration_share),
+                            Modifier.size(24.dp)
+                        )
+                    }
+                    MorphIconButton(onClick = { actions.edit(row.guid, row.profile) }, modifier = Modifier.size(36.dp)) {
+                        Icon(
+                            painterResource(R.drawable.ic_edit_24dp),
+                            stringResource(R.string.acc_edit),
+                            Modifier.size(24.dp)
+                        )
+                    }
+                    MorphIconButton(onClick = { actions.remove(row.guid) }, modifier = Modifier.size(36.dp)) {
+                        Icon(
+                            painterResource(R.drawable.ic_delete_24dp),
+                            stringResource(R.string.acc_delete),
+                            Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
         }
