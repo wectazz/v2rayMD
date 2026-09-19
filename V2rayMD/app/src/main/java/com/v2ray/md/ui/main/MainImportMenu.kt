@@ -155,7 +155,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             val scrollState = rememberScrollState()
-            Column(modifier = Modifier.verticalScroll(scrollState).padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())) {
+            Column(modifier = Modifier.padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())) {
                 
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
@@ -205,32 +205,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             )
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 0.dp, bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    androidx.compose.foundation.layout.Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer, com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_settings_24dp),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(stringResource(R.string.title_app_management), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
-                }
-
-                SegmentedColumn {
                     item { shape ->
                         SettingsMenuItem(
                             icon = painterResource(R.drawable.ic_settings_24dp),
@@ -239,8 +214,8 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             shape = shape
                         )
                     }
-                    val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.DELETE }
-                    actions.forEach { item ->
+                    val deleteActions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.DELETE }
+                    deleteActions.forEach { item ->
                         item(visible = managementExpanded) { shape ->
                             SettingsMenuItem(
                                 icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),

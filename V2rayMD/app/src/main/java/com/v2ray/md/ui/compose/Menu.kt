@@ -118,7 +118,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
             val groupedItems = items.groupBy(groupBy)
             val scrollState = androidx.compose.foundation.rememberScrollState()
             
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
+            Column(modifier = Modifier) {
                 groupedItems.forEach { (group, groupItems) ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),

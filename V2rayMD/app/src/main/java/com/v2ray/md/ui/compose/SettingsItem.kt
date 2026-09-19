@@ -317,7 +317,11 @@ fun SettingsSwitchItem(
                 checked = checked,
                 onCheckedChange = if (enabled) onCheckedChange else null,
                 thumbContent = { SwitchCheckThumb(checked) },
-                enabled = enabled
+                enabled = enabled,
+                colors = SwitchDefaults.colors(
+                    uncheckedTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    uncheckedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
             )
         },
         shape = shape

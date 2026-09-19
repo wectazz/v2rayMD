@@ -588,6 +588,7 @@ fun SettingsScreen(
                 SettingsEntry(R.string.title_user_asset_setting, null) { shape ->
                     val context = LocalContext.current
                     SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_file_24dp),
                         title = stringResource(R.string.title_user_asset_setting),
                         onClick = { context.startActivity(Intent(context, UserAssetActivity::class.java)) },
                         shape = shape

@@ -54,7 +54,7 @@ private const val PADDING_HORIZONTAL = 16
 private const val PADDING_VERTICAL = 8
 
 private const val bouncyStiffness = 800f
-private const val bouncyDamping = 0.5f
+private const val bouncyDamping = 1.0f
 
 @DslMarker
 annotation class SegmentedColumnDsl
