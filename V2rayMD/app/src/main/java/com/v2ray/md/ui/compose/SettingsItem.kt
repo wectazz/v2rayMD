@@ -93,7 +93,7 @@ private fun SettingsItemRow(
                     .size(48.dp)
                     .background(
                         MaterialTheme.colorScheme.secondaryContainer,
-                        com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)
+                        com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
                     ),
                 contentAlignment = Alignment.Center
             ) {
