@@ -362,6 +362,7 @@ private fun ServerListItem(
                 else MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier
             .fillMaxWidth()
+            .clip(shape)
             .semantics {
                 if (selectedStateDescription != null) {
                     stateDescription = selectedStateDescription

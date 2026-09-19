@@ -70,26 +70,26 @@ fun MainCombinedBottomBar(
             enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(750, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
             exit = androidx.compose.animation.fadeOut(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing))
         ) {
-            Surface(
+            androidx.compose.material3.Button(
                 onClick = { onAction(MainAction.TestCurrentServer) },
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(72.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = statsText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.semantics {
-                            contentDescription = statsText
-                        }
-                    )
-                }
+                Text(
+                    text = statsText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .semantics { contentDescription = statsText }
+                        .fillMaxWidth(), // Fill width to align text
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Start
+                )
             }
         }
         
