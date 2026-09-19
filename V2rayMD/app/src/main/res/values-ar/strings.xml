@@ -565,4 +565,11 @@
     <string name="connection_test_empty_message">لا تتوفر تفاصيل</string>
     <string name="value_unknown">غير معروف</string>
 
+    <string name="title_import_method">طريقة الاستيراد</string>
+    <string name="title_add_manual">إدخال يدوي</string>
+    <string name="title_actions">الإجراءات</string>
+    <string name="title_tests">الاختبارات</string>
+    <string name="title_delete">حذف</string>
+    <string name="title_app_settings">إعدادات التطبيق</string>
+    <string name="title_tools_and_info">أدوات ومعلومات</string>
 </resources>

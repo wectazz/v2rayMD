@@ -567,4 +567,11 @@
     <string name="connection_test_empty_message">подробности отсутствуют</string>
     <string name="value_unknown">неизвестно</string>
 
+    <string name="title_import_method">Способ импорта</string>
+    <string name="title_add_manual">Ввести вручную</string>
+    <string name="title_actions">Действия</string>
+    <string name="title_tests">Тесты</string>
+    <string name="title_delete">Удалить</string>
+    <string name="title_app_settings">Настройки приложения</string>
+    <string name="title_tools_and_info">Инструменты и информация</string>
 </resources>

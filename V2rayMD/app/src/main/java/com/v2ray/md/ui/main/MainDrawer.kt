@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.background
@@ -165,6 +166,17 @@ fun MainMenuSheetContent(
                     )
                 }
             }
+              Row(
+                  modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 4.dp),
+                  verticalAlignment = Alignment.CenterVertically
+              ) {
+                  Text(
+                      text = stringResource(R.string.title_app_settings),
+                      style = MaterialTheme.typography.titleMedium,
+                      fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                      color = MaterialTheme.colorScheme.primary
+                  )
+              }
             SegmentedColumn {
                 primaryDrawerItems.forEachIndexed { index, item ->
                     item(key = item) {
@@ -179,6 +191,20 @@ fun MainMenuSheetContent(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 8.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.title_tools_and_info),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
             SegmentedColumn {
                 secondaryDrawerItems.forEachIndexed { index, item ->
                     item(key = item) {

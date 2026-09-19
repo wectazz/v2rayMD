@@ -555,4 +555,11 @@
     <string name="connection_test_empty_message">沒有詳細資訊</string>
     <string name="value_unknown">未知</string>
 
+    <string name="title_import_method">導入方法</string>
+    <string name="title_add_manual">手動輸入</string>
+    <string name="title_actions">操作</string>
+    <string name="title_tests">測試</string>
+    <string name="title_delete">刪除</string>
+    <string name="title_app_settings">應用設置</string>
+    <string name="title_tools_and_info">工具和信息</string>
 </resources>

@@ -555,4 +555,11 @@
     <string name="connection_test_empty_message">không có thông tin chi tiết</string>
     <string name="value_unknown">không xác định</string>
 
+    <string name="title_import_method">Phương thức nhập</string>
+    <string name="title_add_manual">Nhập thủ công</string>
+    <string name="title_actions">Hành động</string>
+    <string name="title_tests">Kiểm tra</string>
+    <string name="title_delete">Xóa</string>
+    <string name="title_app_settings">Cài đặt ứng dụng</string>
+    <string name="title_tools_and_info">Công cụ &amp; thông tin</string>
 </resources>

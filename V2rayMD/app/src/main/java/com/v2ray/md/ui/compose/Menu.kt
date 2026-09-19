@@ -65,7 +65,7 @@ fun <T> AppBottomSheetMenu(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState
         ) {
-            SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
+            SegmentedColumn {
                 items.forEach { item ->
                     item { shape ->
                         SettingsMenuItem(
@@ -152,7 +152,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
                     )
                 }
                 
-                SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
+                SegmentedColumn {
                     groupItems.forEach { item ->
                         item { shape ->
                             SettingsMenuItem(

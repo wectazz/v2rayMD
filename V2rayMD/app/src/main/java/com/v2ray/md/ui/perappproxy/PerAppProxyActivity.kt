@@ -35,6 +35,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -252,38 +255,23 @@ fun PerAppProxyScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f)
+                    MultiChoiceSegmentedButtonRow(
+                        modifier = Modifier.weight(1f).padding(end = 8.dp)
                     ) {
-                        Text(
-                            text = stringResource(R.string.per_app_proxy_settings_enable),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Switch(
+                        SegmentedButton(
                             checked = perAppProxyEnabled,
                             onCheckedChange = onPerAppProxyChanged,
-                            thumbContent = { SwitchCheckThumb(perAppProxyEnabled) }
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.switch_bypass_apps_mode),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Switch(
+                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                        ) {
+                            Text(stringResource(R.string.per_app_proxy_settings_enable))
+                        }
+                        SegmentedButton(
                             checked = bypassApps,
                             onCheckedChange = onBypassAppsChanged,
-                            thumbContent = { SwitchCheckThumb(bypassApps) }
-                        )
+                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                        ) {
+                            Text(stringResource(R.string.switch_bypass_apps_mode))
+                        }
                     }
                     MorphIconButton( onClick = onInfoClick) {
                         Icon(

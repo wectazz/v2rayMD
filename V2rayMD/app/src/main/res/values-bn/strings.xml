@@ -557,4 +557,11 @@
     <string name="connection_test_empty_message">কোনো বিবরণ পাওয়া যায়নি</string>
     <string name="value_unknown">অজানা</string>
 
+    <string name="title_import_method">আমদানি পদ্ধতি</string>
+    <string name="title_add_manual">ম্যানুয়াল এন্ট্রি</string>
+    <string name="title_actions">কার্যক্রম</string>
+    <string name="title_tests">পরীক্ষা</string>
+    <string name="title_delete">মুছুন</string>
+    <string name="title_app_settings">অ্যাপ সেটিংস</string>
+    <string name="title_tools_and_info">টুলস এবং তথ্য</string>
 </resources>

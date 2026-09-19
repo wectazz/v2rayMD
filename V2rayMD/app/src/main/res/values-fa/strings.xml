@@ -557,4 +557,11 @@
     <string name="connection_test_empty_message">جزئیاتی در دسترس نیست</string>
     <string name="value_unknown">ناشناخته</string>
 
+    <string name="title_import_method">روش وارد کردن</string>
+    <string name="title_add_manual">ورود دستی</string>
+    <string name="title_actions">عملیات</string>
+    <string name="title_tests">آزمون‌ها</string>
+    <string name="title_delete">حذف</string>
+    <string name="title_app_settings">تنظیمات برنامه</string>
+    <string name="title_tools_and_info">ابزارها و اطلاعات</string>
 </resources>

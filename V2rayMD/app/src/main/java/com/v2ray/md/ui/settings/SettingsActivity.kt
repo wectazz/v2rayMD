@@ -910,6 +910,17 @@ fun SettingsScreen(
                         shape = shape
                         )
                 },
+                SettingsEntry(R.string.per_app_proxy_settings, null) { perAppShape ->
+                    val context = androidx.compose.ui.platform.LocalContext.current
+                    SettingsMenuItem(
+                        icon = painterResource(R.drawable.ic_per_apps_24dp),
+                        title = stringResource(R.string.per_app_proxy_settings),
+                        onClick = {
+                            context.startActivity(android.content.Intent(context, com.v2ray.md.ui.perappproxy.PerAppProxyActivity::class.java))
+                        },
+                        shape = perAppShape
+                    )
+                },
                 SettingsEntry(R.string.title_system_vpn_settings, R.string.summary_system_vpn_settings) { shape ->
                     if (systemVpnSettingsAvailable) {
                         SettingsMenuItem(
