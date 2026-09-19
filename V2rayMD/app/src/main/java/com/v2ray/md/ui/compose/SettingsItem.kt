@@ -82,14 +82,14 @@ private fun SettingsItemRow(
         containerColor = containerColor
     )
     val titleColor = if (enabled) MaterialTheme.colorScheme.onSurface
-    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
     val descriptionColor = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
-    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
     val leadingContent: @Composable (() -> Unit)? = if (icon != null) {
         {
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(48.dp)
                     .background(
                         MaterialTheme.colorScheme.secondaryContainer,
                         com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)

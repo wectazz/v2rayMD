@@ -109,7 +109,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
     onSelected: (T) -> Unit
 ) {
     if (expanded) {
-        val sheetState = rememberModalBottomSheetState()
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val scope = rememberCoroutineScope()
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
@@ -131,7 +131,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
                         if (p != null) {
                             Box(
                                 modifier = Modifier
-                                    .size(44.dp)
+                                    .size(48.dp)
                                     .background(MaterialTheme.colorScheme.secondaryContainer, ScallopedShape(points = 16, depth = 0.08f)),
                                 contentAlignment = Alignment.Center
                             ) {

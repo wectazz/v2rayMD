@@ -50,6 +50,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+
+import com.v2ray.md.ui.perappproxy.PerAppProxyActivity
+import com.v2ray.md.ui.userasset.UserAssetActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
@@ -147,6 +154,8 @@ private fun SettingsEntry.matches(query: String): Boolean {
 
 private data class SettingsSection(
     val titleRes: Int,
+    val iconRes: Int? = null,
+    val iconVector: ImageVector? = null,
     val entries: List<SettingsEntry>
 )
 
@@ -333,7 +342,7 @@ fun SettingsScreen(
     val sections = listOf(
         SettingsSection(
             R.string.title_ui_settings,
-            listOf(
+            iconVector = Icons.Filled.Palette, entries = listOf(
                 SettingsEntry(R.string.title_pref_speed_enabled, R.string.summary_pref_speed_enabled) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_play_24dp),
@@ -425,7 +434,15 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_vpn_settings,
-            listOf(
+            iconVector = Icons.Filled.VpnKey, entries = listOf(
+                SettingsEntry(R.string.per_app_proxy_settings, null) { shape ->
+                    val context = LocalContext.current
+                    SettingsMenuItem(
+                        title = stringResource(R.string.per_app_proxy_settings),
+                        onClick = { context.startActivity(Intent(context, PerAppProxyActivity::class.java)) },
+                        shape = shape
+                    )
+                },
                 SettingsEntry(R.string.title_pref_ipv6_enabled, R.string.summary_pref_ipv6_enabled) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_routing_24dp),
@@ -567,7 +584,15 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_core_settings,
-            listOf(
+            iconVector = Icons.Filled.Settings, entries = listOf(
+                SettingsEntry(R.string.title_user_asset_setting, null) { shape ->
+                    val context = LocalContext.current
+                    SettingsMenuItem(
+                        title = stringResource(R.string.title_user_asset_setting),
+                        onClick = { context.startActivity(Intent(context, UserAssetActivity::class.java)) },
+                        shape = shape
+                    )
+                },
                 SettingsEntry(R.string.title_pref_sniffing_enabled, R.string.summary_pref_sniffing_enabled) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_search_24dp),
@@ -724,7 +749,7 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_mux_settings,
-            listOf(
+            iconVector = Icons.Filled.Hub, entries = listOf(
                 SettingsEntry(R.string.title_pref_mux_enabled, R.string.summary_pref_mux_enabled) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_play_24dp),
@@ -773,7 +798,7 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_fragment_settings,
-            listOf(
+            iconVector = Icons.Filled.Extension, entries = listOf(
                 SettingsEntry(R.string.title_pref_fragment_enabled, null) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_copy),
@@ -830,7 +855,7 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_observatory_settings,
-            listOf(
+            iconVector = Icons.Filled.Visibility, entries = listOf(
                 SettingsEntry(R.string.title_pref_observatory_least_ping_interval, null) { shape ->
                         SettingsEditItem(
                             icon = painterResource(R.drawable.ic_restore_24dp),
@@ -899,7 +924,7 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_advanced,
-            listOf(
+            iconVector = Icons.Filled.MoreHoriz, entries = listOf(
                 SettingsEntry(R.string.title_pref_is_booted, R.string.summary_pref_is_booted) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_play_24dp),
@@ -964,7 +989,7 @@ fun SettingsScreen(
         ),
         SettingsSection(
             R.string.title_mode_settings,
-            listOf(
+            iconVector = Icons.Filled.Tune, entries = listOf(
                 SettingsEntry(R.string.title_mode, null) { shape ->
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
@@ -1053,12 +1078,12 @@ fun SettingsScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             Column {
+            if (openSectionRes != null) {
+                val openSection = sections.find { it.titleRes == openSectionRes }
+                val p = openSection?.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) } ?: openSection?.iconRes?.let { painterResource(it) }
                 LargeFlexibleTopAppBar(
                     title = {
-                        Text(
-                            text = stringResource(openSection?.titleRes ?: R.string.title_settings),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                        Text(stringResource(openSectionRes ?: R.string.title_settings), modifier = Modifier.padding(start = 8.dp))
                     },
                     navigationIcon = {
                         MorphFilledTonalIconButton(
@@ -1073,6 +1098,25 @@ fun SettingsScreen(
                     },
                     scrollBehavior = scrollBehavior
                 )
+            } else {
+                LargeFlexibleTopAppBar(
+                    title = {
+                        Text(stringResource(R.string.title_settings), modifier = Modifier.padding(start = 8.dp))
+                    },
+                    navigationIcon = {
+                        MorphFilledTonalIconButton(
+                            onClick = { if (openSectionRes != null) openSectionRes = null else onBackClick() },
+                            modifier = Modifier.padding(start = 8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+            }
                 AnimatedVisibility(
                     visible = isLoading,
                     enter = expandVertically(),
@@ -1137,6 +1181,7 @@ fun SettingsScreen(
                                 sections.forEach { overview ->
                                     item(key = overview.titleRes) { shape ->
                                         SettingsMenuItem(
+                                            icon = overview.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) } ?: overview.iconRes?.let { painterResource(it) },
                                             title = stringResource(overview.titleRes),
                                             onClick = { openSectionRes = overview.titleRes },
                                             shape = shape

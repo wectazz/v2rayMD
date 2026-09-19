@@ -162,7 +162,7 @@
     <string name="menu_item_export_proxy_app">تصدير إلى الحافظة</string>
     <string name="menu_item_import_proxy_app">استيراد من الحافظة</string>
     <string name="per_app_proxy_settings">إعدادات كل تطبيق</string>
-    <string name="per_app_proxy_settings_enable">تمكين الإعدادات لكل تطبيق</string>
+    <string name="per_app_proxy_settings_enable">الرئيسية</string>
     <string name="app_picker_unknown_app">تطبيق غير معروف (UID غير محدد)</string>
 
     <!-- Preferences -->
@@ -572,4 +572,6 @@
     <string name="title_delete">حذف</string>
     <string name="title_app_settings">إعدادات التطبيق</string>
     <string name="title_tools_and_info">أدوات ومعلومات</string>
+    <string name="title_fast_actions">إجراءات سريعة</string>
+    <string name="title_management">إدارة</string>
 </resources>

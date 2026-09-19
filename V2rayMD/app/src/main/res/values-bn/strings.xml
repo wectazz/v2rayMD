@@ -162,7 +162,7 @@
     <string name="menu_item_export_proxy_app">ক্লিপবোর্ডে রপ্তানি করুন</string>
     <string name="menu_item_import_proxy_app">ক্লিপবোর্ড থেকে আমদানি করুন</string>
     <string name="per_app_proxy_settings">অ্যাপভিত্তিক সেটিংস</string>
-    <string name="per_app_proxy_settings_enable">অ্যাপভিত্তিক সেটিংস চালু করুন</string>
+    <string name="per_app_proxy_settings_enable">প্রধান</string>
     <string name="app_picker_unknown_app">অজানা অ্যাপ (UID শনাক্ত করা যায়নি)</string>
 
     <!-- Preferences -->
@@ -564,4 +564,6 @@
     <string name="title_delete">মুছুন</string>
     <string name="title_app_settings">অ্যাপ সেটিংস</string>
     <string name="title_tools_and_info">টুলস এবং তথ্য</string>
+    <string name="title_fast_actions">দ্রুত পদক্ষেপ</string>
+    <string name="title_management">ব্যবস্থাপনা</string>
 </resources>

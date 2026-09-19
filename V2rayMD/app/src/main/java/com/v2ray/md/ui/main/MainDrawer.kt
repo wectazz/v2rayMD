@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,12 +57,12 @@ private val primaryDrawerItems = listOf(
     MainDestination.Subscriptions,
     MainDestination.PerAppProxy,
     MainDestination.Routing,
-    MainDestination.UserAssets,
+    
     MainDestination.Settings
 )
 
 private val secondaryDrawerItems = listOf(
-    MainDestination.Promotion,
+    
     MainDestination.Logcat,
     MainDestination.CheckUpdate,
     MainDestination.BackupRestore,
@@ -87,7 +89,7 @@ private fun DrawerSegmentedItem(
         leadingContent = {
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(48.dp)
                     .background(
                         MaterialTheme.colorScheme.secondaryContainer,
                         com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
@@ -170,7 +172,24 @@ fun MainMenuSheetContent(
                   modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 4.dp),
                   verticalAlignment = Alignment.CenterVertically
               ) {
-                  Text(
+                  Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                MaterialTheme.colorScheme.secondaryContainer,
+                                com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_settings_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
                       text = stringResource(R.string.title_app_settings),
                       style = MaterialTheme.typography.titleMedium,
                       fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
@@ -198,12 +217,29 @@ fun MainMenuSheetContent(
                     .padding(top = 8.dp, bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = stringResource(R.string.title_tools_and_info),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                MaterialTheme.colorScheme.secondaryContainer,
+                                com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_about_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                      text = stringResource(R.string.title_tools_and_info),
+                      style = MaterialTheme.typography.titleMedium,
+                      fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                      color = MaterialTheme.colorScheme.primary
+                  )
             }
             SegmentedColumn {
                 secondaryDrawerItems.forEachIndexed { index, item ->
