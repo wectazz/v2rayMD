@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -83,7 +84,22 @@ private fun DrawerSegmentedItem(
         onClick = { onNavigate(item) },
         shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
         leadingContent = {
-            Icon(painterResource(item.iconRes), contentDescription = null)
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painterResource(item.iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
         },
         verticalAlignment = Alignment.CenterVertically,
         trailingContent = if (item == MainDestination.Subscriptions && subscriptionCount > 0) {            {

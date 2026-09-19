@@ -50,6 +50,8 @@ import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
+import com.v2ray.md.ui.compose.SettingsEditItem
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -215,49 +217,77 @@ fun SubEditScreen(
                 .padding(vertical = 8.dp)
                 .padding(bottom = 36.dp)
         ) {
-            FormCard {
-                FormTextField(stringResource(R.string.sub_setting_remarks), remarks, { remarks = it })
-                FormTextField(stringResource(R.string.sub_setting_url), url, { url = it })
-                FormTextField(stringResource(R.string.sub_setting_user_agent), userAgent, { userAgent = it })
-                FormTextField(stringResource(R.string.sub_setting_request_headers), requestHeaders, { requestHeaders = it })
-                FormTextField(stringResource(R.string.sub_setting_filter), filter, { filter = it })
-                SettingsSwitchItem(
-                    title = stringResource(R.string.sub_setting_enable),
-                    checked = enabled,
-                    onCheckedChange = { enabled = it }
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.sub_auto_update),
-                    checked = autoUpdate,
-                    onCheckedChange = { autoUpdate = it }
-                )
-                FormTextField(
-                    stringResource(R.string.title_pref_auto_update_interval),
-                    updateInterval, { updateInterval = it }, keyboardType = KeyboardType.Number
-                )
-                SettingsSwitchItem(
-                    title = stringResource(R.string.sub_allow_insecure_url),
-                    checked = allowInsecureUrl,
-                    onCheckedChange = { allowInsecureUrl = it }
-                )
-                FormDropdownField(
-                    label = stringResource(R.string.sub_setting_pre_profile),
-                    placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                    value = prevProfile,
-                    options = profileSuggestions,
-                    onValueChange = { prevProfile = it },
-                    editable = true,
-                    supportingText = stringResource(R.string.sub_setting_entry_proxy_tip)
-                )
-                FormDropdownField(
-                    label = stringResource(R.string.sub_setting_next_profile),
-                    placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                    value = nextProfile,
-                    options = profileSuggestions,
-                    onValueChange = { nextProfile = it },
-                    editable = true,
-                    supportingText = stringResource(R.string.sub_setting_exit_proxy_tip)
-                )
+            SegmentedColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
+                item { shape ->
+                    SettingsEditItem(title = stringResource(R.string.sub_setting_remarks), value = remarks, onValueChanged = { remarks = it }, shape = shape)
+                }
+                item { shape ->
+                    SettingsEditItem(title = stringResource(R.string.sub_setting_url), value = url, onValueChanged = { url = it }, shape = shape)
+                }
+                item { shape ->
+                    SettingsEditItem(title = stringResource(R.string.sub_setting_user_agent), value = userAgent, onValueChanged = { userAgent = it }, shape = shape)
+                }
+                item { shape ->
+                    SettingsEditItem(title = stringResource(R.string.sub_setting_request_headers), value = requestHeaders, onValueChanged = { requestHeaders = it }, shape = shape)
+                }
+                item { shape ->
+                    SettingsEditItem(title = stringResource(R.string.sub_setting_filter), value = filter, onValueChanged = { filter = it }, shape = shape)
+                }
+                item { shape ->
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.sub_setting_enable),
+                        checked = enabled,
+                        onCheckedChange = { enabled = it },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.sub_auto_update),
+                        checked = autoUpdate,
+                        onCheckedChange = { autoUpdate = it },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_auto_update_interval),
+                        value = updateInterval,
+                        onValueChanged = { updateInterval = it },
+                        keyboardNumber = true,
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    SettingsSwitchItem(
+                        title = stringResource(R.string.sub_allow_insecure_url),
+                        checked = allowInsecureUrl,
+                        onCheckedChange = { allowInsecureUrl = it },
+                        shape = shape
+                    )
+                }
+                item { shape ->
+                    FormDropdownField(
+                        label = stringResource(R.string.sub_setting_pre_profile),
+                        placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
+                        value = prevProfile,
+                        options = profileSuggestions,
+                        onValueChange = { prevProfile = it },
+                        editable = true,
+                        supportingText = stringResource(R.string.sub_setting_entry_proxy_tip)
+                    )
+                }
+                item { shape ->
+                    FormDropdownField(
+                        label = stringResource(R.string.sub_setting_next_profile),
+                        placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
+                        value = nextProfile,
+                        options = profileSuggestions,
+                        onValueChange = { nextProfile = it },
+                        editable = true,
+                        supportingText = stringResource(R.string.sub_setting_exit_proxy_tip)
+                    )
+                }
             }
             NavigationBarsSpacer()
         }

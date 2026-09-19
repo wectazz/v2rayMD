@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -107,7 +109,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
     onSelected: (T) -> Unit
 ) {
     if (expanded) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val sheetState = rememberModalBottomSheetState()
         val scope = rememberCoroutineScope()
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
@@ -115,30 +117,32 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             val groupedItems = items.groupBy(groupBy)
+            val scrollState = androidx.compose.foundation.rememberScrollState()
             
-            groupedItems.forEach { (group, groupItems) ->
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val p = group.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) }
-                        ?: group.iconRes?.let { painterResource(it) }
-                    
-                    if (p != null) {
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .background(MaterialTheme.colorScheme.secondaryContainer, ScallopedShape(points = 16, depth = 0.08f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = p,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
+                groupedItems.forEach { (group, groupItems) ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val p = group.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) }
+                            ?: group.iconRes?.let { painterResource(it) }
+                        
+                        if (p != null) {
+                            Box(
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .background(MaterialTheme.colorScheme.secondaryContainer, ScallopedShape(points = 16, depth = 0.08f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = p,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(16.dp))
                     }
                     Text(
                         text = stringResource(group.titleRes),
@@ -168,9 +172,9 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

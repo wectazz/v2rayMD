@@ -89,7 +89,7 @@ private fun SettingsItemRow(
         {
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(44.dp)
                     .background(
                         MaterialTheme.colorScheme.secondaryContainer,
                         com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
@@ -99,7 +99,7 @@ private fun SettingsItemRow(
                 Icon(
                     painter = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }

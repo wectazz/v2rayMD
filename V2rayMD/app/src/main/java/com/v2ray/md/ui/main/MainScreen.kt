@@ -76,7 +76,7 @@ fun MainScreen(
     val shareQRCodeBitmap = uiState.shareQRCodeBitmap
 
     var showMenuBottomSheet by remember { mutableStateOf(false) }
-    val menuSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val menuSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showDelAllConfirm by remember { mutableStateOf(false) }
     var showDelDuplicateConfirm by remember { mutableStateOf(false) }
