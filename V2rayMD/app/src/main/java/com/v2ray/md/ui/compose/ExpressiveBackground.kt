@@ -68,7 +68,6 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 80.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
         ) {
             val width = size.width
             val height = size.height
