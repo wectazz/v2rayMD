@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -64,7 +65,7 @@ fun MainTopBar(
     val maxMenuHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight - navBarHeight - 20.dp
     val scope = rememberCoroutineScope()
 
-    Column {
+    Column(modifier = Modifier.background(androidx.compose.ui.graphics.Brush.verticalGradient(colors = listOf(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.background.copy(alpha = 0.6f), Color.Transparent)))) {
         TopAppBar(
             title = {
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))

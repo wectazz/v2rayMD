@@ -55,7 +55,6 @@ enum class MainDestination(@DrawableRes val iconRes: Int, @StringRes val labelRe
 
 private val primaryDrawerItems = listOf(
     MainDestination.Subscriptions,
-    MainDestination.PerAppProxy,
     MainDestination.Routing,
     
     MainDestination.Settings
