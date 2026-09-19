@@ -43,7 +43,7 @@ fun GroupTabBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
+            .background(androidx.compose.ui.graphics.Color.Transparent)
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
