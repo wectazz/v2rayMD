@@ -47,29 +47,10 @@ fun GroupTabBar(
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        androidx.compose.foundation.layout.Row(
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
-        ) {
-            labels.forEachIndexed { index, label ->
-                val selected = index == selectedTabIndex.coerceIn(0, groups.lastIndex)
-                androidx.compose.material3.FilterChip(
-                    selected = selected,
-                    onClick = { onTabClick(index) },
-                    label = { androidx.compose.material3.Text(label) },
-                    leadingIcon = if (selected) {
-                        { androidx.compose.material3.Icon(androidx.compose.ui.res.painterResource(com.v2ray.md.R.drawable.ic_action_done), contentDescription = null) }
-                    } else {
-                        { androidx.compose.material3.Icon(androidx.compose.ui.res.painterResource(com.v2ray.md.R.drawable.ic_file_24dp), contentDescription = null) }
-                    },
-                    colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
-                        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceContainerHighest,
-                        labelColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                        iconColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
-                    ),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                    border = null
-                )
-            }
-        }
+        SingleSelectButtonGroup(
+            options = labels,
+            selectedIndex = selectedTabIndex.coerceIn(0, groups.lastIndex),
+            onSelect = onTabClick
+        )
     }
 }
