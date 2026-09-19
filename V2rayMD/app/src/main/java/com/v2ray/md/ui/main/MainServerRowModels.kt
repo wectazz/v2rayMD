@@ -39,8 +39,13 @@ internal fun buildServerRowUiModel(
 }
 
 private fun serverProtocolDescription(profile: ProfileItem): String {
-    if (profile.configType.isComplexType()) return profile.configType.name
-    val parts = mutableListOf(profile.configType.name)
+    if (profile.configType.isComplexType() && profile.configType != com.v2ray.md.enums.EConfigType.CUSTOM) return profile.configType.name
+    val baseName = if (profile.configType == com.v2ray.md.enums.EConfigType.CUSTOM) {
+        profile.customProtocol?.uppercase() ?: "JSON"
+    } else {
+        profile.configType.name
+    }
+    val parts = mutableListOf(baseName)
     profile.network?.let { network ->
         if (network.isNotBlank() && !network.equals("tcp", ignoreCase = true)) {
             parts.add(network)

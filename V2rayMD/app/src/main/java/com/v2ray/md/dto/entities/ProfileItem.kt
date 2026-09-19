@@ -7,6 +7,7 @@ import com.v2ray.md.util.Utils
 data class ProfileItem(
     val configVersion: Int = 4,
     val configType: EConfigType,
+    var customProtocol: String? = null,
     var subscriptionId: String = "",
     var addedTime: Long = System.currentTimeMillis(),
 

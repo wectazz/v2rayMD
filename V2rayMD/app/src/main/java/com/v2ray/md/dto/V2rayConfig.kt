@@ -99,11 +99,26 @@ data class V2rayConfig(
             var reserved: List<Int>? = null,
             var mtu: Int? = null,
             var domainStrategy: String? = null,
+            var vnext: List<VnextBean>? = null,
+            var servers: List<ServerEntryBean>? = null,
         ) {
             data class WireGuardBean(
                 var publicKey: String = "",
                 var preSharedKey: String? = null,
                 var endpoint: String = ""
+            )
+
+            data class VnextBean(
+                var address: String? = null,
+                var port: Int? = null,
+                var users: List<Map<String, Any>>? = null,
+            )
+
+            data class ServerEntryBean(
+                var address: String? = null,
+                var port: Int? = null,
+                var password: String? = null,
+                var method: String? = null,
             )
         }
 
@@ -311,7 +326,9 @@ data class V2rayConfig(
             return if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
                 settings?.peers?.firstOrNull()?.endpoint?.substringBeforeLast(":")
             } else {
-                settings?.address as? String
+                (settings?.address as? String)
+                ?: settings?.vnext?.firstOrNull()?.address
+                ?: settings?.servers?.firstOrNull()?.address
             }
         }
 
@@ -320,6 +337,8 @@ data class V2rayConfig(
                 settings?.peers?.firstOrNull()?.endpoint?.substringAfterLast(":")?.toIntOrNull()
             } else {
                 settings?.port
+                ?: settings?.vnext?.firstOrNull()?.port
+                ?: settings?.servers?.firstOrNull()?.port
             }
         }
 
