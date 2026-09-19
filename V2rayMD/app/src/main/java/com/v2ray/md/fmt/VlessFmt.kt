@@ -18,8 +18,7 @@ object VlessFmt : FmtBase() {
         val config = ProfileItem.create(EConfigType.VLESS)
 
         val uri = URI(Utils.fixIllegalUrl(str))
-        if (uri.rawQuery.isNullOrEmpty()) return null
-        val queryParam = getQueryParam(uri)
+        val queryParam = if (uri.rawQuery.isNullOrEmpty()) emptyMap() else getQueryParam(uri)
 
         config.remarks = Utils.decodeURIComponent(uri.fragment.orEmpty()).let { it.ifEmpty { "none" } }
         config.server = uri.idnHost
