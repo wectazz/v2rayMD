@@ -185,6 +185,7 @@ fun MainScreen(
                     modifier = Modifier.background(
                         androidx.compose.ui.graphics.Brush.verticalGradient(
                             colors = listOf(
+                                MaterialTheme.colorScheme.background,
                                 MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                                 androidx.compose.ui.graphics.Color.Transparent
                             )
