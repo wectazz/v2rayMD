@@ -481,7 +481,13 @@ fun SingleSelectButtonGroup(
                         )
                     }
                 } else {
-                    null
+                    {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_file_24dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
                 }
             )
         }

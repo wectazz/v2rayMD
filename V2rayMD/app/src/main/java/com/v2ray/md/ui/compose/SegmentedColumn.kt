@@ -187,8 +187,8 @@ fun SegmentedColumn(
             )
         }
 
-        val floatSpring = spring<Float>(dampingRatio = bouncyDamping, stiffness = bouncyStiffness)
-        val dpSpring = spring<Dp>(dampingRatio = bouncyDamping, stiffness = bouncyStiffness)
+        val floatSpring = androidx.compose.animation.core.tween<Float>(durationMillis = 300)
+        val dpSpring = androidx.compose.animation.core.tween<Dp>(durationMillis = 300)
 
         val progresses = allItems.mapIndexed { index, item ->
             key(item.key ?: index) {

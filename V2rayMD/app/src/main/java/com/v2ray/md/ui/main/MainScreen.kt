@@ -77,7 +77,7 @@ fun MainScreen(
     val shareQRCodeBitmap = uiState.shareQRCodeBitmap
 
     var showMenuBottomSheet by remember { mutableStateOf(false) }
-    val menuSheetState = rememberModalBottomSheetState()
+    val menuSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showDelAllConfirm by remember { mutableStateOf(false) }
     var showDelDuplicateConfirm by remember { mutableStateOf(false) }
@@ -185,7 +185,7 @@ fun MainScreen(
                     modifier = Modifier.background(
                         androidx.compose.ui.graphics.Brush.verticalGradient(
                             colors = listOf(
-                                androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f),
+                                MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                                 androidx.compose.ui.graphics.Color.Transparent
                             )
                         )
@@ -239,29 +239,14 @@ fun MainScreen(
             val layoutDirection = LocalLayoutDirection.current
 
             if (groups.isNotEmpty()) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
                             start = innerPadding.calculateStartPadding(layoutDirection),
-                            top = innerPadding.calculateTopPadding(),
                             end = innerPadding.calculateEndPadding(layoutDirection)
                         )
                 ) {
-
-                    GroupTabBar(
-                        groups = groups,
-                        selectedTabIndex = pagerState.currentPage.coerceIn(0, groups.lastIndex),
-                        mainViewModel = mainViewModel,
-                        onTabClick = { targetIndex ->
-                            scope.launch {
-                                pagerState.navigateToPageOptimized(
-                                    targetPage = targetIndex,
-                                    animateAdjacentPage = true
-                                )
-                            }
-                        }
-                    )
 
                     HorizontalPager(
                         state = pagerState,
