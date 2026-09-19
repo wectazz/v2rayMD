@@ -86,11 +86,22 @@ private fun SettingsItemRow(
     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
     val leadingContent: @Composable (() -> Unit)? = if (icon != null) {
         {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                tint = titleColor
-            )
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .androidx.compose.foundation.background(
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        com.v2ray.md.ui.compose.ScallopedShape(points = 16, depth = 0.08f)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
         }
     } else {
         null

@@ -27,45 +27,80 @@ import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsMenuItem
 import kotlinx.coroutines.launch
 
-private enum class ImportMenuAction(@StringRes val labelRes: Int, val action: MainAction) {
-    QRCode(R.string.menu_item_import_config_qrcode, MainAction.ImportQRcode),
-    Clipboard(R.string.menu_item_import_config_clipboard, MainAction.ImportClipboard),
-    LocalFile(R.string.menu_item_import_config_local, MainAction.ImportConfigLocal),
-    PolicyGroup(R.string.menu_item_import_config_policy_group, MainAction.ImportManually(EConfigType.POLICYGROUP.value)),
-    ProxyChain(R.string.menu_item_import_config_proxy_chain, MainAction.ImportManually(EConfigType.PROXYCHAIN.value)),
-    Vmess(R.string.menu_item_import_config_manually_vmess, MainAction.ImportManually(EConfigType.VMESS.value)),
-    Vless(R.string.menu_item_import_config_manually_vless, MainAction.ImportManually(EConfigType.VLESS.value)),
-    Shadowsocks(R.string.menu_item_import_config_manually_ss, MainAction.ImportManually(EConfigType.SHADOWSOCKS.value)),
-    Socks(R.string.menu_item_import_config_manually_socks, MainAction.ImportManually(EConfigType.SOCKS.value)),
-    Http(R.string.menu_item_import_config_manually_http, MainAction.ImportManually(EConfigType.HTTP.value)),
-    Trojan(R.string.menu_item_import_config_manually_trojan, MainAction.ImportManually(EConfigType.TROJAN.value)),
-    WireGuard(R.string.menu_item_import_config_manually_wireguard, MainAction.ImportManually(EConfigType.WIREGUARD.value)),
-    Hysteria2(R.string.menu_item_import_config_manually_hysteria2, MainAction.ImportManually(EConfigType.HYSTERIA2.value))
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.v2ray.md.ui.compose.BottomSheetGroup
+import com.v2ray.md.ui.compose.GroupedAppBottomSheetMenu
+
+enum class ImportMenuGroup(
+    override val titleRes: Int,
+    override val iconVector: ImageVector
+) : BottomSheetGroup {
+    METHOD(R.string.title_import_method, Icons.Filled.Add),
+    MANUAL(R.string.title_add_manual, Icons.Filled.Edit)
 }
 
-enum class MainMoreMenuAction(@StringRes val labelRes: Int) {
-    RestartService(R.string.title_service_restart),
-    DeleteAll(R.string.title_del_all_config),
-    DeleteDuplicate(R.string.title_del_duplicate_config),
-    DeleteInvalid(R.string.title_del_invalid_config),
-    ExportAll(R.string.title_export_all),
-    LocateSelected(R.string.title_locate_selected_config),
-    SortByTestResults(R.string.title_sort_by_test_results),
-    TestAll(R.string.title_ping_all_server),
-    TestAllRealPing(R.string.title_real_ping_all_server),
-    UpdateSubscriptions(R.string.title_sub_update)
+private enum class ImportMenuAction(
+    @StringRes val labelRes: Int,
+    val iconVector: ImageVector,
+    val group: ImportMenuGroup,
+    val action: MainAction
+) {
+    QRCode(R.string.menu_item_import_config_qrcode, Icons.Filled.QrCode, ImportMenuGroup.METHOD, MainAction.ImportQRcode),
+    Clipboard(R.string.menu_item_import_config_clipboard, Icons.Filled.ContentPaste, ImportMenuGroup.METHOD, MainAction.ImportClipboard),
+    LocalFile(R.string.menu_item_import_config_local, Icons.Filled.Folder, ImportMenuGroup.METHOD, MainAction.ImportConfigLocal),
+    PolicyGroup(R.string.menu_item_import_config_policy_group, Icons.Filled.AccountTree, ImportMenuGroup.METHOD, MainAction.ImportManually(EConfigType.POLICYGROUP.value)),
+    ProxyChain(R.string.menu_item_import_config_proxy_chain, Icons.Filled.Link, ImportMenuGroup.METHOD, MainAction.ImportManually(EConfigType.PROXYCHAIN.value)),
+    Vmess(R.string.menu_item_import_config_manually_vmess, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.VMESS.value)),
+    Vless(R.string.menu_item_import_config_manually_vless, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.VLESS.value)),
+    Shadowsocks(R.string.menu_item_import_config_manually_ss, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.SHADOWSOCKS.value)),
+    Socks(R.string.menu_item_import_config_manually_socks, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.SOCKS.value)),
+    Http(R.string.menu_item_import_config_manually_http, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.HTTP.value)),
+    Trojan(R.string.menu_item_import_config_manually_trojan, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.TROJAN.value)),
+    WireGuard(R.string.menu_item_import_config_manually_wireguard, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.WIREGUARD.value)),
+    Hysteria2(R.string.menu_item_import_config_manually_hysteria2, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.HYSTERIA2.value))
+}
+
+enum class MainMoreMenuGroup(
+    override val titleRes: Int,
+    override val iconVector: ImageVector
+) : BottomSheetGroup {
+    ACTIONS(R.string.title_actions, Icons.Filled.Build),
+    TESTS(R.string.title_tests, Icons.Filled.Speed),
+    DELETE(R.string.title_delete, Icons.Filled.Delete)
+}
+
+enum class MainMoreMenuAction(
+    @StringRes val labelRes: Int,
+    val iconVector: ImageVector,
+    val group: MainMoreMenuGroup
+) {
+    RestartService(R.string.title_service_restart, Icons.Filled.Refresh, MainMoreMenuGroup.ACTIONS),
+    UpdateSubscriptions(R.string.title_sub_update, Icons.Filled.CloudDownload, MainMoreMenuGroup.ACTIONS),
+    ExportAll(R.string.title_export_all, Icons.Filled.Share, MainMoreMenuGroup.ACTIONS),
+    LocateSelected(R.string.title_locate_selected_config, Icons.Filled.Place, MainMoreMenuGroup.ACTIONS),
+    SortByTestResults(R.string.title_sort_by_test_results, Icons.Filled.Sort, MainMoreMenuGroup.ACTIONS),
+    
+    TestAll(R.string.title_ping_all_server, Icons.Filled.NetworkPing, MainMoreMenuGroup.TESTS),
+    TestAllRealPing(R.string.title_real_ping_all_server, Icons.Filled.Speed, MainMoreMenuGroup.TESTS),
+    
+    DeleteDuplicate(R.string.title_del_duplicate_config, Icons.Filled.DeleteOutline, MainMoreMenuGroup.DELETE),
+    DeleteInvalid(R.string.title_del_invalid_config, Icons.Filled.DeleteSweep, MainMoreMenuGroup.DELETE),
+    DeleteAll(R.string.title_del_all_config, Icons.Filled.DeleteForever, MainMoreMenuGroup.DELETE)
 }
 
 internal enum class ServerMenuAction(
     @StringRes val labelRes: Int,
     val isShareAction: Boolean,
     val supportsComplexProfiles: Boolean,
+    val iconVector: ImageVector
 ) {
-    ShareQRCode(R.string.share_method_qrcode, isShareAction = true, supportsComplexProfiles = false),
-    ShareClipboard(R.string.share_method_clipboard, isShareAction = true, supportsComplexProfiles = false),
-    ShareFullContent(R.string.share_method_full_content, isShareAction = true, supportsComplexProfiles = true),
-    Edit(R.string.action_edit, isShareAction = false, supportsComplexProfiles = true),
-    Delete(R.string.action_delete, isShareAction = false, supportsComplexProfiles = true),
+    ShareQRCode(R.string.share_method_qrcode, isShareAction = true, supportsComplexProfiles = false, Icons.Filled.QrCode),
+    ShareClipboard(R.string.share_method_clipboard, isShareAction = true, supportsComplexProfiles = false, Icons.Filled.ContentPaste),
+    ShareFullContent(R.string.share_method_full_content, isShareAction = true, supportsComplexProfiles = true, Icons.Filled.Share),
+    Edit(R.string.action_edit, isShareAction = false, supportsComplexProfiles = true, Icons.Filled.Edit),
+    Delete(R.string.action_delete, isShareAction = false, supportsComplexProfiles = true, Icons.Filled.Delete),
 }
 
 internal fun serverMenuActions(
@@ -76,20 +111,24 @@ internal fun serverMenuActions(
 }
 
 @Composable
-fun ImportMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onAction: (MainAction) -> Unit) = com.v2ray.md.ui.compose.AppBottomSheetMenu(
+fun ImportMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onAction: (MainAction) -> Unit) = GroupedAppBottomSheetMenu(
     expanded = expanded,
     onDismissRequest = onDismissRequest,
     items = ImportMenuAction.entries,
+    groupBy = { it.group },
     labelRes = { it.labelRes },
+    iconVector = { it.iconVector },
     onSelected = { onAction(it.action) }
 )
 
 @Composable
-fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected: (MainMoreMenuAction) -> Unit) = com.v2ray.md.ui.compose.AppBottomSheetMenu(
+fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected: (MainMoreMenuAction) -> Unit) = GroupedAppBottomSheetMenu(
     expanded = expanded,
     onDismissRequest = onDismissRequest,
     items = MainMoreMenuAction.entries,
+    groupBy = { it.group },
     labelRes = { it.labelRes },
+    iconVector = { it.iconVector },
     onSelected = onSelected
 )
 

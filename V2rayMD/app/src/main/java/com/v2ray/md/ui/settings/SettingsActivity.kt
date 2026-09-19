@@ -983,6 +983,15 @@ fun SettingsScreen(
                         shape = shape
                         )
                 },
+                SettingsEntry(R.string.title_community, null) { shape ->
+                        val context = androidx.compose.ui.platform.LocalContext.current
+                        SettingsMenuItem(
+                            icon = painterResource(R.drawable.ic_telegram_24dp),
+                            title = stringResource(R.string.title_community),
+                            onClick = { Utils.openUri(context, "https://t.me/v2ray_md") },
+                        shape = shape
+                        )
+                },
                 SettingsEntry(R.string.title_root_mode_enabled, R.string.summary_root_mode_enabled) { shape ->
                         SettingsSwitchItem(
                             icon = painterResource(R.drawable.ic_lock_24dp),

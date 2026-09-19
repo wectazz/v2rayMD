@@ -561,4 +561,10 @@
     <string name="connection_test_empty_message">no details available</string>
     <string name="value_unknown">unknown</string>
 
+    <string name="title_import_method">Import method</string>
+    <string name="title_add_manual">Manual entry</string>
+    <string name="title_actions">Actions</string>
+    <string name="title_tests">Tests</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_community">Community (Telegram)</string>
 </resources>

@@ -161,7 +161,9 @@ dependencies {
 
     // Compose Libraries
     implementation(platform(libs.androidx.compose.bom))
+implementation("androidx.compose.material:material-icons-extended")
     androidTestImplementation(platform(libs.androidx.compose.bom))
+implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.androidx.graphics.path)
 
