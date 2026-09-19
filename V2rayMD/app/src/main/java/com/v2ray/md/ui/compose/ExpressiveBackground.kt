@@ -13,98 +13,94 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.asComposePath
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.graphics.shapes.CornerRounding
+import androidx.graphics.shapes.RoundedPolygon
+import androidx.graphics.shapes.star
+import androidx.graphics.shapes.toPath
 
 @Composable
 fun ExpressiveBackground(modifier: Modifier = Modifier) {
     val backgroundColor = MaterialTheme.colorScheme.surface
-    // Use only primary color for a monochromatic monet aesthetic as requested. User requested 20% opacity.
-    val blobColor1 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-    val blobColor2 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-    val blobColor3 = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+    // Darker blobs as requested (0.1f alpha instead of 0.2f)
+    val blobColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
 
     val infiniteTransition = rememberInfiniteTransition(label = "blobTransition")
     
-    val progress1 by infiniteTransition.animateFloat(
+    val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 1f,
+        targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(8000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+            animation = tween(40000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
         ),
-        label = "blobProgress1"
+        label = "blobRotation"
     )
 
-    val progress2 by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(12000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "blobProgress2"
-    )
-    
-    val progress3 by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(15000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "blobProgress3"
-    )
+    // Pre-calculate paths once to avoid allocations and lag during recomposition/drawing
+    val path1 = remember {
+        RoundedPolygon.star(
+            numVerticesPerRadius = 9,
+            innerRadius = 0.7f,
+            rounding = CornerRounding(0.3f)
+        ).toPath().asComposePath()
+    }
+    val path2 = remember {
+        RoundedPolygon.star(
+            numVerticesPerRadius = 5,
+            innerRadius = 0.6f,
+            rounding = CornerRounding(0.4f)
+        ).toPath().asComposePath()
+    }
+    val path3 = remember {
+        RoundedPolygon.star(
+            numVerticesPerRadius = 12,
+            innerRadius = 0.8f,
+            rounding = CornerRounding(0.2f)
+        ).toPath().asComposePath()
+    }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val width = size.width
-            val height = size.height
-            val radius = minOf(width, height) * 0.6f
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+            val radius = minOf(canvasWidth, canvasHeight) * 0.65f
 
-            // Blob 1
-            val center1 = Offset(
-                x = width * 0.2f + width * 0.6f * progress1,
-                y = height * 0.2f + height * 0.4f * progress2
-            )
-            drawCircle(
-                color = blobColor1,
-                radius = radius,
-                center = center1
-            )
+            // Blob 1: 9-sided cookie
+            translate(left = canvasWidth * 0.2f, top = canvasHeight * 0.2f) {
+                rotate(rotation) {
+                    scale(radius, radius) {
+                        drawPath(path = path1, color = blobColor)
+                    }
+                }
+            }
 
-            // Blob 2
-            val center2 = Offset(
-                x = width * 0.8f - width * 0.5f * progress2,
-                y = height * 0.7f - height * 0.3f * progress3
-            )
-            drawCircle(
-                color = blobColor2,
-                radius = radius * 0.9f,
-                center = center2
-            )
+            // Blob 2: pentagon
+            translate(left = canvasWidth * 0.8f, top = canvasHeight * 0.75f) {
+                rotate(-rotation * 1.5f) {
+                    scale(radius * 0.9f, radius * 0.9f) {
+                        drawPath(path = path2, color = blobColor)
+                    }
+                }
+            }
 
-            // Blob 3
-            val center3 = Offset(
-                x = width * 0.5f + width * 0.3f * progress3,
-                y = height * 0.5f - height * 0.4f * progress1
-            )
-            drawCircle(
-                color = blobColor3,
-                radius = radius * 1.1f,
-                center = center3
-            )
+            // Blob 3: very sunny (12-sided)
+            translate(left = canvasWidth * 0.5f, top = canvasHeight * 0.5f) {
+                rotate(rotation * 0.8f) {
+                    scale(radius * 1.1f, radius * 1.1f) {
+                        drawPath(path = path3, color = blobColor)
+                    }
+                }
+            }
         }
     }
 }

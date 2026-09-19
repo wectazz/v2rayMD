@@ -66,8 +66,8 @@ fun MainTopBar(
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
+                containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                scrolledContainerColor = androidx.compose.ui.graphics.Color.Transparent
             ),
             navigationIcon = {
                 MorphFilledTonalIconButton(
