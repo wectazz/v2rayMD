@@ -77,7 +77,7 @@ fun MainTopBar(
                 MorphFilledTonalIconButton(
                     onClick = {
                         scope.launch {
-                            delay(120)
+                            delay(90)
                             onMenuClick()
                         }
                     },
@@ -91,7 +91,7 @@ fun MainTopBar(
                     MorphFilledTonalIconButton(
                     onClick = {
                         scope.launch {
-                            delay(120)
+                            delay(90)
                             showImportMenu = true
                         }
                     }
@@ -111,7 +111,7 @@ fun MainTopBar(
                     MorphFilledTonalIconButton(
                     onClick = {
                         scope.launch {
-                            delay(120)
+                            delay(90)
                             showMenu = true
                         }
                     },
