@@ -32,7 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -59,6 +62,7 @@ fun MainTopBar(
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val maxMenuHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight - navBarHeight - 20.dp
+    val scope = rememberCoroutineScope()
 
     Column {
         TopAppBar(
@@ -71,7 +75,12 @@ fun MainTopBar(
             ),
             navigationIcon = {
                 MorphFilledTonalIconButton(
-                    onClick = onMenuClick,
+                    onClick = {
+                        scope.launch {
+                            delay(50)
+                            onMenuClick()
+                        }
+                    },
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
@@ -80,7 +89,12 @@ fun MainTopBar(
             actions = {
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                     MorphFilledTonalIconButton(
-                        onClick = { showImportMenu = true }
+                        onClick = {
+                            scope.launch {
+                                delay(50)
+                                showImportMenu = true
+                            }
+                        }
                     ) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = stringResource(R.string.acc_add))
                     }
@@ -95,7 +109,12 @@ fun MainTopBar(
                 }
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                     MorphFilledTonalIconButton(
-                        onClick = { showMenu = true },
+                        onClick = {
+                            scope.launch {
+                                delay(50)
+                                showMenu = true
+                            }
+                        },
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Icon(painterResource(R.drawable.ic_more_vert_24dp), contentDescription = stringResource(R.string.acc_more))
