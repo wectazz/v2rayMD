@@ -134,8 +134,8 @@ fun MainConnectFab(
         modifier = modifier,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius),
         colors = androidx.compose.material3.IconButtonDefaults.filledIconToggleButtonColors(
-            uncheckedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-            uncheckedContentColor = MaterialTheme.colorScheme.onSurface
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            contentColor = MaterialTheme.colorScheme.onSurface
         )
     ) {
         Icon(
