@@ -132,7 +132,11 @@ fun MainConnectFab(
         checked = isRunning,
         onCheckedChange = { onAction(MainAction.ToggleService) },
         modifier = modifier,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius)
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(cornerRadius),
+        colors = androidx.compose.material3.IconButtonDefaults.filledIconToggleButtonColors(
+            uncheckedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            uncheckedContentColor = MaterialTheme.colorScheme.onSurface
+        )
     ) {
         Icon(
             painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
