@@ -246,23 +246,70 @@ object AngConfigManager {
             }
             val subItem = MmkvManager.decodeSubscription(subid)
 
-            // Parse all configs first (no I/O during parsing)
             val configs = mutableListOf<ProfileItem>()
             val v2raynLines = mutableListOf<String>()
 
-            servers.lines()
-                .distinct()
-                .reversed()
-                .forEach {
-                    if (it.startsWith(AppConfig.V2RAYNFMTS, ignoreCase = true)) {
-                        v2raynLines.add(it)
+            // Extract configs safely, preserving multiline JSON blocks
+            val extracted = mutableListOf<String>()
+            var i = 0
+            val length = servers.length
+
+            while (i < length) {
+                while (i < length && servers[i].isWhitespace()) i++
+                if (i >= length) break
+
+                if (servers[i] == '{') {
+                    val start = i
+                    var braceCount = 0
+                    var inString = false
+                    var escape = false
+
+                    while (i < length) {
+                        val c = servers[i]
+                        if (escape) {
+                            escape = false
+                        } else if (c == '\\') {
+                            escape = true
+                        } else if (c == '"') {
+                            inString = !inString
+                        } else if (!inString) {
+                            if (c == '{') braceCount++
+                            else if (c == '}') braceCount--
+                        }
+                        
+                        i++
+                        if (braceCount == 0) break
+                    }
+                    if (braceCount == 0) {
+                        extracted.add(servers.substring(start, i))
                     } else {
-                        val config = parseConfig(it, subid, subItem)
-                        if (config != null) {
-                            configs.add(config)
+                        // Unbalanced braces, just add the { line and continue
+                        val nextLineIdx = servers.indexOf('\n', start)
+                        if (nextLineIdx == -1) {
+                            extracted.add(servers.substring(start))
+                            break
+                        } else {
+                            extracted.add(servers.substring(start, nextLineIdx))
+                            i = nextLineIdx + 1
                         }
                     }
+                } else {
+                    val start = i
+                    while (i < length && servers[i] != '\n' && servers[i] != '\r') i++
+                    extracted.add(servers.substring(start, i))
                 }
+            }
+
+            extracted.distinct().reversed().forEach {
+                if (it.startsWith(AppConfig.V2RAYNFMTS, ignoreCase = true)) {
+                    v2raynLines.add(it)
+                } else {
+                    val config = parseConfig(it, subid, subItem)
+                    if (config != null) {
+                        configs.add(config)
+                    }
+                }
+            }
 
             val v2raynConfigs = V2rayNFmt.parse(v2raynLines, subid)
             val allConfigs = v2raynConfigs + configs
