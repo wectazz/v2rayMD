@@ -65,7 +65,7 @@ fun MainTopBar(
     val maxMenuHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight - navBarHeight - 20.dp
     val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier) {
+    Column(modifier = Modifier.background(androidx.compose.ui.graphics.Brush.verticalGradient(colors = listOf(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f), androidx.compose.ui.graphics.Color.Transparent)))) {
         TopAppBar(
             title = {
                 Text(text = stringResource(R.string.title_server), modifier = Modifier.padding(start = 8.dp))
