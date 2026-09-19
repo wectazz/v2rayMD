@@ -82,7 +82,7 @@ fun MainCombinedBottomBar(
                 onClick = { onAction(MainAction.TestCurrentServer) },
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                     contentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp),

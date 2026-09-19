@@ -182,7 +182,7 @@ private fun ServerListPage(
                 PullToRefreshDefaults.LoadingIndicator(
                     state = state,
                     isRefreshing = isRefreshing,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter).padding(top = contentPadding.calculateTopPadding())
                 )
             }
         ) {
@@ -243,7 +243,7 @@ private fun ServerListPage(
                 PullToRefreshDefaults.LoadingIndicator(
                     state = state,
                     isRefreshing = isRefreshing,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter).padding(top = contentPadding.calculateTopPadding())
                 )
             }
         ) {
