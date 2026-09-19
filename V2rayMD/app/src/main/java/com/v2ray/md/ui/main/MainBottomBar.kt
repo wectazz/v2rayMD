@@ -58,9 +58,17 @@ fun MainCombinedBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(androidx.compose.ui.graphics.Color.Transparent)
+            .background(
+                brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                    colors = listOf(
+                        androidx.compose.ui.graphics.Color.Transparent,
+                        MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                        MaterialTheme.colorScheme.background
+                    )
+                )
+            )
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
