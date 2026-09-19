@@ -48,7 +48,7 @@ fun MainCombinedBottomBar(
     
     val fabWidth by androidx.compose.animation.core.animateDpAsState(
         targetValue = if (isRunning) 72.dp else fullWidth,
-        animationSpec = androidx.compose.animation.core.tween(durationMillis = 250, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+        animationSpec = androidx.compose.animation.core.tween(durationMillis = 375, easing = androidx.compose.animation.core.FastOutSlowInEasing),
         label = "fabWidth"
     )
 
