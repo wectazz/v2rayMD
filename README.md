@@ -74,10 +74,6 @@ Release files are signed with GPG to verify authenticity and integrity, helping 
 
 ## Community / 社区
 
-Telegram Group / Telegram 群组：
-
-[https://t.me/v2rayN](https://t.me/v2rayN)
-
 Telegram Channel / Telegram 频道：
 
-[https://t.me/github_2dust](https://t.me/github_2dust)
+[https://t.me/v2ray_md](https://t.me/v2ray_md)
