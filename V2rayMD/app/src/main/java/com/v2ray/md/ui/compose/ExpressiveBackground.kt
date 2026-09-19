@@ -77,8 +77,8 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
 
             // Blob 1: 9-sided cookie
             translate(left = canvasWidth * 0.2f, top = canvasHeight * 0.2f) {
-                rotate(rotation) {
-                    scale(radius, radius) {
+                rotate(rotation, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                    scale(radius, radius, pivot = androidx.compose.ui.geometry.Offset.Zero) {
                         drawPath(path = path1, color = blobColor)
                     }
                 }
@@ -86,8 +86,8 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
 
             // Blob 2: pentagon
             translate(left = canvasWidth * 0.8f, top = canvasHeight * 0.75f) {
-                rotate(-rotation * 1.5f) {
-                    scale(radius * 0.9f, radius * 0.9f) {
+                rotate(-rotation * 1.5f, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                    scale(radius * 0.9f, radius * 0.9f, pivot = androidx.compose.ui.geometry.Offset.Zero) {
                         drawPath(path = path2, color = blobColor)
                     }
                 }
@@ -95,8 +95,8 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
 
             // Blob 3: very sunny (12-sided)
             translate(left = canvasWidth * 0.5f, top = canvasHeight * 0.5f) {
-                rotate(rotation * 0.8f) {
-                    scale(radius * 1.1f, radius * 1.1f) {
+                rotate(rotation * 0.8f, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                    scale(radius * 1.1f, radius * 1.1f, pivot = androidx.compose.ui.geometry.Offset.Zero) {
                         drawPath(path = path3, color = blobColor)
                     }
                 }
