@@ -79,7 +79,8 @@ private fun SettingsItemRow(
     val containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
     else MaterialTheme.colorScheme.surfaceContainerHigh
     val colors = ListItemDefaults.segmentedColors(
-        containerColor = containerColor
+        containerColor = containerColor,
+        disabledContainerColor = containerColor.copy(alpha = 0.5f)
     )
     val titleColor = if (enabled) MaterialTheme.colorScheme.onSurface
     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
