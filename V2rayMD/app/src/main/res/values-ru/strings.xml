@@ -576,4 +576,6 @@
     <string name="title_tools_and_info">Инструменты и информация</string>
     <string name="title_fast_actions">Быстрые действия</string>
     <string name="title_management">Управление</string>
+    <string name="title_additional_menu">Дополнительное меню</string>
+    <string name="title_app_management">Управление приложением</string>
 </resources>

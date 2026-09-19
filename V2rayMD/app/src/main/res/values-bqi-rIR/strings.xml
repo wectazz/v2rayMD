@@ -566,4 +566,6 @@
     <string name="title_tools_and_info">ابزارها و اطلاعات</string>
     <string name="title_fast_actions">اقدامات سریع</string>
     <string name="title_management">مدیریت</string>
+    <string name="title_additional_menu">منوی اضافی</string>
+    <string name="title_app_management">مدیریت برنامه</string>
 </resources>

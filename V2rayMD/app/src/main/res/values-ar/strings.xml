@@ -574,4 +574,6 @@
     <string name="title_tools_and_info">أدوات ومعلومات</string>
     <string name="title_fast_actions">إجراءات سريعة</string>
     <string name="title_management">إدارة</string>
+    <string name="title_additional_menu">قائمة إضافية</string>
+    <string name="title_app_management">إدارة التطبيق</string>
 </resources>

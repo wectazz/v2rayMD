@@ -571,4 +571,6 @@
     <string name="title_tools_and_info">Tools &amp; Info</string>
     <string name="title_fast_actions">Fast actions</string>
     <string name="title_management">Management</string>
+    <string name="title_additional_menu">Additional menu</string>
+    <string name="title_app_management">App management</string>
 </resources>

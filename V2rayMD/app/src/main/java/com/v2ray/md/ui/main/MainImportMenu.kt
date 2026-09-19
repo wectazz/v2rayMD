@@ -158,7 +158,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
             Column(modifier = Modifier.verticalScroll(scrollState).padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())) {
                 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     androidx.compose.foundation.layout.Box(
@@ -175,7 +175,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text("Дополнительное меню", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(R.string.title_additional_menu), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
                 }
 
                 SegmentedColumn {
@@ -184,28 +184,25 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             icon = painterResource(R.drawable.ic_play_24dp),
                             title = stringResource(R.string.title_fast_actions),
                             onClick = { fastActionsExpanded = !fastActionsExpanded },
-                            shape = if (fastActionsExpanded) androidx.compose.foundation.shape.RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 5.dp, bottomEnd = 5.dp) else shape
+                            shape = shape
                         )
                     }
-                    if (fastActionsExpanded) {
-                        val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.ACTIONS || it.group == MainMoreMenuGroup.TESTS }
-                        actions.forEachIndexed { index, item ->
-                            val isLast = index == actions.size - 1
-                            item { _ ->
-                                SettingsMenuItem(
-                                    icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
-                                    title = stringResource(item.labelRes),
-                                    onClick = {
-                                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                            if (!sheetState.isVisible) {
-                                                onDismissRequest()
-                                                onSelected(item)
-                                            }
+                    val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.ACTIONS || it.group == MainMoreMenuGroup.TESTS }
+                    actions.forEach { item ->
+                        item(visible = fastActionsExpanded) { shape ->
+                            SettingsMenuItem(
+                                icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
+                                title = stringResource(item.labelRes),
+                                onClick = {
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            onDismissRequest()
+                                            onSelected(item)
                                         }
-                                    },
-                                    shape = if (isLast) androidx.compose.foundation.shape.RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp, bottomStart = 16.dp, bottomEnd = 16.dp) else androidx.compose.foundation.shape.RoundedCornerShape(5.dp)
-                                )
-                            }
+                                    }
+                                },
+                                shape = shape
+                            )
                         }
                     }
                 }
@@ -230,7 +227,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text("Управление приложением", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(R.string.title_app_management), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
                 }
 
                 SegmentedColumn {
@@ -239,28 +236,25 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             icon = painterResource(R.drawable.ic_settings_24dp),
                             title = stringResource(R.string.title_management),
                             onClick = { managementExpanded = !managementExpanded },
-                            shape = if (managementExpanded) androidx.compose.foundation.shape.RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 5.dp, bottomEnd = 5.dp) else shape
+                            shape = shape
                         )
                     }
-                    if (managementExpanded) {
-                        val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.DELETE }
-                        actions.forEachIndexed { index, item ->
-                            val isLast = index == actions.size - 1
-                            item { _ ->
-                                SettingsMenuItem(
-                                    icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
-                                    title = stringResource(item.labelRes),
-                                    onClick = {
-                                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                            if (!sheetState.isVisible) {
-                                                onDismissRequest()
-                                                onSelected(item)
-                                            }
+                    val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.DELETE }
+                    actions.forEach { item ->
+                        item(visible = managementExpanded) { shape ->
+                            SettingsMenuItem(
+                                icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
+                                title = stringResource(item.labelRes),
+                                onClick = {
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            onDismissRequest()
+                                            onSelected(item)
                                         }
-                                    },
-                                    shape = if (isLast) androidx.compose.foundation.shape.RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp, bottomStart = 16.dp, bottomEnd = 16.dp) else androidx.compose.foundation.shape.RoundedCornerShape(5.dp)
-                                )
-                            }
+                                    }
+                                },
+                                shape = shape
+                            )
                         }
                     }
                 }

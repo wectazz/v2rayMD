@@ -85,7 +85,6 @@ fun <T> AppBottomSheetMenu(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
@@ -122,7 +121,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 groupedItems.forEach { (group, groupItems) ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 4.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val p = group.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) }

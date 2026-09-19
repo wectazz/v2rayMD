@@ -168,7 +168,7 @@ fun MainMenuSheetContent(
                 }
             }
               Row(
-                  modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 8.dp, bottom = 4.dp),
+                  modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
                   verticalAlignment = Alignment.CenterVertically
               ) {
                   Box(
@@ -208,12 +208,11 @@ fun MainMenuSheetContent(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
-                    .padding(top = 8.dp, bottom = 4.dp),
+                    .padding(top = 12.dp, bottom = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(

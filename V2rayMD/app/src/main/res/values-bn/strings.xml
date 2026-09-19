@@ -566,4 +566,6 @@
     <string name="title_tools_and_info">টুলস এবং তথ্য</string>
     <string name="title_fast_actions">দ্রুত পদক্ষেপ</string>
     <string name="title_management">ব্যবস্থাপনা</string>
+    <string name="title_additional_menu">অতিরিক্ত মেনু</string>
+    <string name="title_app_management">অ্যাপ পরিচালনা</string>
 </resources>

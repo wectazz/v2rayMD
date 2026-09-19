@@ -564,4 +564,6 @@
     <string name="title_tools_and_info">Công cụ &amp; thông tin</string>
     <string name="title_fast_actions">Thao tác nhanh</string>
     <string name="title_management">Quản lý</string>
+    <string name="title_additional_menu">Menu bổ sung</string>
+    <string name="title_app_management">Quản lý ứng dụng</string>
 </resources>

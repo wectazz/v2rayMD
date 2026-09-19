@@ -564,4 +564,6 @@
     <string name="title_tools_and_info">工具和信息</string>
     <string name="title_fast_actions">快速操作</string>
     <string name="title_management">管理</string>
+    <string name="title_additional_menu">附加選單</string>
+    <string name="title_app_management">應用管理</string>
 </resources>
