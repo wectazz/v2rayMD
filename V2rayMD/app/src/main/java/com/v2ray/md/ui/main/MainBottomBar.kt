@@ -67,7 +67,7 @@ fun MainCombinedBottomBar(
         androidx.compose.animation.AnimatedVisibility(
             visible = isRunning && statsText.isNotEmpty(),
             modifier = Modifier.weight(1f),
-            enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(750, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
+            enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
             exit = androidx.compose.animation.fadeOut(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing))
         ) {
             androidx.compose.material3.Button(
