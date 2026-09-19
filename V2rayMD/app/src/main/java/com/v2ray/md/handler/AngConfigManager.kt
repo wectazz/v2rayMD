@@ -412,6 +412,10 @@ object AngConfigManager {
 
             val config = configFmtParsers.firstNotNullOfOrNull { (scheme, parser) ->
                 if (str.startsWith(scheme)) parser(str) else null
+            } ?: if (str.trim().startsWith("{")) {
+                com.v2ray.md.fmt.CustomFmt.parse(str)
+            } else {
+                null
             }
 
             if (config == null) {

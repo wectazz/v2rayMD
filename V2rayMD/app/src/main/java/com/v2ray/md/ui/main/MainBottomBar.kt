@@ -48,7 +48,7 @@ fun MainCombinedBottomBar(
     
     val fabWidth by androidx.compose.animation.core.animateDpAsState(
         targetValue = if (isRunning) 72.dp else fullWidth,
-        animationSpec = androidx.compose.animation.core.tween(durationMillis = 500, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+        animationSpec = androidx.compose.animation.core.tween(durationMillis = 250, easing = androidx.compose.animation.core.FastOutSlowInEasing),
         label = "fabWidth"
     )
 
@@ -67,7 +67,7 @@ fun MainCombinedBottomBar(
         androidx.compose.animation.AnimatedVisibility(
             visible = isRunning && statsText.isNotEmpty(),
             modifier = Modifier.weight(1f),
-            enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
+            enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(750, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
             exit = androidx.compose.animation.fadeOut(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing))
         ) {
             Surface(
