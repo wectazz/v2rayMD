@@ -313,13 +313,14 @@ private fun MainEmptyState(
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            color = androidx.compose.ui.graphics.Color.White
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.app_tile_first_use),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))

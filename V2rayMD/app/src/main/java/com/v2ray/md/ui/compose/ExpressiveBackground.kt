@@ -13,23 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Matrix
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.asComposePath
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.dp
-import androidx.graphics.shapes.CornerRounding
-import androidx.graphics.shapes.Morph
-import androidx.graphics.shapes.RoundedPolygon
-import androidx.graphics.shapes.star
-import androidx.graphics.shapes.toPath
 
 @Composable
 fun ExpressiveBackground(modifier: Modifier = Modifier) {
@@ -41,56 +30,35 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
 
     val infiniteTransition = rememberInfiniteTransition(label = "blobTransition")
     
-    val progress by infiniteTransition.animateFloat(
+    val progress1 by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(8000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "blobMorph"
+        label = "blobProgress1"
     )
 
-    val rotation by infiniteTransition.animateFloat(
+    val progress2 by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 360f,
+        targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(20000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
+            animation = tween(12000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
         ),
-        label = "blobRotation"
+        label = "blobProgress2"
     )
-
-    val shapeA = remember {
-        RoundedPolygon.star(
-            numVerticesPerRadius = 5,
-            innerRadius = 0.5f,
-            rounding = CornerRounding(0.3f),
-            innerRounding = CornerRounding(0.3f)
-        )
-    }
-
-    val shapeB = remember {
-        RoundedPolygon.star(
-            numVerticesPerRadius = 6,
-            innerRadius = 0.6f,
-            rounding = CornerRounding(0.4f),
-            innerRounding = CornerRounding(0.4f)
-        )
-    }
-
-    val shapeCookie = remember {
-        RoundedPolygon.star(
-            numVerticesPerRadius = 12,
-            innerRadius = 0.85f,
-            rounding = CornerRounding(0.15f),
-            innerRounding = CornerRounding(0.15f)
-        )
-    }
-
-    val morph1 = remember(shapeA, shapeB) { Morph(shapeA, shapeB) }
-    val morph2 = remember(shapeB, shapeCookie) { Morph(shapeB, shapeCookie) }
-    val morph3 = remember(shapeCookie, shapeA) { Morph(shapeCookie, shapeA) }
+    
+    val progress3 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(15000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blobProgress3"
+    )
 
     Box(
         modifier = modifier
@@ -100,44 +68,44 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(1f) // Fully opaque here, controlled by the colors above
+                .blur(radius = 80.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
         ) {
-            val canvasWidth = size.width
-            val canvasHeight = size.height
-            val scale = minOf(canvasWidth, canvasHeight) * 0.85f
+            val width = size.width
+            val height = size.height
+            val radius = minOf(width, height) * 0.6f
 
-            val path1 = morph1.toPath(progress).asComposePath()
-            
-            translate(left = canvasWidth * 0.3f, top = canvasHeight * 0.2f) {
-                val matrix = Matrix()
-                matrix.scale(scale, scale)
-                matrix.rotateZ(rotation)
-                path1.transform(matrix)
-                
-                drawPath(path = path1, color = blobColor1)
-            }
+            // Blob 1
+            val center1 = Offset(
+                x = width * 0.2f + width * 0.6f * progress1,
+                y = height * 0.2f + height * 0.4f * progress2
+            )
+            drawCircle(
+                color = blobColor1,
+                radius = radius,
+                center = center1
+            )
 
-            val path2 = morph2.toPath(1f - progress).asComposePath()
-            
-            translate(left = canvasWidth * 0.7f, top = canvasHeight * 0.8f) {
-                val matrix = Matrix()
-                matrix.scale(scale * 0.9f, scale * 0.9f)
-                matrix.rotateZ(-rotation * 1.2f)
-                path2.transform(matrix)
-                
-                drawPath(path = path2, color = blobColor2)
-            }
+            // Blob 2
+            val center2 = Offset(
+                x = width * 0.8f - width * 0.5f * progress2,
+                y = height * 0.7f - height * 0.3f * progress3
+            )
+            drawCircle(
+                color = blobColor2,
+                radius = radius * 0.9f,
+                center = center2
+            )
 
-            val path3 = morph3.toPath(Math.abs(progress - 0.5f) * 2f).asComposePath()
-            
-            translate(left = canvasWidth * 0.5f, top = canvasHeight * 0.5f) {
-                val matrix = Matrix()
-                matrix.scale(scale * 0.7f, scale * 0.7f)
-                matrix.rotateZ(rotation * 0.5f)
-                path3.transform(matrix)
-                
-                drawPath(path = path3, color = blobColor3)
-            }
+            // Blob 3
+            val center3 = Offset(
+                x = width * 0.5f + width * 0.3f * progress3,
+                y = height * 0.5f - height * 0.4f * progress1
+            )
+            drawCircle(
+                color = blobColor3,
+                radius = radius * 1.1f,
+                center = center3
+            )
         }
     }
 }
