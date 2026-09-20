@@ -42,7 +42,6 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -462,7 +461,7 @@ fun SingleSelectButtonGroup(
     }
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         options.forEachIndexed { index, label ->
             val selected = index == selectedIndex
@@ -475,15 +474,7 @@ fun SingleSelectButtonGroup(
             ToggleButton(
                 checked = selected,
                 onCheckedChange = { onSelect(index) },
-                shapes = if (options.size == 1) {
-                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
-                } else {
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    }
-                },
+                shapes = ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size),
                 interactionSource = interactionSources[index]
             ) {
                 Spacer(Modifier.size(pressExpand))
