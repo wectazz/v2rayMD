@@ -67,7 +67,7 @@ sealed interface MainAction {
     data object DismissQRCodeDialog : MainAction
     data object DismissUpdateNotice : MainAction
 
-    data class ImportBatchConfig(val configText: String) : MainAction
+    data class ImportBatchConfig(val configText: String, val fileName: String? = null) : MainAction
 
     data object LocateHandled : MainAction
 }

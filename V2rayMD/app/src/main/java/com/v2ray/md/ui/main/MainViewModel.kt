@@ -12,6 +12,7 @@ import com.v2ray.md.dto.LocateTarget
 import com.v2ray.md.dto.RealPingResult
 import com.v2ray.md.dto.TestServiceMessage
 import com.v2ray.md.dto.entities.ProfileItem
+import com.v2ray.md.dto.entities.SubscriptionItem
 import com.v2ray.md.dto.entities.ServersCache
 import com.v2ray.md.dto.entities.SubscriptionCache
 import com.v2ray.md.extension.delay
@@ -22,6 +23,7 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.UpdateCheckerManager
 import com.v2ray.md.ui.base.BaseViewModel
 import com.v2ray.md.util.LogUtil
+import com.v2ray.md.util.Utils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
@@ -306,7 +308,7 @@ class MainViewModel(
             is MainAction.SelectServer -> updateSelectedGuid(action.guid)
             is MainAction.RemoveServer -> removeServerAndRefresh(action.guid)
             is MainAction.Search -> filterConfig(action.query)
-            is MainAction.ImportBatchConfig -> importBatchConfig(action.configText)
+            is MainAction.ImportBatchConfig -> importBatchConfig(action.configText, action.fileName)
             MainAction.LocateHandled -> consumeLocateTarget()
             is MainAction.ShareQRCode -> {
                 val bitmap = dataSource.share2QRCode(action.guid)
@@ -527,21 +529,41 @@ class MainViewModel(
     }
 
     // ---------- Business actions (coroutine-based) ----------
-    private fun importBatchConfig(configText: String) {
+    private fun importBatchConfig(configText: String, fileName: String? = null) {
         launchLoading {
             withContext(ioDispatcher) {
                 try {
+                    // A WireGuard .conf file gets its own subscription named
+                    // after the file (extension stripped). Anything else keeps
+                    // the previous behavior (import into the current tab).
+                    val newSubId = fileName
+                        ?.substringBeforeLast('.')
+                        ?.ifBlank { null }
+                        ?.takeIf { isWireGuardConf(configText) }
+                        ?.let { baseName ->
+                            val guid = Utils.getUuid()
+                            MmkvManager.encodeSubscription(guid, SubscriptionItem(remarks = baseName))
+                            guid
+                        }
                     val (count, countSub) = dataSource.importBatchConfig(
-                        configText, uiState.value.selectedGroupId, true
+                        configText, newSubId ?: uiState.value.selectedGroupId, true
                     )
                     when {
                         count > 0 -> {
                             toast(dataSource.getString(R.string.title_import_config_count, count))
-                            setupGroupTab(forceRefresh = true)
+                            if (newSubId != null) {
+                                setupGroupTab(forceRefresh = true).join()
+                                subscriptionIdChanged(newSubId)
+                            } else {
+                                setupGroupTab(forceRefresh = true)
+                            }
                         }
 
                         countSub > 0 -> setupGroupTab(forceRefresh = true)
-                        else -> toastError(R.string.toast_failure)
+                        else -> {
+                            if (newSubId != null) MmkvManager.removeSubscription(newSubId)
+                            toastError(R.string.toast_failure)
+                        }
                     }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
@@ -551,6 +573,11 @@ class MainViewModel(
                 }
             }
         }
+    }
+
+    private fun isWireGuardConf(text: String): Boolean {
+        val trimmed = text.trim()
+        return trimmed.startsWith("[Interface]") && trimmed.contains("[Peer]")
     }
 
     private fun importConfigViaSub() {
