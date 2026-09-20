@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.v2ray.md.ui.compose.CookieShape
 import com.v2ray.md.R
 import com.v2ray.md.ui.compose.AppDivider
 import com.v2ray.md.ui.compose.LocalDarkTheme
@@ -91,7 +92,7 @@ private fun DrawerSegmentedItem(
                     .size(48.dp)
                     .background(
                         MaterialTheme.colorScheme.secondaryContainer,
-                        com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)
+                        CookieShape()
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -176,7 +177,7 @@ fun MainMenuSheetContent(
                             .size(48.dp)
                             .background(
                                 MaterialTheme.colorScheme.secondaryContainer,
-                                com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)
+                                CookieShape()
                             ),
                         contentAlignment = Alignment.Center
                     ) {
@@ -220,7 +221,7 @@ fun MainMenuSheetContent(
                             .size(48.dp)
                             .background(
                                 MaterialTheme.colorScheme.secondaryContainer,
-                                com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)
+                                CookieShape()
                             ),
                         contentAlignment = Alignment.Center
                     ) {

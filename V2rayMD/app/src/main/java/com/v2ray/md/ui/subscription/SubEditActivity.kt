@@ -44,9 +44,7 @@ import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.handler.SubscriptionUpdater
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
-import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
@@ -257,6 +255,8 @@ fun SubEditScreen(
                         shape = shape
                     )
                 }
+            }
+            SegmentedColumn {
                 item { shape ->
                     FormDropdownField(
                         label = stringResource(R.string.sub_setting_pre_profile),

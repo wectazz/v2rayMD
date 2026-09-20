@@ -50,6 +50,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.v2ray.md.ui.compose.BottomSheetGroup
+import com.v2ray.md.ui.compose.CookieShape
 import com.v2ray.md.ui.compose.GroupedAppBottomSheetMenu
 
 enum class ImportMenuGroup(
@@ -164,7 +165,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                     androidx.compose.foundation.layout.Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer, com.v2ray.md.ui.compose.ScallopedShape(points = 10, depth = 0.12f)),
+                            .background(MaterialTheme.colorScheme.secondaryContainer, CookieShape()),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
