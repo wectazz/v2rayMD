@@ -1,5 +1,6 @@
 package com.v2ray.md.ui.main
 
+import com.v2ray.md.dto.CheckUpdateResult
 import com.v2ray.md.dto.ConnectionTestResult
 import com.v2ray.md.dto.GroupMapItem
 import com.v2ray.md.dto.LocateTarget
@@ -26,7 +27,8 @@ data class MainUiState(
     val locateTarget: LocateTarget? = null,
     val confirmRemove: Boolean = false,
     val doubleColumnDisplay: Boolean = false,
-    val shareQRCodeBitmap: android.graphics.Bitmap? = null
+    val shareQRCodeBitmap: android.graphics.Bitmap? = null,
+    val updateAvailable: CheckUpdateResult? = null
 )
 
 /**
@@ -63,6 +65,7 @@ sealed interface MainAction {
     data class ShareClipboard(val guid: String) : MainAction
     data class ShareFullContent(val guid: String) : MainAction
     data object DismissQRCodeDialog : MainAction
+    data object DismissUpdateNotice : MainAction
 
     data class ImportBatchConfig(val configText: String) : MainAction
 

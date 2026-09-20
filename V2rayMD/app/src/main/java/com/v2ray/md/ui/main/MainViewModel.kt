@@ -18,6 +18,8 @@ import com.v2ray.md.extension.delay
 import com.v2ray.md.extension.isComplexType
 import com.v2ray.md.extension.matchesPattern
 import com.v2ray.md.extension.moveItem
+import com.v2ray.md.handler.MmkvManager
+import com.v2ray.md.handler.UpdateCheckerManager
 import com.v2ray.md.ui.base.BaseViewModel
 import com.v2ray.md.util.LogUtil
 import kotlinx.coroutines.CancellationException
@@ -115,6 +117,25 @@ class MainViewModel(
     init {
         collectServiceEvents()
         setupGroupTab()
+        checkForAppUpdate()
+    }
+
+    // Silent update check on every cold start (no toast: only shows a notice
+    // dialog when a newer version actually exists).
+    private fun checkForAppUpdate() {
+        viewModelScope.launch {
+            try {
+                val includePreRelease = MmkvManager.decodeSettingsBool(
+                    AppConfig.PREF_CHECK_UPDATE_PRE_RELEASE, false
+                )
+                val result = UpdateCheckerManager.checkForUpdate(includePreRelease)
+                if (result.hasUpdate) {
+                    _uiState.update { it.copy(updateAvailable = result) }
+                }
+            } catch (e: Exception) {
+                LogUtil.e(AppConfig.TAG, "Failed to auto-check for updates", e)
+            }
+        }
     }
 
     private fun collectServiceEvents() {
@@ -294,6 +315,10 @@ class MainViewModel(
 
             MainAction.DismissQRCodeDialog -> {
                 _uiState.update { it.copy(shareQRCodeBitmap = null) }
+            }
+
+            MainAction.DismissUpdateNotice -> {
+                _uiState.update { it.copy(updateAvailable = null) }
             }
 
             MainAction.ToggleService,

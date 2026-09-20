@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
@@ -19,8 +21,10 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +48,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +58,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.ui.compose.QRCodeDialog
+import com.v2ray.md.ui.compose.verticalScrollbar
+import com.v2ray.md.util.Utils
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import androidx.compose.material3.ModalBottomSheet
@@ -154,6 +161,43 @@ fun MainScreen(
     }
     if (shareQRCodeBitmap != null) {
         QRCodeDialog(bitmap = shareQRCodeBitmap, onDismiss = { onAction(MainAction.DismissQRCodeDialog) })
+    }
+    val updateNotice = uiState.updateAvailable
+    if (updateNotice != null) {
+        val context = LocalContext.current
+        AlertDialog(
+            onDismissRequest = { onAction(MainAction.DismissUpdateNotice) },
+            title = {
+                Text(
+                    stringResource(R.string.update_new_version_found, updateNotice.latestVersion ?: ""),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            },
+            text = {
+                val updateNotesState = rememberScrollState()
+                Text(
+                    text = updateNotice.releaseNotes.orEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(updateNotesState)
+                        .verticalScrollbar(updateNotesState)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onAction(MainAction.DismissUpdateNotice)
+                    updateNotice.downloadUrl?.let { Utils.openUri(context, it) }
+                }) {
+                    Text(stringResource(R.string.update_now))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onAction(MainAction.DismissUpdateNotice) }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     }
 
     if (showMenuBottomSheet) {
