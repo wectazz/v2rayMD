@@ -44,12 +44,12 @@ import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.handler.SubscriptionUpdater
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.SettingsEditItem
+import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
@@ -256,25 +256,40 @@ fun SubEditScreen(
                     )
                 }
                 item { shape ->
-                    FormDropdownField(
-                        label = stringResource(R.string.sub_setting_pre_profile),
-                        placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                        value = prevProfile,
-                        options = profileSuggestions,
-                        onValueChange = { prevProfile = it },
-                        editable = true,
-                        supportingText = stringResource(R.string.sub_setting_entry_proxy_tip)
+                    // List-item row in the same group: dialog selection (modal),
+                    // with an explicit None entry so a proxy can be cleared again.
+                    // A stored custom value is kept visible even if not suggested.
+                    val noProxy = stringResource(R.string.sub_setting_no_proxy)
+                    val entryOptions = listOf("" to noProxy) +
+                        profileSuggestions.map { it to it } +
+                        listOfNotNull(
+                            prevProfile.takeIf { it.isNotEmpty() && it !in profileSuggestions }
+                                ?.let { it to it }
+                        )
+                    SettingsListItem(
+                        title = stringResource(R.string.sub_setting_pre_profile),
+                        entries = entryOptions.map { it.second },
+                        values = entryOptions.map { it.first },
+                        selectedValue = prevProfile,
+                        onSelected = { prevProfile = it },
+                        shape = shape
                     )
                 }
                 item { shape ->
-                    FormDropdownField(
-                        label = stringResource(R.string.sub_setting_next_profile),
-                        placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
-                        value = nextProfile,
-                        options = profileSuggestions,
-                        onValueChange = { nextProfile = it },
-                        editable = true,
-                        supportingText = stringResource(R.string.sub_setting_exit_proxy_tip)
+                    val noProxy = stringResource(R.string.sub_setting_no_proxy)
+                    val exitOptions = listOf("" to noProxy) +
+                        profileSuggestions.map { it to it } +
+                        listOfNotNull(
+                            nextProfile.takeIf { it.isNotEmpty() && it !in profileSuggestions }
+                                ?.let { it to it }
+                        )
+                    SettingsListItem(
+                        title = stringResource(R.string.sub_setting_next_profile),
+                        entries = exitOptions.map { it.second },
+                        values = exitOptions.map { it.first },
+                        selectedValue = nextProfile,
+                        onSelected = { nextProfile = it },
+                        shape = shape
                     )
                 }
             }
