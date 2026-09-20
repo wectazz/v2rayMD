@@ -328,6 +328,7 @@ class MainViewModel(
             MainAction.ImportQRcode,
             MainAction.ImportClipboard,
             MainAction.ImportConfigLocal,
+            MainAction.ImportConfigLocalToCurrent,
             is MainAction.ImportManually,
             MainAction.RestartService,
             MainAction.LocateSelectedServer,
@@ -533,13 +534,12 @@ class MainViewModel(
         launchLoading {
             withContext(ioDispatcher) {
                 try {
-                    // A WireGuard .conf file gets its own subscription named
-                    // after the file (extension stripped). Anything else keeps
-                    // the previous behavior (import into the current tab).
+                    // A file import gets its own subscription named after the
+                    // file (extension stripped). Anything else (clipboard, QR)
+                    // keeps the previous behavior (current tab).
                     val newSubId = fileName
                         ?.substringBeforeLast('.')
                         ?.ifBlank { null }
-                        ?.takeIf { isWireGuardConf(configText) }
                         ?.let { baseName ->
                             val guid = Utils.getUuid()
                             MmkvManager.encodeSubscription(guid, SubscriptionItem(remarks = baseName))
@@ -559,7 +559,10 @@ class MainViewModel(
                             }
                         }
 
-                        countSub > 0 -> setupGroupTab(forceRefresh = true)
+                        countSub > 0 -> {
+                            if (newSubId != null) MmkvManager.removeSubscription(newSubId)
+                            setupGroupTab(forceRefresh = true)
+                        }
                         else -> {
                             if (newSubId != null) MmkvManager.removeSubscription(newSubId)
                             toastError(R.string.toast_failure)
@@ -573,11 +576,6 @@ class MainViewModel(
                 }
             }
         }
-    }
-
-    private fun isWireGuardConf(text: String): Boolean {
-        val trimmed = text.trim()
-        return trimmed.startsWith("[Interface]") && trimmed.contains("[Peer]")
     }
 
     private fun importConfigViaSub() {

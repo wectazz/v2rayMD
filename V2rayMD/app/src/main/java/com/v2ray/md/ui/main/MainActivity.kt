@@ -109,7 +109,8 @@ class MainActivity : HelperBaseComponentActivity() {
                     MainAction.TestCurrentServer -> handleLayoutTestClick()
                     MainAction.ImportQRcode -> importQRcode()
                     MainAction.ImportClipboard -> importClipboard()
-                    MainAction.ImportConfigLocal -> importConfigLocal()
+                    MainAction.ImportConfigLocal -> importConfigLocal(toNewSub = true)
+                    MainAction.ImportConfigLocalToCurrent -> importConfigLocal(toNewSub = false)
                     is MainAction.ImportManually -> importManually(action.type)
                     MainAction.RestartService -> LauncherManager.restartServiceOrStart(this, ::requestServiceStart)
                     MainAction.LocateSelectedServer -> mainViewModel.triggerLocateSelectedServer()
@@ -233,7 +234,7 @@ class MainActivity : HelperBaseComponentActivity() {
         }
     }
 
-    private fun importConfigLocal() {
+    private fun importConfigLocal(toNewSub: Boolean) {
         launchFileChooser { uri ->
             if (uri == null) return@launchFileChooser
             try {
@@ -243,7 +244,9 @@ class MainActivity : HelperBaseComponentActivity() {
                     if (cursor.moveToFirst()) cursor.getString(0) else null
                 }
                 contentResolver.openInputStream(uri)?.bufferedReader()?.use { reader ->
-                    mainViewModel.onAction(MainAction.ImportBatchConfig(reader.readText(), fileName))
+                    mainViewModel.onAction(
+                        MainAction.ImportBatchConfig(reader.readText(), fileName?.takeIf { toNewSub })
+                    )
                 }
             } catch (e: Exception) {
                 LogUtil.e(AppConfig.TAG, "Failed to read content from URI", e)

@@ -70,6 +70,7 @@ private enum class ImportMenuAction(
     QRCode(R.string.menu_item_import_config_qrcode, Icons.Filled.QrCode, ImportMenuGroup.METHOD, MainAction.ImportQRcode),
     Clipboard(R.string.menu_item_import_config_clipboard, Icons.Filled.ContentPaste, ImportMenuGroup.METHOD, MainAction.ImportClipboard),
     LocalFile(R.string.menu_item_import_config_local, Icons.Filled.Folder, ImportMenuGroup.METHOD, MainAction.ImportConfigLocal),
+    LocalFileCurrent(R.string.menu_item_import_config_local_current, Icons.Filled.FolderOpen, ImportMenuGroup.METHOD, MainAction.ImportConfigLocalToCurrent),
     PolicyGroup(R.string.menu_item_import_config_policy_group, Icons.Filled.AccountTree, ImportMenuGroup.METHOD, MainAction.ImportManually(EConfigType.POLICYGROUP.value)),
     ProxyChain(R.string.menu_item_import_config_proxy_chain, Icons.Filled.Link, ImportMenuGroup.METHOD, MainAction.ImportManually(EConfigType.PROXYCHAIN.value)),
     Vmess(R.string.menu_item_import_config_manually_vmess, Icons.Filled.Add, ImportMenuGroup.MANUAL, MainAction.ImportManually(EConfigType.VMESS.value)),

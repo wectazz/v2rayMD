@@ -31,7 +31,8 @@
     <string name="menu_item_del_config">Xoá cấu hình</string>
     <string name="menu_item_import_config_qrcode">Nhập cấu hình từ mã QR</string>
     <string name="menu_item_import_config_clipboard">Nhập cấu hình từ bảng tạm</string>
-    <string name="menu_item_import_config_local">Nhập cấu hình từ thiết bị</string>
+    <string name="menu_item_import_config_local">Nhập tệp vào gói đăng ký mới</string>
+    <string name="menu_item_import_config_local_current">Nhập tệp vào gói đăng ký hiện tại</string>
     <string name="menu_item_import_config_policy_group">Thêm [Nhóm chính sách]</string>
     <string name="menu_item_import_config_proxy_chain">Thêm [Chuỗi proxy]</string>
     <string name="menu_item_import_config_manually_vmess">Thêm [VMess]</string>
