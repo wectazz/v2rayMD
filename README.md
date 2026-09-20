@@ -29,7 +29,7 @@ Download the latest release here:
 - latest official [domain list](https://github.com/Loyalsoldier/v2ray-rules-dat) and [ip list](https://github.com/Loyalsoldier/geoip) can be imported manually
 - possible to use a third-party dat file in the same folder, like [h2y](https://guide.v2fly.org/routing/sitedata.html#%E5%A4%96%E7%BD%AE%E7%9A%84%E5%9F%9F%E5%90%8D%E6%96%87%E4%BB%B6)
 
-More in our [wiki](https://github.com/wectazz/v2rayMD/wiki)
+More in our [wiki](https://github.com/2dust/v2rayNG/wiki)
 
 ### Geoip 与 Geosite
 
@@ -38,7 +38,7 @@ More in our [wiki](https://github.com/wectazz/v2rayMD/wiki)
 - 最新官方 [域名列表](https://github.com/Loyalsoldier/v2ray-rules-dat) 和 [IP 列表](https://github.com/Loyalsoldier/geoip) 可手动导入
 - 也可在同一文件夹中使用第三方 dat 文件，例如 [h2y](https://guide.v2fly.org/routing/sitedata.html#%E5%A4%96%E7%BD%AE%E7%9A%84%E5%9F%9F%E5%90%8D%E6%96%87%E4%BB%B6)
 
-更多内容请见我们的 [wiki](https://github.com/wectazz/v2rayMD/wiki)
+更多内容请见我们的 [wiki](https://github.com/2dust/v2rayNG/wiki)
 
 ---
 
