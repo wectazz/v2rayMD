@@ -6,7 +6,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import com.v2ray.md.R
 import com.v2ray.md.enums.EConfigType
-import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormTextField
 
 class ServerHttpActivity : BaseServerActivity() {
@@ -36,17 +35,15 @@ class ServerHttpActivity : BaseServerActivity() {
 
     @Composable
     private fun HttpProtocolFields(state: ServerUiState) {
-        FormCard {
-            FormTextField(
-                stringResource(R.string.server_lab_security4),
-                state.username,
-                { state.username = it }
-            )
-            FormTextField(
-                stringResource(R.string.server_lab_id4),
-                state.password,
-                { state.password = it }
-            )
-        }
+        FormTextField(
+            stringResource(R.string.server_lab_security4),
+            state.username,
+            { state.username = it }
+        )
+        FormTextField(
+            stringResource(R.string.server_lab_id4),
+            state.password,
+            { state.password = it }
+        )
     }
 }

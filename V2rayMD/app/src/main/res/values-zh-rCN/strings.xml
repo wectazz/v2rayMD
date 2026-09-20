@@ -427,6 +427,8 @@
     <string name="update_check_pre_release">检查预发布版本</string>
     <string name="update_checking_for_update">正在检查更新中…</string>
 
+    <string name="title_policy_group">策略组</string>
+    <string name="title_proxy_chain">代理链</string>
     <string name="title_policy_group_type">策略组类型</string>
     <string name="title_policy_group_subscription_id">来自订阅分组</string>
     <string name="title_policy_group_subscription_filter">备注正则筛选</string>

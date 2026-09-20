@@ -53,7 +53,6 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.MorphIconButton
@@ -237,7 +236,7 @@ fun ProxyChainScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(EConfigType.PROXYCHAIN.toString(), modifier = Modifier.padding(start = 8.dp)) },
+                title = { Text(stringResource(R.string.title_proxy_chain), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
@@ -290,13 +289,11 @@ fun ProxyChainScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item(key = "remarks_field") {
-                FormCard {
-                    FormTextField(
-                        label = stringResource(R.string.server_lab_remarks),
-                        value = remarks,
-                        onValueChange = { remarks = it }
-                    )
-                }
+                FormTextField(
+                    label = stringResource(R.string.server_lab_remarks),
+                    value = remarks,
+                    onValueChange = { remarks = it }
+                )
             }
 
             item {

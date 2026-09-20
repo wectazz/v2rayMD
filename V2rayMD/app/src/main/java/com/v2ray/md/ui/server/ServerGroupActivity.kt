@@ -42,7 +42,6 @@ import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.MorphIconButton
@@ -253,7 +252,7 @@ fun ServerGroupScreen(
         contentWindowInsets = WindowInsets(0),
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(EConfigType.POLICYGROUP.toString(), modifier = Modifier.padding(start = 8.dp)) },
+                title = { Text(stringResource(R.string.title_policy_group), modifier = Modifier.padding(start = 8.dp)) },
                 navigationIcon = {
                     MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
                         Icon(
@@ -289,36 +288,34 @@ fun ServerGroupScreen(
                 .padding(vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            FormCard {
-                FormTextField(stringResource(R.string.server_lab_remarks), remarks, { remarks = it })
-                FormDropdownField(
-                    label = stringResource(R.string.title_policy_group_type),
-                    value = typeValue,
-                    options = typeEntries,
-                    onValueChange = { typeValue = it }
+            FormTextField(stringResource(R.string.server_lab_remarks), remarks, { remarks = it })
+            FormDropdownField(
+                label = stringResource(R.string.title_policy_group_type),
+                value = typeValue,
+                options = typeEntries,
+                onValueChange = { typeValue = it }
+            )
+            FormDropdownField(
+                label = stringResource(R.string.title_policy_group_subscription_id),
+                value = subValue,
+                options = subDisplay,
+                onValueChange = { subValue = it }
+            )
+            FormTextField(stringResource(R.string.title_policy_group_subscription_filter), filter, { filter = it })
+            if (supportsObservatory) {
+                SettingsSwitchItem(
+                    title = stringResource(R.string.title_policy_group_test_outbounds),
+                    checked = testOutbounds,
+                    onCheckedChange = { testOutbounds = it }
                 )
-                FormDropdownField(
-                    label = stringResource(R.string.title_policy_group_subscription_id),
-                    value = subValue,
-                    options = subDisplay,
-                    onValueChange = { subValue = it }
-                )
-                FormTextField(stringResource(R.string.title_policy_group_subscription_filter), filter, { filter = it })
-                if (supportsObservatory) {
-                    SettingsSwitchItem(
-                        title = stringResource(R.string.title_policy_group_test_outbounds),
-                        checked = testOutbounds,
-                        onCheckedChange = { testOutbounds = it }
+                if (testOutbounds) {
+                    FormDropdownField(
+                        label = stringResource(R.string.title_policy_group_fallback),
+                        value = fallbackTag,
+                        options = fallbackSuggestions,
+                        onValueChange = { fallbackTag = it },
+                        editable = true
                     )
-                    if (testOutbounds) {
-                        FormDropdownField(
-                            label = stringResource(R.string.title_policy_group_fallback),
-                            value = fallbackTag,
-                            options = fallbackSuggestions,
-                            onValueChange = { fallbackTag = it },
-                            editable = true
-                        )
-                    }
                 }
             }
             NavigationBarsSpacer()

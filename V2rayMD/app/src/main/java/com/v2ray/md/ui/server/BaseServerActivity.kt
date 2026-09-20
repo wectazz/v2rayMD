@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -46,12 +47,12 @@ import com.v2ray.md.handler.CertificateFingerprintManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
-import com.v2ray.md.ui.compose.FormCard
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
+import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.JsonUtil
@@ -110,24 +111,22 @@ abstract class BaseServerActivity : BaseComponentActivity() {
     protected fun CommonBasicFields(
         state: ServerUiState
     ) {
-        FormCard {
-            FormTextField(
-                stringResource(R.string.server_lab_remarks),
-                state.remarks,
-                { state.remarks = it }
-            )
-            FormTextField(
-                stringResource(R.string.server_lab_address),
-                state.address,
-                { state.address = it }
-            )
-            FormTextField(
-                stringResource(R.string.server_lab_port),
-                state.port,
-                { state.port = it },
-                keyboardType = KeyboardType.Number
-            )
-        }
+        FormTextField(
+            stringResource(R.string.server_lab_remarks),
+            state.remarks,
+            { state.remarks = it }
+        )
+        FormTextField(
+            stringResource(R.string.server_lab_address),
+            state.address,
+            { state.address = it }
+        )
+        FormTextField(
+            stringResource(R.string.server_lab_port),
+            state.port,
+            { state.port = it },
+            keyboardType = KeyboardType.Number
+        )
     }
 
     @Composable
@@ -135,119 +134,117 @@ abstract class BaseServerActivity : BaseComponentActivity() {
         state: ServerUiState,
         options: FieldOptions
     ) {
-        FormCard {
+        FormDropdownField(
+            stringResource(R.string.server_lab_network),
+            state.network,
+            options.networkOptions,
+            { state.network = it }
+        )
+
+        val headerOptions = when (state.network) {
+            NetworkType.TCP.type -> options.tcpHeaderOptions
+            NetworkType.KCP.type -> options.kcpHeaderOptions
+            NetworkType.GRPC.type -> options.grpcModeOptions
+            NetworkType.XHTTP.type -> options.xhttpModeOptions
+            else -> listOf("---")
+        }
+        if (headerOptions.size > 1) {
             FormDropdownField(
-                stringResource(R.string.server_lab_network),
-                state.network,
-                options.networkOptions,
-                { state.network = it }
-            )
-
-            val headerOptions = when (state.network) {
-                NetworkType.TCP.type -> options.tcpHeaderOptions
-                NetworkType.KCP.type -> options.kcpHeaderOptions
-                NetworkType.GRPC.type -> options.grpcModeOptions
-                NetworkType.XHTTP.type -> options.xhttpModeOptions
-                else -> listOf("---")
-            }
-            if (headerOptions.size > 1) {
-                FormDropdownField(
-                    stringResource(
-                        when (state.network) {
-                            NetworkType.GRPC.type -> R.string.server_lab_mode_type
-                            NetworkType.XHTTP.type -> R.string.server_lab_xhttp_mode
-                            else -> R.string.server_lab_head_type
-                        }
-                    ),
+                stringResource(
                     when (state.network) {
-                        NetworkType.GRPC.type -> state.mode
-                        NetworkType.XHTTP.type -> state.xhttpMode
-                        else -> state.headerType
-                    },
-                    headerOptions,
-                    {
-                        when (state.network) {
-                            NetworkType.GRPC.type -> state.mode = it
-                            NetworkType.XHTTP.type -> state.xhttpMode = it
-                            else -> state.headerType = it
-                        }
+                        NetworkType.GRPC.type -> R.string.server_lab_mode_type
+                        NetworkType.XHTTP.type -> R.string.server_lab_xhttp_mode
+                        else -> R.string.server_lab_head_type
                     }
-                )
-            }
+                ),
+                when (state.network) {
+                    NetworkType.GRPC.type -> state.mode
+                    NetworkType.XHTTP.type -> state.xhttpMode
+                    else -> state.headerType
+                },
+                headerOptions,
+                {
+                    when (state.network) {
+                        NetworkType.GRPC.type -> state.mode = it
+                        NetworkType.XHTTP.type -> state.xhttpMode = it
+                        else -> state.headerType = it
+                    }
+                }
+            )
+        }
 
+        FormTextField(
+            stringResource(
+                when (state.network) {
+                    NetworkType.TCP.type,
+                    NetworkType.HTTP_UPGRADE.type,
+                    NetworkType.XHTTP.type,
+                    NetworkType.H2.type -> R.string.server_lab_request_host_http
+
+                    NetworkType.WS.type -> R.string.server_lab_request_host_ws
+                    NetworkType.GRPC.type -> R.string.server_lab_request_host_grpc
+                    else -> R.string.server_lab_request_host6
+                }
+            ),
+            if (state.network == NetworkType.GRPC.type) state.authority else state.host,
+            { if (state.network == NetworkType.GRPC.type) state.authority = it else state.host = it }
+        )
+
+        if (state.network != NetworkType.KCP.type) {
             FormTextField(
                 stringResource(
                     when (state.network) {
-                        NetworkType.TCP.type,
-                        NetworkType.HTTP_UPGRADE.type,
-                        NetworkType.XHTTP.type,
-                        NetworkType.H2.type -> R.string.server_lab_request_host_http
-
-                        NetworkType.WS.type -> R.string.server_lab_request_host_ws
-                        NetworkType.GRPC.type -> R.string.server_lab_request_host_grpc
-                        else -> R.string.server_lab_request_host6
+                        NetworkType.WS.type -> R.string.server_lab_path_ws
+                        NetworkType.HTTP_UPGRADE.type -> R.string.server_lab_path_httpupgrade
+                        NetworkType.XHTTP.type -> R.string.server_lab_path_xhttp
+                        NetworkType.H2.type -> R.string.server_lab_path_h2
+                        NetworkType.GRPC.type -> R.string.server_lab_path_grpc
+                        else -> R.string.server_lab_path
                     }
                 ),
-                if (state.network == NetworkType.GRPC.type) state.authority else state.host,
-                { if (state.network == NetworkType.GRPC.type) state.authority = it else state.host = it }
+                if (state.network == NetworkType.GRPC.type) state.serviceName else state.path,
+                { if (state.network == NetworkType.GRPC.type) state.serviceName = it else state.path = it }
             )
+        }
 
-            if (state.network != NetworkType.KCP.type) {
-                FormTextField(
-                    stringResource(
-                        when (state.network) {
-                            NetworkType.WS.type -> R.string.server_lab_path_ws
-                            NetworkType.HTTP_UPGRADE.type -> R.string.server_lab_path_httpupgrade
-                            NetworkType.XHTTP.type -> R.string.server_lab_path_xhttp
-                            NetworkType.H2.type -> R.string.server_lab_path_h2
-                            NetworkType.GRPC.type -> R.string.server_lab_path_grpc
-                            else -> R.string.server_lab_path
-                        }
-                    ),
-                    if (state.network == NetworkType.GRPC.type) state.serviceName else state.path,
-                    { if (state.network == NetworkType.GRPC.type) state.serviceName = it else state.path = it }
-                )
-            }
-
-            if (state.network == NetworkType.XHTTP.type) {
-                FormTextField(
-                    stringResource(R.string.server_lab_xhttp_extra),
-                    state.xhttpExtra,
-                    { state.xhttpExtra = it }
-                )
-            }
-            if (state.network == NetworkType.KCP.type) {
-                FormTextField(
-                    stringResource(R.string.server_lab_path_kcp),
-                    state.seed,
-                    { state.seed = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_kcp_mtu),
-                    state.kcpMtu,
-                    { state.kcpMtu = it },
-                    keyboardType = KeyboardType.Number
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_kcp_tti),
-                    state.kcpTti,
-                    { state.kcpTti = it },
-                    keyboardType = KeyboardType.Number
-                )
-            }
+        if (state.network == NetworkType.XHTTP.type) {
             FormTextField(
-                stringResource(R.string.server_lab_final_mask),
-                state.finalMask,
-                { state.finalMask = it }
+                stringResource(R.string.server_lab_xhttp_extra),
+                state.xhttpExtra,
+                { state.xhttpExtra = it }
             )
-            if (state.network == NetworkType.WS.type || state.network == NetworkType.XHTTP.type) {
-                FormDropdownField(
-                    stringResource(R.string.server_lab_browser_dialer),
-                    state.browserDialerMode,
-                    options.browserDialerOptions,
-                    { state.browserDialerMode = it }
-                )
-            }
+        }
+        if (state.network == NetworkType.KCP.type) {
+            FormTextField(
+                stringResource(R.string.server_lab_path_kcp),
+                state.seed,
+                { state.seed = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_kcp_mtu),
+                state.kcpMtu,
+                { state.kcpMtu = it },
+                keyboardType = KeyboardType.Number
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_kcp_tti),
+                state.kcpTti,
+                { state.kcpTti = it },
+                keyboardType = KeyboardType.Number
+            )
+        }
+        FormTextField(
+            stringResource(R.string.server_lab_final_mask),
+            state.finalMask,
+            { state.finalMask = it }
+        )
+        if (state.network == NetworkType.WS.type || state.network == NetworkType.XHTTP.type) {
+            FormDropdownField(
+                stringResource(R.string.server_lab_browser_dialer),
+                state.browserDialerMode,
+                options.browserDialerOptions,
+                { state.browserDialerMode = it }
+            )
         }
     }
 
@@ -259,115 +256,122 @@ abstract class BaseServerActivity : BaseComponentActivity() {
         buildProfileItem: () -> ProfileItem
     ) {
         val context = LocalContext.current
-        FormCard {
-            FormDropdownField(
-                stringResource(R.string.server_lab_stream_security),
-                state.streamSecurity,
-                options.streamSecurityOptions,
-                { state.streamSecurity = it }
-            )
+        FormDropdownField(
+            stringResource(R.string.server_lab_stream_security),
+            state.streamSecurity,
+            options.streamSecurityOptions,
+            { state.streamSecurity = it }
+        )
 
-            if (state.streamSecurity.isBlank()) {
-                return@FormCard
-            }
+        if (state.streamSecurity.isBlank()) {
+            return
+        }
 
-            FormTextField(
-                stringResource(R.string.server_lab_sni),
-                state.sni,
-                { state.sni = it }
-            )
-            FormDropdownField(
-                stringResource(R.string.server_lab_stream_fingerprint),
-                state.fingerPrint,
-                options.uTlsOptions,
-                { state.fingerPrint = it }
-            )
+        FormTextField(
+            stringResource(R.string.server_lab_sni),
+            state.sni,
+            { state.sni = it }
+        )
+        FormDropdownField(
+            stringResource(R.string.server_lab_stream_fingerprint),
+            state.fingerPrint,
+            options.uTlsOptions,
+            { state.fingerPrint = it }
+        )
 
             if (state.streamSecurity == TLS) {
-                SettingsSwitchItem(
-                    title = stringResource(R.string.server_lab_allow_insecure),
-                    checked = state.allowInsecure,
-                    onCheckedChange = { state.allowInsecure = it }
-                )
-                FormDropdownField(
-                    stringResource(R.string.server_lab_stream_alpn),
-                    state.alpn,
-                    options.alpnOptions,
-                    { state.alpn = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_ech_config_list),
-                    state.echConfigList,
-                    { state.echConfigList = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_verify_peer_cert_by_name),
-                    state.verifyPeerCertByName,
-                    { state.verifyPeerCertByName = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_pinned_ca256),
-                    state.pinnedCA256,
-                    { state.pinnedCA256 = it }
-                )
-                Button(
-                    onClick = {
-                        if (state.address.isBlank()) {
-                            context.toast(R.string.server_lab_address)
-                            return@Button
-                        }
-                        if (
-                            state.configType != EConfigType.HYSTERIA2 &&
-                            (state.port.toIntOrNull() ?: 0) <= 0
-                        ) {
-                            context.toast(R.string.server_lab_port)
-                            return@Button
-                        }
-                        val temp = buildProfileItem()
-                        scope.launch {
-                            state.isFetchingCert = true
-                            try {
-                                val sha256 = withContext(Dispatchers.IO) {
-                                    CertificateFingerprintManager.fetchForManualFill(temp)
-                                }
-                                if (sha256.isNullOrBlank()) {
-                                    context.toast(R.string.toast_fetch_cert_sha256_failed)
-                                } else {
-                                    state.pinnedCA256 = sha256
-                                    context.toastSuccess(R.string.toast_fetch_cert_sha256_success)
-                                }
-                            } finally {
-                                state.isFetchingCert = false
-                            }
-                        }
-                    },
-                    enabled = !state.isFetchingCert,
-                    modifier = Modifier.padding(start = 16.dp)
-                ) {
-                    Text(stringResource(R.string.pinned_ca256_action_fetch))
+                SegmentedColumn {
+                    item { shape ->
+                        SettingsSwitchItem(
+                            title = stringResource(R.string.server_lab_allow_insecure),
+                            checked = state.allowInsecure,
+                            onCheckedChange = { state.allowInsecure = it },
+                            shape = shape
+                        )
+                    }
                 }
-            } else if (state.streamSecurity == REALITY) {
-                FormTextField(
-                    stringResource(R.string.server_lab_public_key),
-                    state.publicKeyReality,
-                    { state.publicKeyReality = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_short_id),
-                    state.shortId,
-                    { state.shortId = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_spider_x),
-                    state.spiderX,
-                    { state.spiderX = it }
-                )
-                FormTextField(
-                    stringResource(R.string.server_lab_mldsa65_verify),
-                    state.mldsa65Verify,
-                    { state.mldsa65Verify = it }
-                )
-            }
+            FormDropdownField(
+                stringResource(R.string.server_lab_stream_alpn),
+                state.alpn,
+                options.alpnOptions,
+                { state.alpn = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_ech_config_list),
+                state.echConfigList,
+                { state.echConfigList = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_verify_peer_cert_by_name),
+                state.verifyPeerCertByName,
+                { state.verifyPeerCertByName = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_pinned_ca256),
+                state.pinnedCA256,
+                { state.pinnedCA256 = it }
+            )
+                SegmentedColumn {
+                    item {
+                        Button(
+                            onClick = {
+                                if (state.address.isBlank()) {
+                                    context.toast(R.string.server_lab_address)
+                                    return@Button
+                                }
+                                if (
+                                    state.configType != EConfigType.HYSTERIA2 &&
+                                    (state.port.toIntOrNull() ?: 0) <= 0
+                                ) {
+                                    context.toast(R.string.server_lab_port)
+                                    return@Button
+                                }
+                                val temp = buildProfileItem()
+                                scope.launch {
+                                    state.isFetchingCert = true
+                                    try {
+                                        val sha256 = withContext(Dispatchers.IO) {
+                                            CertificateFingerprintManager.fetchForManualFill(temp)
+                                        }
+                                        if (sha256.isNullOrBlank()) {
+                                            context.toast(R.string.toast_fetch_cert_sha256_failed)
+                                        } else {
+                                            state.pinnedCA256 = sha256
+                                            context.toastSuccess(R.string.toast_fetch_cert_sha256_success)
+                                        }
+                                    } finally {
+                                        state.isFetchingCert = false
+                                    }
+                                }
+                            },
+                            enabled = !state.isFetchingCert,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(R.string.pinned_ca256_action_fetch))
+                        }
+                    }
+                }
+        } else if (state.streamSecurity == REALITY) {
+            FormTextField(
+                stringResource(R.string.server_lab_public_key),
+                state.publicKeyReality,
+                { state.publicKeyReality = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_short_id),
+                state.shortId,
+                { state.shortId = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_spider_x),
+                state.spiderX,
+                { state.spiderX = it }
+            )
+            FormTextField(
+                stringResource(R.string.server_lab_mldsa65_verify),
+                state.mldsa65Verify,
+                { state.mldsa65Verify = it }
+            )
         }
     }
 
