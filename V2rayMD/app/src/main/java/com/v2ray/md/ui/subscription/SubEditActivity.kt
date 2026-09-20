@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,9 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
@@ -220,70 +217,105 @@ fun SubEditScreen(
                 .padding(vertical = 8.dp)
                 .padding(bottom = 36.dp)
         ) {
-            TextField(
+            OutlinedTextField(
                 value = remarks,
                 onValueChange = { remarks = it },
                 label = { Text(stringResource(R.string.sub_setting_remarks)) },
+                trailingIcon = if (remarks.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { remarks = "" }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = url,
                 onValueChange = { url = it },
                 label = { Text(stringResource(R.string.sub_setting_url)) },
+                trailingIcon = if (url.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { url = "" }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = userAgent,
                 onValueChange = { userAgent = it },
                 label = { Text(stringResource(R.string.sub_setting_user_agent)) },
+                trailingIcon = if (userAgent.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { userAgent = "" }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = requestHeaders,
                 onValueChange = { requestHeaders = it },
                 label = { Text(stringResource(R.string.sub_setting_request_headers)) },
+                trailingIcon = if (requestHeaders.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { requestHeaders = "" }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = filter,
                 onValueChange = { filter = it },
                 label = { Text(stringResource(R.string.sub_setting_filter)) },
+                trailingIcon = if (filter.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { filter = "" }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear)
+                            )
+                        }
+                    }
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
             FormDropdownField(
                 label = stringResource(R.string.sub_setting_pre_profile),
