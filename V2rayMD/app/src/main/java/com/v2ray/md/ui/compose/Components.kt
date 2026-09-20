@@ -493,6 +493,13 @@ fun SingleSelectButtonGroup(
                         contentDescription = null
                     )
                     Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_file_24dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
                 }
                 Text(
                     text = label,
