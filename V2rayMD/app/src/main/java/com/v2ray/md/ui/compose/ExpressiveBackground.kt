@@ -8,9 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.vector.PathParser
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
@@ -37,12 +39,21 @@ fun ExpressiveBackground(modifier: Modifier = Modifier) {
             rounding = CornerRounding(0.4f)
         ).toPath().asComposePath()
     }
+    // Blob 3 (Bottom Left): exact very-sunny.svg artwork, normalized to unit
+    // space so position and scale below stay exactly as before.
     val path3 = remember {
-        RoundedPolygon.star(
-            numVerticesPerRadius = 12,
-            innerRadius = 0.8f,
-            rounding = CornerRounding(0.2f)
-        ).toPath().asComposePath()
+        PathParser().parsePathString(VERY_SUNNY_PATH).toPath().apply {
+            val bounds = getBounds()
+            val unit = 2f / maxOf(bounds.width, bounds.height)
+            transform(
+                Matrix().apply {
+                    this[0, 0] = unit
+                    this[1, 1] = unit
+                    this[0, 3] = -bounds.center.x * unit
+                    this[1, 3] = -bounds.center.y * unit
+                }
+            )
+        }
     }
 
     Box(
