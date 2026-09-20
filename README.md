@@ -2,7 +2,7 @@
 
 A V2Ray client for Android, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core)
 
-Fork of [2dust/v2rayNG](https://github.com/2dust/v2rayNG), rebranded and modernized with Material 3.
+Fork of [2dust/v2rayNG](https://github.com/2dust/v2rayNG), rebranded and modernized with Material Design 3 Expressive.
 
 [![API](https://img.shields.io/badge/API-24%2B-yellow.svg?style=flat)](https://developer.android.com/about/versions/lollipop)
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-2.4.10-blue.svg)](https://kotlinlang.org)
