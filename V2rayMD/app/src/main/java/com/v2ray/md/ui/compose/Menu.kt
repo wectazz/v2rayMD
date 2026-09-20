@@ -131,7 +131,7 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, CookieShape()),
+                                    .background(MaterialTheme.colorScheme.secondaryContainer, VerySunnyShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(

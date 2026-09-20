@@ -8,29 +8,35 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -202,70 +208,81 @@ fun SubSettingScreen(
                         scope = this,
                         isDragging = isDragging
                     ) {
-                        ListItem(
-                            supportingContent = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(LocalSegmentedItemShape.current)
+                                .background(if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = subCache.subscription.remarks,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                                 if (subCache.subscription.url.isNotEmpty()) {
+                                    Spacer(modifier = Modifier.height(2.dp))
                                     Text(
                                         text = subCache.subscription.url,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                 }
-                                Text(text = Utils.formatTimestamp(subCache.subscription.lastUpdated))
-                            },
-                            trailingContent = {
-                                Column(horizontalAlignment = Alignment.End) {
-                                    Row {
-                                        if (subCache.subscription.url.isNotEmpty()) {
-                                            MorphIconButton( onClick = {
-                                                shareTarget = Pair(subCache.guid, subCache.subscription.url)
-                                            }) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.ic_share_24dp),
-                                                    contentDescription = stringResource(R.string.acc_share_subscription)
-                                                )
-                                            }
-                                        }
-                                        MorphIconButton( onClick = { onEditSub(subCache.guid) }) {
-                                            Icon(
-                                                painter = painterResource(R.drawable.ic_edit_24dp),
-                                                contentDescription = stringResource(R.string.acc_edit)
-                                            )
-                                        }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = Utils.formatTimestamp(subCache.subscription.lastUpdated),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Row {
+                                    if (subCache.subscription.url.isNotEmpty()) {
                                         MorphIconButton( onClick = {
-                                            if (confirmRemove) removeTarget = subCache.guid
-                                            else onRemoveSub(subCache.guid)
+                                            shareTarget = Pair(subCache.guid, subCache.subscription.url)
                                         }) {
                                             Icon(
-                                                painter = painterResource(R.drawable.ic_delete_24dp),
-                                                contentDescription = stringResource(R.string.acc_delete)
+                                                painter = painterResource(R.drawable.ic_share_24dp),
+                                                contentDescription = stringResource(R.string.acc_share_subscription)
                                             )
                                         }
                                     }
-                                    Switch(
-                                        checked = subCache.subscription.enabled,
-                                        onCheckedChange = { checked ->
-                                            val updated = subCache.subscription.copy()
-                                            updated.enabled = checked
-                                            viewModel.update(subCache.guid, updated)
-                                        },
-                                        thumbContent = { SwitchCheckThumb(subCache.subscription.enabled) }
-                                    )
+                                    MorphIconButton( onClick = { onEditSub(subCache.guid) }) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_edit_24dp),
+                                            contentDescription = stringResource(R.string.acc_edit)
+                                        )
+                                    }
+                                    MorphIconButton( onClick = {
+                                        if (confirmRemove) removeTarget = subCache.guid
+                                        else onRemoveSub(subCache.guid)
+                                    }) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_delete_24dp),
+                                            contentDescription = stringResource(R.string.acc_delete)
+                                        )
+                                    }
                                 }
-                            },
-                            colors = ListItemDefaults.colors(
-                                containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
-                                else MaterialTheme.colorScheme.surfaceContainerHigh
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(LocalSegmentedItemShape.current)
-                        ) {
-                            Text(
-                                text = subCache.subscription.remarks,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Switch(
+                                    checked = subCache.subscription.enabled,
+                                    onCheckedChange = { checked ->
+                                        val updated = subCache.subscription.copy()
+                                        updated.enabled = checked
+                                        viewModel.update(subCache.guid, updated)
+                                    },
+                                    thumbContent = { SwitchCheckThumb(subCache.subscription.enabled) }
+                                )
+                            }
                         }
                     }
                 }

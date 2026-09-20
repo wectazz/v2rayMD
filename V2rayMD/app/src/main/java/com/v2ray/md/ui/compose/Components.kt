@@ -72,15 +72,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.PI
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -491,31 +483,5 @@ fun SingleSelectButtonGroup(
                 }
             )
         }
-    }
-}
-
-class ScallopedShape(
-    private val points: Int = 16,
-    private val depth: Float = 0.08f
-) : Shape {
-    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val path = Path()
-        val cx = size.width / 2f
-        val cy = size.height / 2f
-        val radius = minOf(cx, cy)
-        
-        for (i in 0..360) {
-            val angle = i * PI / 180.0
-            val r = radius * (1f - depth * (1f - cos(angle * points).toFloat()) / 2f)
-            val x = cx + r * cos(angle).toFloat()
-            val y = cy + r * sin(angle).toFloat()
-            if (i == 0) {
-                path.moveTo(x, y)
-            } else {
-                path.lineTo(x, y)
-            }
-        }
-        path.close()
-        return Outline.Generic(path)
     }
 }

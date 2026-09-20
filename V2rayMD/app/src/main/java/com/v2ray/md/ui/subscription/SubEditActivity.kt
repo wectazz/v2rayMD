@@ -255,8 +255,6 @@ fun SubEditScreen(
                         shape = shape
                     )
                 }
-            }
-            SegmentedColumn {
                 item { shape ->
                     FormDropdownField(
                         label = stringResource(R.string.sub_setting_pre_profile),
