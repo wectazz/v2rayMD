@@ -156,7 +156,11 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             val scrollState = rememberScrollState()
-            Column(modifier = Modifier.padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+            ) {
                 
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
@@ -185,6 +189,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             icon = painterResource(R.drawable.ic_play_24dp),
                             title = stringResource(R.string.title_fast_actions),
                             onClick = { fastActionsExpanded = !fastActionsExpanded },
+                            expanded = fastActionsExpanded,
                             shape = shape
                         )
                     }
@@ -212,6 +217,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             icon = painterResource(R.drawable.ic_settings_24dp),
                             title = stringResource(R.string.title_management),
                             onClick = { managementExpanded = !managementExpanded },
+                            expanded = managementExpanded,
                             shape = shape
                         )
                     }

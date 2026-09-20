@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -273,8 +274,15 @@ fun SettingsMenuItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    expanded: Boolean? = null,
     shape: Shape? = null
 ) {
+    // Expandable rows (menu groups): chevron rests pointing right, rotates
+    // smoothly down when expanded. Plain navigation rows keep a static chevron.
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (expanded == true) 0f else -90f,
+        label = "menu-chevron"
+    )
     SettingsItemRow(
         icon = icon,
         title = title,
@@ -287,7 +295,7 @@ fun SettingsMenuItem(
             Icon(
                 painter = painterResource(R.drawable.ic_expand_more_24dp),
                 contentDescription = null,
-                modifier = Modifier.rotate(-90f)
+                modifier = Modifier.rotate(chevronRotation)
             )
         }
     )

@@ -2,6 +2,7 @@ package com.v2ray.md.ui.subscription
 
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -18,17 +19,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.v2ray.md.AppConfig
@@ -47,9 +54,9 @@ import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsSpacer
+import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.SettingsEditItem
-import com.v2ray.md.ui.compose.SettingsListItem
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
@@ -256,9 +263,9 @@ fun SubEditScreen(
                     )
                 }
                 item { shape ->
-                    // List-item row in the same group: dialog selection (modal),
-                    // with an explicit None entry so a proxy can be cleared again.
-                    // A stored custom value is kept visible even if not suggested.
+                    // Filled TextField look like the fields above; tap opens the
+                    // option dialog (modal). None entry included so a proxy can
+                    // be cleared again; a stored custom value stays visible.
                     val noProxy = stringResource(R.string.sub_setting_no_proxy)
                     val entryOptions = listOf("" to noProxy) +
                         profileSuggestions.map { it to it } +
@@ -266,14 +273,38 @@ fun SubEditScreen(
                             prevProfile.takeIf { it.isNotEmpty() && it !in profileSuggestions }
                                 ?.let { it to it }
                         )
-                    SettingsListItem(
-                        title = stringResource(R.string.sub_setting_pre_profile),
-                        entries = entryOptions.map { it.second },
-                        values = entryOptions.map { it.first },
-                        selectedValue = prevProfile,
-                        onSelected = { prevProfile = it },
-                        shape = shape
+                    var showEntryDialog by remember { mutableStateOf(false) }
+                    TextField(
+                        value = entryOptions.find { it.first == prevProfile }?.second.orEmpty(),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.sub_setting_pre_profile)) },
+                        trailingIcon = {
+                            Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                        },
+                        shape = shape,
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showEntryDialog = true }
                     )
+                    if (showEntryDialog) {
+                        SelectListDialog(
+                            title = stringResource(R.string.sub_setting_pre_profile),
+                            options = entryOptions,
+                            optionText = { it.second },
+                            selectedOption = entryOptions.find { it.first == prevProfile },
+                            onSelected = { option ->
+                                showEntryDialog = false
+                                prevProfile = option.first
+                            },
+                            onDismiss = { showEntryDialog = false },
+                            showRadio = true
+                        )
+                    }
                 }
                 item { shape ->
                     val noProxy = stringResource(R.string.sub_setting_no_proxy)
@@ -283,14 +314,38 @@ fun SubEditScreen(
                             nextProfile.takeIf { it.isNotEmpty() && it !in profileSuggestions }
                                 ?.let { it to it }
                         )
-                    SettingsListItem(
-                        title = stringResource(R.string.sub_setting_next_profile),
-                        entries = exitOptions.map { it.second },
-                        values = exitOptions.map { it.first },
-                        selectedValue = nextProfile,
-                        onSelected = { nextProfile = it },
-                        shape = shape
+                    var showExitDialog by remember { mutableStateOf(false) }
+                    TextField(
+                        value = exitOptions.find { it.first == nextProfile }?.second.orEmpty(),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.sub_setting_next_profile)) },
+                        trailingIcon = {
+                            Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                        },
+                        shape = shape,
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showExitDialog = true }
                     )
+                    if (showExitDialog) {
+                        SelectListDialog(
+                            title = stringResource(R.string.sub_setting_next_profile),
+                            options = exitOptions,
+                            optionText = { it.second },
+                            selectedOption = exitOptions.find { it.first == nextProfile },
+                            onSelected = { option ->
+                                showExitDialog = false
+                                nextProfile = option.first
+                            },
+                            onDismiss = { showExitDialog = false },
+                            showRadio = true
+                        )
+                    }
                 }
             }
             NavigationBarsSpacer()
