@@ -20,12 +20,6 @@ Download the latest release here:
 
 [https://github.com/wectazz/v2rayMD/releases](https://github.com/wectazz/v2rayMD/releases)
 
-> [!TIP]
-> v2rayMD is the mobile version. For the desktop version, please visit the v2rayN \
-> v2rayMD 是手机版，电脑版请访问 v2rayN
->
-> https://github.com/2dust/v2rayN
-
 ---
 
 ### Geoip and Geosite
