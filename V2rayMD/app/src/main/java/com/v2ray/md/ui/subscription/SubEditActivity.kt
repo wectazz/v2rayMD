@@ -2,7 +2,6 @@ package com.v2ray.md.ui.subscription
 
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -221,66 +220,71 @@ fun SubEditScreen(
                 .padding(vertical = 8.dp)
                 .padding(bottom = 36.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                TextField(
-                    value = remarks,
-                    onValueChange = { remarks = it },
-                    label = { Text(stringResource(R.string.sub_setting_remarks)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+            TextField(
+                value = remarks,
+                onValueChange = { remarks = it },
+                label = { Text(stringResource(R.string.sub_setting_remarks)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-                TextField(
-                    value = url,
-                    onValueChange = { url = it },
-                    label = { Text(stringResource(R.string.sub_setting_url)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+            )
+            TextField(
+                value = url,
+                onValueChange = { url = it },
+                label = { Text(stringResource(R.string.sub_setting_url)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-                TextField(
-                    value = userAgent,
-                    onValueChange = { userAgent = it },
-                    label = { Text(stringResource(R.string.sub_setting_user_agent)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+            )
+            TextField(
+                value = userAgent,
+                onValueChange = { userAgent = it },
+                label = { Text(stringResource(R.string.sub_setting_user_agent)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-                TextField(
-                    value = requestHeaders,
-                    onValueChange = { requestHeaders = it },
-                    label = { Text(stringResource(R.string.sub_setting_request_headers)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+            )
+            TextField(
+                value = requestHeaders,
+                onValueChange = { requestHeaders = it },
+                label = { Text(stringResource(R.string.sub_setting_request_headers)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-                TextField(
-                    value = filter,
-                    onValueChange = { filter = it },
-                    label = { Text(stringResource(R.string.sub_setting_filter)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+            )
+            TextField(
+                value = filter,
+                onValueChange = { filter = it },
+                label = { Text(stringResource(R.string.sub_setting_filter)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-            }
+            )
             FormDropdownField(
                 label = stringResource(R.string.sub_setting_pre_profile),
                 placeholder = stringResource(R.string.sub_setting_pre_profile_tip),
