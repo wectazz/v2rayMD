@@ -443,8 +443,10 @@ fun MorphFilledTonalIconButton(
 }
 
 /**
- * Single-select toggle row from the ButtonGroup family.
- * Extra items never overflow into a menu — wrap in a horizontalScroll Row 
+ * Single-select connected toggle row from the ButtonGroup family.
+ * Unlike ButtonGroup itself, a pressed item expands WITHOUT compressing its
+ * neighbours: siblings keep their width and slide aside (the parent is
+ * expected to scroll when the row overflows). Wrap in a horizontalScroll Row
  * when the count can exceed the width.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -455,33 +457,51 @@ fun SingleSelectButtonGroup(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    androidx.compose.material3.ButtonGroup(
+    val interactionSources = remember(options.size) {
+        List(options.size) { MutableInteractionSource() }
+    }
+    Row(
         modifier = modifier,
-        overflowIndicator = {}
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
     ) {
         options.forEachIndexed { index, label ->
             val selected = index == selectedIndex
-            toggleableItem(
-                checked = selected,
-                label = label,
-                onCheckedChange = { onSelect(index) },
-                icon = if (selected) {
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_action_done),
-                            contentDescription = null
-                        )
-                    }
-                } else {
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_file_24dp),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+            val pressed by interactionSources[index].collectIsPressedAsState()
+            // Width gained only by the pressed item; neighbours stay rigid.
+            val pressExpand by animateDpAsState(
+                targetValue = if (pressed) 8.dp else 0.dp,
+                label = "press-expand"
             )
+            ToggleButton(
+                checked = selected,
+                onCheckedChange = { onSelect(index) },
+                shapes = if (options.size == 1) {
+                    ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size)
+                } else {
+                    when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                    }
+                },
+                interactionSource = interactionSources[index]
+            ) {
+                Spacer(Modifier.size(pressExpand))
+                if (selected) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_action_done),
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+                }
+                Text(
+                    text = label,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.size(pressExpand))
+            }
         }
     }
 }
