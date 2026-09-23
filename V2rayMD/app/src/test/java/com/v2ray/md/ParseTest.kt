@@ -31,4 +31,20 @@ class ParseTest {
             "[Peer]\nPublicKey=pub\nEndpoint=example.com:51820\nFinalMask=mymask\n"
         assertEquals("mymask", WireguardFmt.parseWireguardConfFile(conf).finalMask)
     }
+
+    @Test
+    fun testWireguardRemoteDnsUri() {
+        val config = WireguardFmt.parse(
+            "wireguard://secret@example.com:51820?address=172.16.0.2%2F32&publickey=pub&dns=9.9.9.9#test"
+        )
+        assertNotNull(config)
+        assertEquals("9.9.9.9", config?.remoteDNS)
+    }
+
+    @Test
+    fun testWireguardRemoteDnsConf() {
+        val conf = "[Interface]\nPrivateKey=secret\nAddress=172.16.0.2/32\nDNS=9.9.9.9\n" +
+            "[Peer]\nPublicKey=pub\nEndpoint=example.com:51820\n"
+        assertEquals("9.9.9.9", WireguardFmt.parseWireguardConfFile(conf).remoteDNS)
+    }
 }

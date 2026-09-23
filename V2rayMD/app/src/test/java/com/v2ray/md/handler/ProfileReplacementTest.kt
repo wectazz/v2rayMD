@@ -115,6 +115,20 @@ class ProfileReplacementTest {
     }
 
     @Test
+    fun `keeps preserved group payloads during replace`() {
+        // Mirrors MmkvManager.saveServerProfiles replace flow: re-indexed
+        // group guids are passed as replacements so their payloads survive.
+        val result = ProfileReplacement.findRemovablePayloads(
+            replacedServers = listOf("group", "stale"),
+            replacementServers = setOf("fresh", "group"),
+            protectedServer = null,
+            serversReferencedByOtherGroups = emptySet(),
+        )
+
+        assertEquals(setOf("stale"), result)
+    }
+
+    @Test
     fun `keeps all payloads when another group index is unreadable`() {
         val result = ProfileReplacement.findRemovablePayloads(
             replacedServers = listOf("candidate"),

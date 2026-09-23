@@ -22,7 +22,6 @@ import com.v2ray.md.extension.toast
 import com.v2ray.md.extension.toastError
 import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.AngConfigManager
-import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.AboutActivity
@@ -188,8 +187,7 @@ class MainActivity : HelperBaseComponentActivity() {
             toast(R.string.title_file_chooser)
             return
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN &&
-            MmkvManager.decodeSettingsBool(AppConfig.PREF_PROXY_SHARING)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
         ) {
             checkAndRequestPermission(PermissionType.ACCESS_LOCAL_NETWORK) {}
         }

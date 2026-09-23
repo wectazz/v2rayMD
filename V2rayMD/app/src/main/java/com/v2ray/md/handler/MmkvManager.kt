@@ -25,6 +25,7 @@ import com.v2ray.md.dto.entities.ServerAffiliationInfo
 import com.v2ray.md.dto.entities.SubscriptionCache
 import com.v2ray.md.dto.entities.SubscriptionItem
 import com.v2ray.md.dto.entities.WebDavConfig
+import com.v2ray.md.extension.isGroupType
 import com.v2ray.md.util.JsonUtil
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.flow.collectLatest
@@ -318,6 +319,15 @@ object MmkvManager {
             } else {
                 decodeServerList(subscriptionId).toList()
             }
+            // Group configs (policy groups, proxy chains) survive a replace:
+            // they are re-indexed below instead of being dropped.
+            val preservedGroups = if (append) {
+                emptyList()
+            } else {
+                replacedServers.filter { guid ->
+                    decodeServerConfig(guid)?.configType?.isGroupType() == true
+                }
+            }
             val previousSelection = getSelectServer()
             val selectedProfile = if (!append &&
                 previousSelection != null &&
@@ -349,7 +359,7 @@ object MmkvManager {
             val serverList = if (append) {
                 decodeServerList(subscriptionId)
             } else {
-                mutableListOf()
+                preservedGroups.toMutableList()
             }
             val indexedServers = serverList.toHashSet()
             profiles.keys.forEach { guid ->
@@ -371,9 +381,11 @@ object MmkvManager {
 
             val protectedServer = replacementSelection ?: previousSelection
             val referencedByOtherGroups = decodeServersReferencedByOtherGroups(subscriptionId)
+            // Preserved groups stay indexed above, so their payloads must also
+            // survive: treat them as replacements for removal purposes.
             val removablePayloads = ProfileReplacement.findRemovablePayloads(
                 replacedServers = replacedServers,
-                replacementServers = profiles.keys,
+                replacementServers = profiles.keys + preservedGroups,
                 protectedServer = protectedServer,
                 serversReferencedByOtherGroups = referencedByOtherGroups,
             )
