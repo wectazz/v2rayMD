@@ -377,13 +377,13 @@ private fun MainEmptyState(
         Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineSmall,
-            color = androidx.compose.ui.graphics.Color.White
+            color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.app_tile_first_use),
             style = MaterialTheme.typography.bodyMedium,
-            color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
