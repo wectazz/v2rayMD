@@ -8,7 +8,6 @@ import androidx.compose.ui.res.stringResource
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
-import com.v2ray.md.extension.toast
 import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 
@@ -47,7 +46,6 @@ class ServerVlessActivity : BaseServerActivity() {
 
     override fun validateProtocolConfig(config: ProfileItem): Boolean {
         if (config.password.isNullOrBlank()) {
-            toast(R.string.server_lab_id)
             return false
         }
         return true
@@ -61,7 +59,8 @@ class ServerVlessActivity : BaseServerActivity() {
         FormTextField(
             stringResource(R.string.server_lab_id),
             state.password,
-            { state.password = it }
+            { state.password = it },
+            isError = state.isPasswordError
         )
         FormTextField(
             stringResource(R.string.server_lab_encryption),

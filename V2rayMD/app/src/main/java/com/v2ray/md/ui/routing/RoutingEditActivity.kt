@@ -42,7 +42,6 @@ import com.v2ray.md.AppConfig.TAG_PROXY
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.RulesetItem
 import com.v2ray.md.extension.nullIfBlank
-import com.v2ray.md.extension.toast
 import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.apppicker.AppPickerActivity
@@ -93,7 +92,6 @@ class RoutingEditActivity : BaseComponentActivity() {
 
     private fun saveServer(rulesetItem: RulesetItem): Boolean {
         if (rulesetItem.remarks.isNullOrEmpty()) {
-            toast(R.string.sub_setting_remarks)
             return false
         }
         if (position < 0 && rulesetItem.id.isEmpty()) {
@@ -132,6 +130,7 @@ fun RoutingEditScreen(
     val scrollState = rememberScrollState()
 
     var remarks by rememberSaveable { mutableStateOf(initial?.remarks ?: "") }
+    var isRemarksError by rememberSaveable { mutableStateOf(false) }
     var locked by rememberSaveable { mutableStateOf(initial?.locked == true) }
     var domain by rememberSaveable { mutableStateOf(initial?.domain?.joinToString(",") ?: "") }
     var ip by rememberSaveable { mutableStateOf(initial?.ip?.joinToString(",") ?: "") }
@@ -211,7 +210,13 @@ fun RoutingEditScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { onSave(buildRuleset()) }, modifier = Modifier.padding(end = 8.dp)) {
+                    MorphFilledTonalIconButton( onClick = {
+                        val remarksErr = remarks.isBlank()
+                        isRemarksError = remarksErr
+                        if (!remarksErr) {
+                            onSave(buildRuleset())
+                        }
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)
@@ -236,7 +241,8 @@ fun RoutingEditScreen(
                 FormTextField(
                     label = stringResource(R.string.sub_setting_remarks),
                     value = remarks,
-                    onValueChange = { remarks = it }
+                    onValueChange = { remarks = it },
+                    isError = isRemarksError
                 )
                 SettingsSwitchItem(
                     title = stringResource(R.string.routing_settings_locked),
