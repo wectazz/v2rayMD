@@ -115,7 +115,6 @@ class ServerCustomConfigActivity : BaseComponentActivity() {
         content: String
     ): Boolean {
         if (remarks.isBlank()) {
-            toast(R.string.server_lab_remarks)
             return false
         }
 
@@ -214,6 +213,7 @@ fun ServerCustomConfigScreen(
     onDelete: () -> Unit
 ) {
     var remarks by rememberSaveable { mutableStateOf(initialRemarks) }
+    var isRemarksError by rememberSaveable { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState(initialText = initialContent)
     var showDeleteConfirm by remember { mutableStateOf(false) }
     val showDelete = editGuid.isNotEmpty() && !isRunning
@@ -342,7 +342,13 @@ fun ServerCustomConfigScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { onSave(remarks, textFieldState.text.toString()) }, modifier = Modifier.padding(end = 8.dp)) {
+                    MorphFilledTonalIconButton( onClick = {
+                        val remarksErr = remarks.isBlank()
+                        isRemarksError = remarksErr
+                        if (!remarksErr) {
+                            onSave(remarks, textFieldState.text.toString())
+                        }
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)
@@ -363,7 +369,8 @@ fun ServerCustomConfigScreen(
             FormTextField(
                 label = stringResource(R.string.server_lab_remarks),
                 value = remarks,
-                onValueChange = { remarks = it }
+                onValueChange = { remarks = it },
+                isError = isRemarksError
             )
 
             Box(

@@ -41,6 +41,8 @@ fun FormTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     placeholder: String? = null,
     maxLines: Int = 5,
+    isError: Boolean = false,
+    supportingText: String? = null,
 ) {
     Box(
         modifier = modifier
@@ -52,6 +54,8 @@ fun FormTextField(
             onValueChange = onValueChange,
             label = { Text(label) },
             placeholder = placeholder?.let { { Text(it) } },
+            isError = isError,
+            supportingText = supportingText?.let { { Text(it) } },
             singleLine = false,
             maxLines = maxLines,
             enabled = enabled,

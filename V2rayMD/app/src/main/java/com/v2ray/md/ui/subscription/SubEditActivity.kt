@@ -90,7 +90,6 @@ class SubEditActivity : BaseComponentActivity() {
     private fun saveServer(subItem: SubscriptionItem): Boolean {
 
         if (TextUtils.isEmpty(subItem.remarks)) {
-            toast(R.string.sub_setting_remarks)
             return false
         }
         if (subItem.url.isNotEmpty()) {
@@ -143,6 +142,7 @@ fun SubEditScreen(
 ) {
     //val context = LocalContext.current
     var remarks by rememberSaveable { mutableStateOf(initial.remarks.orEmpty()) }
+    var isRemarksError by rememberSaveable { mutableStateOf(false) }
     var url by rememberSaveable { mutableStateOf(initial.url.orEmpty()) }
     var userAgent by rememberSaveable { mutableStateOf(initial.userAgent.orEmpty()) }
     var requestHeaders by rememberSaveable { mutableStateOf(initial.requestHeaders.orEmpty()) }
@@ -198,7 +198,13 @@ fun SubEditScreen(
                             Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = stringResource(R.string.acc_delete))
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { buildSubItem()?.let { onSave(it) } }, modifier = Modifier.padding(end = 8.dp)) {
+                    MorphFilledTonalIconButton( onClick = {
+                        val remarksErr = remarks.isBlank()
+                        isRemarksError = remarksErr
+                        if (!remarksErr) {
+                            buildSubItem()?.let { onSave(it) }
+                        }
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(painterResource(R.drawable.ic_fab_check), contentDescription = stringResource(R.string.acc_save))
                     }
                 },
@@ -221,6 +227,7 @@ fun SubEditScreen(
                 value = remarks,
                 onValueChange = { remarks = it },
                 label = { Text(stringResource(R.string.sub_setting_remarks)) },
+                isError = isRemarksError,
                 trailingIcon = if (remarks.isNotEmpty()) {
                     {
                         IconButton(onClick = { remarks = "" }) {

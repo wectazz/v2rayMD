@@ -98,12 +98,7 @@ class UserAssetUrlActivity : BaseComponentActivity() {
             toast(R.string.msg_remark_is_duplicate)
             return false
         }
-        if (TextUtils.isEmpty(remarks)) {
-            toast(R.string.sub_setting_remarks)
-            return false
-        }
-        if (TextUtils.isEmpty(url)) {
-            toast(R.string.title_url)
+        if (TextUtils.isEmpty(remarks) || TextUtils.isEmpty(url)) {
             return false
         }
 
@@ -152,7 +147,9 @@ fun UserAssetUrlScreen(
     onDelete: () -> Unit
 ) {
     var remarks by rememberSaveable(editAssetId, initialRemarks) { mutableStateOf(initialRemarks) }
+    var isRemarksError by rememberSaveable(editAssetId) { mutableStateOf(false) }
     var url by rememberSaveable(editAssetId, initialUrl) { mutableStateOf(initialUrl) }
+    var isUrlError by rememberSaveable(editAssetId) { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable(editAssetId) { mutableStateOf(false) }
 
 
@@ -180,7 +177,15 @@ fun UserAssetUrlScreen(
                             )
                         }
                     }
-                    MorphFilledTonalIconButton( onClick = { onSave(remarks, url) }, modifier = Modifier.padding(end = 8.dp)) {
+                    MorphFilledTonalIconButton( onClick = {
+                        val remarksErr = remarks.isBlank()
+                        val urlErr = url.isBlank()
+                        isRemarksError = remarksErr
+                        isUrlError = urlErr
+                        if (!remarksErr && !urlErr) {
+                            onSave(remarks, url)
+                        }
+                    }, modifier = Modifier.padding(end = 8.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_fab_check),
                             contentDescription = stringResource(R.string.acc_save)
@@ -204,12 +209,14 @@ fun UserAssetUrlScreen(
                 FormTextField(
                     label = stringResource(R.string.sub_setting_remarks),
                     value = remarks,
-                    onValueChange = { remarks = it }
+                    onValueChange = { remarks = it },
+                    isError = isRemarksError
                 )
                 FormTextField(
                     label = stringResource(R.string.title_url),
                     value = url,
-                    onValueChange = { url = it }
+                    onValueChange = { url = it },
+                    isError = isUrlError
                 )
             }
             NavigationBarsSpacer()
