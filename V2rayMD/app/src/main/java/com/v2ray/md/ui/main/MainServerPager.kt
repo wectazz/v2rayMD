@@ -84,7 +84,7 @@ fun GroupPagerPage(
     onEditServer: (String, ProfileItem) -> Unit,
     onShareServer: (String, ProfileItem) -> Unit,
     onMoreServer: (String, ProfileItem) -> Unit,
-    onRemoveServer: (String) -> Unit,
+    onRemoveServer: (String, String) -> Unit,
     emptyContent: @Composable () -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
@@ -139,7 +139,7 @@ private class ServerRowActions(
     val edit: (String, ProfileItem) -> Unit,
     val share: (String, ProfileItem) -> Unit,
     val more: (String, ProfileItem) -> Unit,
-    val remove: (String) -> Unit,
+    val remove: (String, String) -> Unit,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -435,7 +435,7 @@ private fun ServerListItem(
                             Modifier.size(24.dp)
                         )
                     }
-                    MorphIconButton(onClick = { actions.remove(row.guid) }, modifier = Modifier.size(36.dp)) {
+                    MorphIconButton(onClick = { actions.remove(row.guid, row.remarks) }, modifier = Modifier.size(36.dp)) {
                         Icon(
                             painterResource(R.drawable.ic_delete_24dp),
                             stringResource(R.string.acc_delete),

@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 
@@ -44,6 +45,7 @@ fun ConfirmDialog(
     confirmText: String = stringResource(R.string.action_ok),
     dismissText: String? = stringResource(R.string.action_cancel),
     confirmIcon: @Composable (() -> Unit)? = null,
+    messageTextAlign: TextAlign = TextAlign.Start,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -58,7 +60,14 @@ fun ConfirmDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = title?.let { { Text(it) } },
-        text = { Text(message, style = MaterialTheme.typography.bodyMedium) },
+        text = {
+            Text(
+                text = message,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = messageTextAlign
+            )
+        },
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(); onDismiss() },
@@ -87,9 +96,11 @@ fun DeleteConfirmDialog(
     message: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    itemName: String? = null,
 ) {
     ConfirmDialog(
-        message = message,
+        message = if (itemName.isNullOrBlank()) message else "$message\n\n$itemName",
+        messageTextAlign = TextAlign.Center,
         confirmText = stringResource(R.string.action_delete),
         confirmIcon = {
             Icon(

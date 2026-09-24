@@ -219,6 +219,7 @@ fun UserAssetUrlScreen(
     if (showDeleteConfirm) {
         DeleteConfirmDialog(
             message = stringResource(R.string.confirm_delete_asset_source),
+            itemName = remarks,
             onConfirm = onDelete,
             onDismiss = { showDeleteConfirm = false }
         )
