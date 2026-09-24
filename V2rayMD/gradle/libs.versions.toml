@@ -27,7 +27,7 @@ material3Alpha = "1.5.0-alpha28"
 materialKolor = "5.0.1"
 monetCompat = "0.4.1"
 reorderable = "3.1.0"
-coil = "2.7.0"
+coil = "3.6.3"
 graphicsShapes = "1.0.1"
 graphicsPath = "1.0.1"
 [libraries]
@@ -68,7 +68,7 @@ androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleViewmodelKtx" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 androidx-graphics-path = { module = "androidx.graphics:graphics-path", version.ref = "graphicsPath" }
 [plugins]
