@@ -5,11 +5,11 @@ A V2Ray client for Android, support [Xray core](https://github.com/XTLS/Xray-cor
 Fork of [2dust/v2rayNG](https://github.com/2dust/v2rayNG), rebranded and modernized with Material Design 3 Expressive.
 
 <p align="center">
-[![API](https://img.shields.io/badge/API-24%2B-yellow.svg?style=flat)](https://developer.android.com/about/versions/lollipop)
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.4.10-blue.svg)](https://kotlinlang.org)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/wectazz/v2rayMD)](https://github.com/wectazz/v2rayMD/commits/master)
-[![GitHub Releases](https://img.shields.io/github/downloads/wectazz/v2rayMD/latest/total?logo=github)](https://github.com/wectazz/v2rayMD/releases)
-[![Telegram Channel](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](https://t.me/v2ray_md)
+  <a href="https://developer.android.com/about/versions/lollipop"><img src="https://img.shields.io/badge/API-24%2B-yellow.svg?style=flat" alt="API" /></a>
+  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.4.10-blue.svg" alt="Kotlin Version" /></a>
+  <a href="https://github.com/wectazz/v2rayMD/commits/master"><img src="https://img.shields.io/github/commit-activity/m/wectazz/v2rayMD" alt="GitHub commit activity" /></a>
+  <a href="https://github.com/wectazz/v2rayMD/releases"><img src="https://img.shields.io/github/downloads/wectazz/v2rayMD/latest/total?logo=github" alt="GitHub Releases" /></a>
+  <a href="https://t.me/v2ray_md"><img src="https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg" alt="Telegram Channel" /></a>
 </p>
 
 <p align="center">
