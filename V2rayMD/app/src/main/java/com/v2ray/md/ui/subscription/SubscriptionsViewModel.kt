@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.dto.SubscriptionUpdateMessage
+import com.v2ray.md.dto.SubscriptionUpdateResult
 import com.v2ray.md.dto.entities.SubscriptionCache
 import com.v2ray.md.dto.entities.SubscriptionItem
 import com.v2ray.md.extension.moveItem
@@ -35,6 +36,9 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
 
     private val _subsFlow = MutableStateFlow(subscriptions.toList())
     val subsFlow: StateFlow<List<SubscriptionCache>> = _subsFlow.asStateFlow()
+
+    private val _updateDiff = MutableStateFlow<SubscriptionUpdateResult?>(null)
+    val updateDiff: StateFlow<SubscriptionUpdateResult?> = _updateDiff.asStateFlow()
 
     fun getAll(): List<SubscriptionCache> = subscriptions.toList()
 
@@ -105,7 +109,9 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
                     AngConfigManager.updateConfigViaSubAll()
                 }
 
-                when {
+                if (result.addedProfiles.isNotEmpty() || result.deletedProfiles.isNotEmpty()) {
+                    _updateDiff.value = result
+                } else when {
                     result.successCount + result.failureCount + result.skipCount == 0 ->
                         toast(R.string.title_update_subscription_no_subscription)
 
@@ -129,6 +135,10 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
                 toastError(R.string.toast_failure)
             }
         }
+    }
+
+    fun dismissUpdateDiff() {
+        _updateDiff.value = null
     }
 
     fun updateSubscriptionsMore() {

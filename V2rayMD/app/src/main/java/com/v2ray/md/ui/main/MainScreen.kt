@@ -59,6 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.ui.compose.QRCodeDialog
+import com.v2ray.md.ui.compose.SubUpdateDiffDialog
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -168,6 +169,13 @@ fun MainScreen(
     }
     if (shareQRCodeBitmap != null) {
         QRCodeDialog(bitmap = shareQRCodeBitmap, onDismiss = { onAction(MainAction.DismissQRCodeDialog) })
+    }
+    val subUpdateDiff = uiState.subUpdateDiff
+    if (subUpdateDiff != null) {
+        SubUpdateDiffDialog(
+            result = subUpdateDiff,
+            onDismiss = { onAction(MainAction.DismissSubUpdateDiff) }
+        )
     }
     val updateNotice = uiState.updateAvailable
     if (updateNotice != null) {

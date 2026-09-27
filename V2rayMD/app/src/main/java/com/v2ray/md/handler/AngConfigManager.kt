@@ -583,14 +583,23 @@ object AngConfigManager {
                 return SubscriptionUpdateResult(failureCount = 1)
             }
 
+            val beforeServers = MmkvManager.decodeServerList(it.guid)
+                .associateWith { guid -> MmkvManager.decodeServerConfig(guid)?.remarks.orEmpty() }
             val count = parseConfigViaSub(configText, it.guid, false)
             if (count > 0) {
                 it.subscription.lastUpdated = System.currentTimeMillis()
                 MmkvManager.encodeSubscription(it.guid, it.subscription)
                 LogUtil.i(AppConfig.TAG, "Subscription updated: ${it.subscription.remarks}, $count configs")
+                val afterServers = MmkvManager.decodeServerList(it.guid)
+                    .associateWith { guid -> MmkvManager.decodeServerConfig(guid)?.remarks.orEmpty() }
+                val (added, deleted) = ProfileReplacement.diffProfiles(
+                    it.subscription.remarks, beforeServers, afterServers
+                )
                 return SubscriptionUpdateResult(
                     configCount = count,
-                    successCount = 1
+                    successCount = 1,
+                    addedProfiles = added,
+                    deletedProfiles = deleted
                 )
             } else {
                 // Got response but no valid configs parsed

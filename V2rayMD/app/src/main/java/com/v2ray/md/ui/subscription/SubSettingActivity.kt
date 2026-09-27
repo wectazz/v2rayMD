@@ -70,6 +70,7 @@ import com.v2ray.md.ui.compose.LocalSegmentedItemShape
 import com.v2ray.md.ui.compose.lazySegmentColumn
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SelectListDialog
+import com.v2ray.md.ui.compose.SubUpdateDiffDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
@@ -325,6 +326,12 @@ fun SubSettingScreen(
                 removeTarget = null
             },
             onDismiss = { removeTarget = null }
+        )
+    }
+    if (updateDiff != null) {
+        SubUpdateDiffDialog(
+            result = updateDiff!!,
+            onDismiss = { viewModel.dismissUpdateDiff() }
         )
     }
 

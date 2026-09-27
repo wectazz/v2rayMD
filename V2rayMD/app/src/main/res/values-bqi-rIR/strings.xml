@@ -345,6 +345,9 @@
     <string name="sub_setting_exit_proxy_tip">ای پروکسی بئڌ ز هر کانفیگ من ای اشتراک، وری آخر عوزو زنجیره پروکسی اضاف ابۊ.</string>
     <string name="toast_invalid_update_interval">فاصله ورۊ کردن نا موئتبر هڌ. حداقل مقدار 15 دؽقه هڌ.</string>
     <string name="title_sub_update">ورۊ کردن اشتراک بونکۊ سکویی</string>
+    <string name="title_sub_update_diff">ورۊ کردن اشتراک: %1$s</string>
+    <string name="sub_update_diff_added">اضافه وابین:\n%1$s</string>
+    <string name="sub_update_diff_deleted">پاک وابین:\n%1$s</string>
     <string name="title_ping_all_server">آزمایش تئخیر TCP (TCPing)</string>
     <string name="title_real_ping_all_server">آزمایش تئخیر واقعی</string>
     <string name="title_user_asset_setting">فایلا بونچک جغرافیایی</string>

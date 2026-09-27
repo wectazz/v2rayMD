@@ -1,5 +1,7 @@
 package com.v2ray.md.handler
 
+import com.v2ray.md.dto.ProfileDiffEntry
+import com.v2ray.md.dto.SubscriptionUpdateResult
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
 import org.junit.Assert.assertEquals
@@ -138,6 +140,54 @@ class ProfileReplacementTest {
         )
 
         assertEquals(emptySet<String>(), result)
+    }
+
+    @Test
+    fun `diffProfiles reports added and deleted profiles`() {
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = mapOf("gone" to "Old", "kept" to "Same"),
+            after = mapOf("kept" to "Same", "fresh" to "New"),
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("sub", "New")), added)
+        assertEquals(listOf(ProfileDiffEntry("sub", "Old")), deleted)
+    }
+
+    @Test
+    fun `diffProfiles falls back to guid for blank names`() {
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = mapOf("gone" to ""),
+            after = mapOf("fresh" to "  "),
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("sub", "gone")), deleted)
+        assertEquals(listOf(ProfileDiffEntry("sub", "fresh")), added)
+    }
+
+    @Test
+    fun `diffProfiles is empty when nothing changed`() {
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = mapOf("a" to "A"),
+            after = mapOf("a" to "A"),
+        )
+
+        assertEquals(emptyList<ProfileDiffEntry>(), added)
+        assertEquals(emptyList<ProfileDiffEntry>(), deleted)
+    }
+
+    @Test
+    fun `plus combines diff lists`() {
+        val combined = SubscriptionUpdateResult(
+            addedProfiles = listOf(ProfileDiffEntry("s1", "A"))
+        ) + SubscriptionUpdateResult(
+            deletedProfiles = listOf(ProfileDiffEntry("s2", "B"))
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("s1", "A")), combined.addedProfiles)
+        assertEquals(listOf(ProfileDiffEntry("s2", "B")), combined.deletedProfiles)
     }
 
     private fun profile(

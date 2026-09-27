@@ -1,8 +1,29 @@
 package com.v2ray.md.handler
 
+import com.v2ray.md.dto.ProfileDiffEntry
 import com.v2ray.md.dto.entities.ProfileItem
 
 internal object ProfileReplacement {
+
+    /**
+     * Compares profile GUID→remarks snapshots taken before and after a subscription update.
+     *
+     * @return added entries (name from [after]) and deleted entries (name from [before]).
+     * Blank names fall back to the GUID so nothing renders empty.
+     */
+    fun diffProfiles(
+        subscriptionName: String,
+        before: Map<String, String>,
+        after: Map<String, String>,
+    ): Pair<List<ProfileDiffEntry>, List<ProfileDiffEntry>> {
+        val added = after
+            .filterKeys { it !in before }
+            .map { (guid, name) -> ProfileDiffEntry(subscriptionName, name.ifBlank { guid }) }
+        val deleted = before
+            .filterKeys { it !in after }
+            .map { (guid, name) -> ProfileDiffEntry(subscriptionName, name.ifBlank { guid }) }
+        return added to deleted
+    }
 
     /**
      * Finds the profile that should become selected after publishing a replacement batch.

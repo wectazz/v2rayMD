@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import com.v2ray.md.dto.ProfileDiffEntry
+import com.v2ray.md.dto.SubscriptionUpdateResult
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -241,5 +245,56 @@ fun <T> SelectListDialog(
                 Text(stringResource(R.string.action_cancel))
             }
         },
+    )
+}
+
+/**
+ * Shows added/removed profiles after a subscription update, MikuRay-style.
+ * Rows are prefixed with the subscription name when several updated at once.
+ */
+@Composable
+fun SubUpdateDiffDialog(
+    result: SubscriptionUpdateResult,
+    onDismiss: () -> Unit
+) {
+    val subNames = (result.addedProfiles.map { it.subscriptionName } +
+        result.deletedProfiles.map { it.subscriptionName }).distinct()
+    val multipleSubs = subNames.size > 1
+    fun format(entries: List<ProfileDiffEntry>): String = entries.joinToString("\n") { entry ->
+        if (multipleSubs) "• [${entry.subscriptionName}] ${entry.profileName}" else "• ${entry.profileName}"
+    }
+    val message = buildString {
+        if (result.addedProfiles.isNotEmpty()) {
+            append(stringResource(R.string.sub_update_diff_added, format(result.addedProfiles)))
+        }
+        if (result.deletedProfiles.isNotEmpty()) {
+            if (isNotEmpty()) append("\n\n")
+            append(stringResource(R.string.sub_update_diff_deleted, format(result.deletedProfiles)))
+        }
+    }
+    val scrollState = rememberScrollState()
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                if (subNames.size == 1) stringResource(R.string.title_sub_update_diff, subNames.first())
+                else stringResource(R.string.title_sub_update)
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .verticalScrollbar(scrollState)
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_ok))
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.surface
     )
 }

@@ -327,6 +327,10 @@ class MainViewModel(
                 _uiState.update { it.copy(updateAvailable = null) }
             }
 
+            MainAction.DismissSubUpdateDiff -> {
+                _uiState.update { it.copy(subUpdateDiff = null) }
+            }
+
             MainAction.ToggleService,
             MainAction.TestCurrentServer,
             MainAction.ImportQRcode,
@@ -597,7 +601,8 @@ class MainViewModel(
                         result.successCount + result.failureCount + result.skipCount == 0 ->
                             toast(R.string.title_update_subscription_no_subscription)
 
-                        result.successCount > 0 && result.failureCount + result.skipCount == 0 ->
+                        result.successCount > 0 && result.failureCount + result.skipCount == 0 &&
+                            result.addedProfiles.isEmpty() && result.deletedProfiles.isEmpty() ->
                             toast(
                                 getQuantityString(
                                     R.plurals.title_update_config_count,
@@ -606,8 +611,10 @@ class MainViewModel(
                                 )
                             )
 
-                        else ->
+                        result.addedProfiles.isEmpty() && result.deletedProfiles.isEmpty() ->
                             toast(dataSource.getString(R.string.title_update_subscription_result, result.configCount, result.successCount, result.failureCount, result.skipCount))
+
+                        else -> _uiState.update { it.copy(subUpdateDiff = result) }
                     }
                     if (result.configCount > 0) {
                         setupGroupTab(forceRefresh = true)

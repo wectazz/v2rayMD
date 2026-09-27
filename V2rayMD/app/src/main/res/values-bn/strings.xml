@@ -345,6 +345,9 @@
     <string name="sub_setting_exit_proxy_tip">নির্বাচিত প্রক্সিটি এই সাবস্ক্রিপশনের প্রতিটি প্রোফাইলের পরে সেই প্রোফাইলের প্রক্সি চেইনের প্রস্থান লিঙ্ক হিসেবে যোগ করা হবে।</string>
     <string name="toast_invalid_update_interval">আপডেটের বিরতি সঠিক নয়। সর্বনিম্ন ১৫ মিনিট।</string>
     <string name="title_sub_update">সাবস্ক্রিপশন আপডেট</string>
+    <string name="title_sub_update_diff">সাবস্ক্রিপশন আপডেট: %1$s</string>
+    <string name="sub_update_diff_added">যোগ হয়েছে:\n%1$s</string>
+    <string name="sub_update_diff_deleted">মুছে গেছে:\n%1$s</string>
     <string name="title_ping_all_server">TCP বিলম্ব পরীক্ষা করুন (TCPing)</string>
     <string name="title_real_ping_all_server">প্রকৃত বিলম্ব পরীক্ষা করুন</string>
     <string name="title_user_asset_setting">অ্যাসেট ফাইল</string>

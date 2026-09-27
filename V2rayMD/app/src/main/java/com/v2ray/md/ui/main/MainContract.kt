@@ -2,6 +2,7 @@ package com.v2ray.md.ui.main
 
 import com.v2ray.md.dto.CheckUpdateResult
 import com.v2ray.md.dto.ConnectionTestResult
+import com.v2ray.md.dto.SubscriptionUpdateResult
 import com.v2ray.md.dto.GroupMapItem
 import com.v2ray.md.dto.LocateTarget
 
@@ -28,7 +29,8 @@ data class MainUiState(
     val confirmRemove: Boolean = false,
     val doubleColumnDisplay: Boolean = false,
     val shareQRCodeBitmap: android.graphics.Bitmap? = null,
-    val updateAvailable: CheckUpdateResult? = null
+    val updateAvailable: CheckUpdateResult? = null,
+    val subUpdateDiff: SubscriptionUpdateResult? = null
 )
 
 /**
@@ -67,6 +69,7 @@ sealed interface MainAction {
     data class ShareFullContent(val guid: String) : MainAction
     data object DismissQRCodeDialog : MainAction
     data object DismissUpdateNotice : MainAction
+    data object DismissSubUpdateDiff : MainAction
 
     data class ImportBatchConfig(val configText: String, val fileName: String? = null) : MainAction
 

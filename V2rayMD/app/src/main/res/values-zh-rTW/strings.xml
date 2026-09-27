@@ -345,6 +345,9 @@
     <string name="sub_setting_exit_proxy_tip">所選代理會加在此訂閱中每個設定檔之後，作為該設定檔代理鏈的出口節點。</string>
     <string name="toast_invalid_update_interval">更新間隔無效，最小值為 15 分鐘。</string>
     <string name="title_sub_update">更新訂閱</string>
+    <string name="title_sub_update_diff">訂閱更新：%1$s</string>
+    <string name="sub_update_diff_added">新增：\n%1$s</string>
+    <string name="sub_update_diff_deleted">刪除：\n%1$s</string>
     <string name="title_ping_all_server">測試 TCP 延遲（TCPing）</string>
     <string name="title_real_ping_all_server">測試真連接延遲</string>
     <string name="title_user_asset_setting">資源檔案</string>
