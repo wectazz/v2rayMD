@@ -6,22 +6,47 @@ import com.v2ray.md.dto.entities.ProfileItem
 internal object ProfileReplacement {
 
     /**
-     * Compares profile GUID→remarks snapshots taken before and after a subscription update.
+     * Compares profile snapshots taken before and after a subscription update.
      *
-     * @return added entries (name from [after]) and deleted entries (name from [before]).
-     * Blank names fall back to the GUID so nothing renders empty.
+     * GUIDs are regenerated on every import, so identity is the profile content
+     * (remarks, server, port, password). Duplicates are matched as a multiset:
+     * only the surplus on either side is reported.
+     *
+     * @return added entries and deleted entries with display names.
      */
     fun diffProfiles(
         subscriptionName: String,
-        before: Map<String, String>,
-        after: Map<String, String>,
+        before: List<ProfileItem>,
+        after: List<ProfileItem>,
     ): Pair<List<ProfileDiffEntry>, List<ProfileDiffEntry>> {
-        val added = after
-            .filterKeys { it !in before }
-            .map { (guid, name) -> ProfileDiffEntry(subscriptionName, name.ifBlank { guid }) }
-        val deleted = before
-            .filterKeys { it !in after }
-            .map { (guid, name) -> ProfileDiffEntry(subscriptionName, name.ifBlank { guid }) }
+        fun ProfileItem.identityKey() = listOf(
+            remarks.orEmpty(), server.orEmpty(), serverPort.orEmpty(), password.orEmpty()
+        ).joinToString("\u0001")
+
+        fun ProfileItem.displayName() = remarks.ifBlank {
+            if (server.isNullOrBlank()) "" else "$server:${serverPort.orEmpty()}".trimEnd(':')
+        }
+
+        val beforeCounts = before.groupingBy { it.identityKey() }.eachCount().toMutableMap()
+        val added = mutableListOf<ProfileDiffEntry>()
+        for (profile in after) {
+            val remaining = beforeCounts[profile.identityKey()] ?: 0
+            if (remaining > 0) {
+                beforeCounts[profile.identityKey()] = remaining - 1
+            } else {
+                added.add(ProfileDiffEntry(subscriptionName, profile.displayName()))
+            }
+        }
+        val afterCounts = after.groupingBy { it.identityKey() }.eachCount().toMutableMap()
+        val deleted = mutableListOf<ProfileDiffEntry>()
+        for (profile in before) {
+            val remaining = afterCounts[profile.identityKey()] ?: 0
+            if (remaining > 0) {
+                afterCounts[profile.identityKey()] = remaining - 1
+            } else {
+                deleted.add(ProfileDiffEntry(subscriptionName, profile.displayName()))
+            }
+        }
         return added to deleted
     }
 

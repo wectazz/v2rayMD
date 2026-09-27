@@ -146,8 +146,14 @@ class ProfileReplacementTest {
     fun `diffProfiles reports added and deleted profiles`() {
         val (added, deleted) = ProfileReplacement.diffProfiles(
             subscriptionName = "sub",
-            before = mapOf("gone" to "Old", "kept" to "Same"),
-            after = mapOf("kept" to "Same", "fresh" to "New"),
+            before = listOf(
+                profile(remarks = "Old", server = "a.com"),
+                profile(remarks = "Same", server = "b.com"),
+            ),
+            after = listOf(
+                profile(remarks = "Same", server = "b.com"),
+                profile(remarks = "New", server = "c.com"),
+            ),
         )
 
         assertEquals(listOf(ProfileDiffEntry("sub", "New")), added)
@@ -155,27 +161,52 @@ class ProfileReplacementTest {
     }
 
     @Test
-    fun `diffProfiles falls back to guid for blank names`() {
-        val (added, deleted) = ProfileReplacement.diffProfiles(
-            subscriptionName = "sub",
-            before = mapOf("gone" to ""),
-            after = mapOf("fresh" to "  "),
-        )
+    fun `diffProfiles ignores regenerated guids when content is identical`() {
+        val before = listOf(profile(remarks = "A", server = "a.com", password = "s3cr3t"))
+        // Same content, different storage identity: no diff expected.
+        val after = listOf(profile(remarks = "A", server = "a.com", password = "s3cr3t"))
 
-        assertEquals(listOf(ProfileDiffEntry("sub", "gone")), deleted)
-        assertEquals(listOf(ProfileDiffEntry("sub", "fresh")), added)
-    }
-
-    @Test
-    fun `diffProfiles is empty when nothing changed`() {
-        val (added, deleted) = ProfileReplacement.diffProfiles(
-            subscriptionName = "sub",
-            before = mapOf("a" to "A"),
-            after = mapOf("a" to "A"),
-        )
+        val (added, deleted) = ProfileReplacement.diffProfiles("sub", before, after)
 
         assertEquals(emptyList<ProfileDiffEntry>(), added)
         assertEquals(emptyList<ProfileDiffEntry>(), deleted)
+    }
+
+    @Test
+    fun `diffProfiles matches duplicates as a multiset`() {
+        fun dup() = profile(remarks = "Dup", server = "d.com")
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = listOf(dup(), dup()),
+            after = listOf(dup(), dup(), dup()),
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("sub", "Dup")), added)
+        assertEquals(emptyList<ProfileDiffEntry>(), deleted)
+    }
+
+    @Test
+    fun `diffProfiles reports password rotation as replacement`() {
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = listOf(profile(remarks = "A", server = "a.com", password = "old")),
+            after = listOf(profile(remarks = "A", server = "a.com", password = "new")),
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("sub", "A")), added)
+        assertEquals(listOf(ProfileDiffEntry("sub", "A")), deleted)
+    }
+
+    @Test
+    fun `diffProfiles falls back to address for blank names`() {
+        val (added, deleted) = ProfileReplacement.diffProfiles(
+            subscriptionName = "sub",
+            before = listOf(profile(server = "gone.com", port = "443")),
+            after = listOf(profile(server = "fresh.com", port = "443")),
+        )
+
+        assertEquals(listOf(ProfileDiffEntry("sub", "fresh.com:443")), added)
+        assertEquals(listOf(ProfileDiffEntry("sub", "gone.com:443")), deleted)
     }
 
     @Test

@@ -584,14 +584,14 @@ object AngConfigManager {
             }
 
             val beforeServers = MmkvManager.decodeServerList(it.guid)
-                .associateWith { guid -> MmkvManager.decodeServerConfig(guid)?.remarks.orEmpty() }
+                .mapNotNull { guid -> MmkvManager.decodeServerConfig(guid) }
             val count = parseConfigViaSub(configText, it.guid, false)
             if (count > 0) {
                 it.subscription.lastUpdated = System.currentTimeMillis()
                 MmkvManager.encodeSubscription(it.guid, it.subscription)
                 LogUtil.i(AppConfig.TAG, "Subscription updated: ${it.subscription.remarks}, $count configs")
                 val afterServers = MmkvManager.decodeServerList(it.guid)
-                    .associateWith { guid -> MmkvManager.decodeServerConfig(guid)?.remarks.orEmpty() }
+                    .mapNotNull { guid -> MmkvManager.decodeServerConfig(guid) }
                 val (added, deleted) = ProfileReplacement.diffProfiles(
                     it.subscription.remarks, beforeServers, afterServers
                 )
