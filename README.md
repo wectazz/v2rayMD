@@ -1,14 +1,20 @@
-# v2rayMD
+<h1 align="center">v2rayMD</h1>
 
 A V2Ray client for Android, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core)
 
 Fork of [2dust/v2rayNG](https://github.com/2dust/v2rayNG), rebranded and modernized with Material Design 3 Expressive.
 
+<p align="center">
 [![API](https://img.shields.io/badge/API-24%2B-yellow.svg?style=flat)](https://developer.android.com/about/versions/lollipop)
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-2.4.10-blue.svg)](https://kotlinlang.org)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/wectazz/v2rayMD)](https://github.com/wectazz/v2rayMD/commits/master)
 [![GitHub Releases](https://img.shields.io/github/downloads/wectazz/v2rayMD/latest/total?logo=github)](https://github.com/wectazz/v2rayMD/releases)
 [![Telegram Channel](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](https://t.me/v2ray_md)
+</p>
+
+<p align="center">
+  <img src="V2rayMD/app/src/main/res/mipmap-xhdpi/ic_banner.png" alt="v2rayMD banner" width="640" />
+</p>
 
 ---
 
