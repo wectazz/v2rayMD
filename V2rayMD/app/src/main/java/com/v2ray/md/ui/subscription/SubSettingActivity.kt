@@ -143,6 +143,7 @@ fun SubSettingScreen(
 
     var shareTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
     val qrCodeBitmap by viewModel.qrCode.collectAsStateWithLifecycle()
+    val updateDiff by viewModel.updateDiff.collectAsStateWithLifecycle()
 
     val lazyListState = rememberLazyListState()
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
