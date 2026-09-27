@@ -354,6 +354,7 @@
     <string name="title_sub_update_diff">Обновление подписки: %1$s</string>
     <string name="sub_update_diff_added">Добавлено:\n%1$s</string>
     <string name="sub_update_diff_deleted">Удалено:\n%1$s</string>
+    <string name="sub_update_diff_empty">Изменений нет</string>
     <string name="title_ping_all_server">Проверить TCP-задержку</string>
     <string name="title_real_ping_all_server">Проверить реальную задержку</string>
     <string name="title_user_asset_setting">Файлы ресурсов</string>

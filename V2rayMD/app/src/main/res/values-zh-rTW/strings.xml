@@ -348,6 +348,7 @@
     <string name="title_sub_update_diff">訂閱更新：%1$s</string>
     <string name="sub_update_diff_added">新增：\n%1$s</string>
     <string name="sub_update_diff_deleted">刪除：\n%1$s</string>
+    <string name="sub_update_diff_empty">無變化</string>
     <string name="title_ping_all_server">測試 TCP 延遲（TCPing）</string>
     <string name="title_real_ping_all_server">測試真連接延遲</string>
     <string name="title_user_asset_setting">資源檔案</string>

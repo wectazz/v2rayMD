@@ -348,6 +348,7 @@
     <string name="title_sub_update_diff">订阅更新：%1$s</string>
     <string name="sub_update_diff_added">新增：\n%1$s</string>
     <string name="sub_update_diff_deleted">删除：\n%1$s</string>
+    <string name="sub_update_diff_empty">无变化</string>
     <string name="title_ping_all_server">测试 TCP 延迟（TCPing）</string>
     <string name="title_real_ping_all_server">测试真连接延迟</string>
     <string name="title_user_asset_setting">资源文件</string>

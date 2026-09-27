@@ -109,20 +109,11 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
                     AngConfigManager.updateConfigViaSubAll()
                 }
 
-                if (result.addedProfiles.isNotEmpty() || result.deletedProfiles.isNotEmpty()) {
+                if (result.successCount > 0 && result.failureCount + result.skipCount == 0) {
                     _updateDiff.value = result
                 } else when {
                     result.successCount + result.failureCount + result.skipCount == 0 ->
                         toast(R.string.title_update_subscription_no_subscription)
-
-                    result.successCount > 0 && result.failureCount + result.skipCount == 0 ->
-                        toast(
-                            getQuantityString(
-                                R.plurals.title_update_config_count,
-                                result.configCount,
-                                result.configCount,
-                            )
-                        )
 
                     else ->
                         toast(getString(R.string.title_update_subscription_result, result.configCount, result.successCount, result.failureCount, result.skipCount))

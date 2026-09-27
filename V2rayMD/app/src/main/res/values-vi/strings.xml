@@ -348,6 +348,7 @@
     <string name="title_sub_update_diff">Cập nhật gói đăng ký: %1$s</string>
     <string name="sub_update_diff_added">Đã thêm:\n%1$s</string>
     <string name="sub_update_diff_deleted">Đã xóa:\n%1$s</string>
+    <string name="sub_update_diff_empty">Không có gì thay đổi</string>
     <string name="title_ping_all_server">Kiểm tra độ trễ TCP (TCPing)</string>
     <string name="title_real_ping_all_server">Kiểm tra độ trễ thực</string>
     <string name="title_user_asset_setting">Tệp tài nguyên</string>

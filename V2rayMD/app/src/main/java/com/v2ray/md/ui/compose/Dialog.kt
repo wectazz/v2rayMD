@@ -271,6 +271,9 @@ fun SubUpdateDiffDialog(
             if (isNotEmpty()) append("\n\n")
             append(stringResource(R.string.sub_update_diff_deleted, format(result.deletedProfiles)))
         }
+        if (isEmpty()) {
+            append(stringResource(R.string.sub_update_diff_empty))
+        }
     }
     val scrollState = rememberScrollState()
     AlertDialog(

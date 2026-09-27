@@ -348,6 +348,7 @@
     <string name="title_sub_update_diff">ورۊ کردن اشتراک: %1$s</string>
     <string name="sub_update_diff_added">اضافه وابین:\n%1$s</string>
     <string name="sub_update_diff_deleted">پاک وابین:\n%1$s</string>
+    <string name="sub_update_diff_empty">هیچ تغییری نی</string>
     <string name="title_ping_all_server">آزمایش تئخیر TCP (TCPing)</string>
     <string name="title_real_ping_all_server">آزمایش تئخیر واقعی</string>
     <string name="title_user_asset_setting">فایلا بونچک جغرافیایی</string>

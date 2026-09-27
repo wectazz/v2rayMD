@@ -348,6 +348,7 @@
     <string name="title_sub_update_diff">تحديث الاشتراك: %1$s</string>
     <string name="sub_update_diff_added">تمت إضافة:\n%1$s</string>
     <string name="sub_update_diff_deleted">تمت إزالة:\n%1$s</string>
+    <string name="sub_update_diff_empty">لا توجد تغييرات</string>
     <string name="title_ping_all_server">اختبار تأخير TCP (TCPing)</string>
     <string name="title_real_ping_all_server">اختبار زمن الاستجابة الفعلي</string>
     <string name="title_user_asset_setting">ملفات الأصول</string>

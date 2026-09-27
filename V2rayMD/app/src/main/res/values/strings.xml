@@ -352,6 +352,7 @@
     <string name="title_sub_update_diff">Subscription update: %1$s</string>
     <string name="sub_update_diff_added">Added:\n%1$s</string>
     <string name="sub_update_diff_deleted">Removed:\n%1$s</string>
+    <string name="sub_update_diff_empty">Nothing changed</string>
     <string name="title_ping_all_server">Test TCP delays (TCPing)</string>
     <string name="title_real_ping_all_server">Test real delays</string>
     <string name="title_user_asset_setting">Asset files</string>

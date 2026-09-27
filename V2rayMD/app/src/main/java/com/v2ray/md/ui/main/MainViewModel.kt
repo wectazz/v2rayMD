@@ -601,15 +601,8 @@ class MainViewModel(
                         result.successCount + result.failureCount + result.skipCount == 0 ->
                             toast(R.string.title_update_subscription_no_subscription)
 
-                        result.successCount > 0 && result.failureCount + result.skipCount == 0 &&
-                            result.addedProfiles.isEmpty() && result.deletedProfiles.isEmpty() ->
-                            toast(
-                                getQuantityString(
-                                    R.plurals.title_update_config_count,
-                                    result.configCount,
-                                    result.configCount,
-                                )
-                            )
+                        result.successCount > 0 && result.failureCount + result.skipCount == 0 ->
+                            _uiState.update { it.copy(subUpdateDiff = result) }
 
                         result.addedProfiles.isEmpty() && result.deletedProfiles.isEmpty() ->
                             toast(dataSource.getString(R.string.title_update_subscription_result, result.configCount, result.successCount, result.failureCount, result.skipCount))
