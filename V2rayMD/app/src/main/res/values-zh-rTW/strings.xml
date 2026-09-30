@@ -350,7 +350,9 @@
     <string name="sub_update_diff_deleted">刪除：\n%1$s</string>
     <string name="sub_update_diff_empty">無變化</string>
     <string name="title_ping_all_server">測試 TCP 延遲（TCPing）</string>
+    <string name="title_ping_selected_server">Test TCP delay of selected server</string>
     <string name="title_real_ping_all_server">測試真連接延遲</string>
+    <string name="title_real_ping_selected_server">Test real delay of selected server</string>
     <string name="title_user_asset_setting">資源檔案</string>
     <string name="title_sort_by_test_results">依測試結果排序</string>
     <string name="title_filter_config">篩選設定</string>

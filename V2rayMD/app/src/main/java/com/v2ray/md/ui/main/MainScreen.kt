@@ -265,7 +265,9 @@ fun MainScreen(
                                 MainMoreMenuAction.LocateSelected -> onAction(MainAction.LocateSelectedServer)
                                 MainMoreMenuAction.SortByTestResults -> onAction(MainAction.SortByTestResults)
                                 MainMoreMenuAction.TestAll -> onAction(MainAction.TestAllServers)
+                                MainMoreMenuAction.TestSelected -> onAction(MainAction.TestSelectedServers)
                                 MainMoreMenuAction.TestAllRealPing -> onAction(MainAction.TestRealAllServers)
+                                MainMoreMenuAction.TestSelectedRealPing -> onAction(MainAction.TestRealSelectedServers)
                                 MainMoreMenuAction.UpdateSubscriptions -> onAction(MainAction.UpdateSubscriptions)
                             }
                         },

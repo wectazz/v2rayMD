@@ -6,6 +6,19 @@ import org.junit.Test
 class MainImportMenuTest {
 
     @Test
+    fun testsGroupKeepsSelectedActionsAfterAllActions() {
+        assertEquals(
+            listOf(
+                MainMoreMenuAction.TestAll,
+                MainMoreMenuAction.TestSelected,
+                MainMoreMenuAction.TestAllRealPing,
+                MainMoreMenuAction.TestSelectedRealPing,
+            ),
+            MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.TESTS },
+        )
+    }
+
+    @Test
     fun regularShareMenuContainsOnlyShareActions() {
         val expected = listOf(
             ServerMenuAction.ShareQRCode,

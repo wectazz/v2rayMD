@@ -301,6 +301,8 @@ class MainViewModel(
             MainAction.RefreshGroups -> setupGroupTab(forceRefresh = true)
             MainAction.TestAllServers -> testAllRealPing(true)
             MainAction.TestRealAllServers -> testAllRealPing()
+            MainAction.TestSelectedServers -> testSelectedServer(onlyTcp = true)
+            MainAction.TestRealSelectedServers -> testSelectedServer(onlyTcp = false)
             MainAction.CancelTesting -> cancelAllPing()
             MainAction.RemoveAllServers -> removeAllServerAsync()
             MainAction.RemoveDuplicateServers -> removeDuplicateServerAsync()
@@ -878,21 +880,32 @@ class MainViewModel(
     }
 
     fun testAllRealPing(onlyTcp: Boolean = false) {
-        cancelAllPing()
         val groupId = uiState.value.selectedGroupId
-        val servers = currentServers()
-        if (servers.isEmpty()) {
+        val guids = currentServers().map { it.guid }
+        if (guids.isEmpty()) {
             return
         }
-        val serverGuids = servers.map { it.guid }
+        startPingTest(onlyTcp = onlyTcp, groupId = groupId, guids = guids, resetAll = true)
+    }
+
+    fun testSelectedServer(onlyTcp: Boolean) {
+        val selected = dataSource.getSelectServer()?.takeIf { it.isNotBlank() } ?: return
+        val groupId = dataSource.decodeServerConfig(selected)?.subscriptionId?.takeIf { it.isNotBlank() }
+            ?: uiState.value.selectedGroupId
+        startPingTest(onlyTcp = onlyTcp, groupId = groupId, guids = listOf(selected), resetAll = false)
+    }
+
+    private fun startPingTest(onlyTcp: Boolean, groupId: String, guids: List<String>, resetAll: Boolean) {
+        cancelAllPing()
+        val targets = guids.toHashSet()
         mutableServerGroupState(groupId).update { current ->
             current.copy(
                 servers = current.servers.map { server ->
-                    if (server.testDelayMillis == 0L) server
+                    if ((!resetAll && server.guid !in targets) || server.testDelayMillis == 0L) server
                     else server.copy(testDelayMillis = 0L)
                 },
                 rows = current.rows.map { row ->
-                    if (row.testDelayMillis == 0L) row
+                    if ((!resetAll && row.guid !in targets) || row.testDelayMillis == 0L) row
                     else row.copy(testDelayMillis = 0L)
                 }
             )
@@ -901,7 +914,7 @@ class MainViewModel(
         val message = TestServiceMessage(
             key = AppConfig.MSG_MEASURE_CONFIG_START,
             subscriptionId = groupId,
-            serverGuids = if (keywordFilter.isNotEmpty()) serverGuids else emptyList(),
+            serverGuids = if (resetAll && keywordFilter.isEmpty()) emptyList() else guids,
             onlyTcp = onlyTcp
         )
         _uiState.update {
@@ -912,8 +925,8 @@ class MainViewModel(
         }
         bulkTestJob = viewModelScope.launch {
             withContext(ioDispatcher) {
-                dataSource.clearAllTestDelayResults(serverGuids)
-                val resetGuids = serverGuids.toHashSet()
+                dataSource.clearAllTestDelayResults(guids)
+                val resetGuids = guids.toHashSet()
                 cacheMutex.withLock {
                     groupDataCache[groupId]?.let { cached ->
                         groupDataCache[groupId] = cached.map { server ->

@@ -104,7 +104,9 @@ enum class MainMoreMenuAction(
     SortByTestResults(R.string.title_sort_by_test_results, Icons.Filled.Sort, MainMoreMenuGroup.ACTIONS),
     
     TestAll(R.string.title_ping_all_server, Icons.Filled.NetworkPing, MainMoreMenuGroup.TESTS),
+    TestSelected(R.string.title_ping_selected_server, Icons.Filled.GpsFixed, MainMoreMenuGroup.TESTS),
     TestAllRealPing(R.string.title_real_ping_all_server, Icons.Filled.Speed, MainMoreMenuGroup.TESTS),
+    TestSelectedRealPing(R.string.title_real_ping_selected_server, Icons.Filled.LocationSearching, MainMoreMenuGroup.TESTS),
     
     DeleteDuplicate(R.string.title_del_duplicate_config, Icons.Filled.DeleteOutline, MainMoreMenuGroup.DELETE),
     DeleteInvalid(R.string.title_del_invalid_config, Icons.Filled.DeleteSweep, MainMoreMenuGroup.DELETE),

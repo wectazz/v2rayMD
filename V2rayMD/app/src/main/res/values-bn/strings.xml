@@ -350,7 +350,9 @@
     <string name="sub_update_diff_deleted">মুছে গেছে:\n%1$s</string>
     <string name="sub_update_diff_empty">কোনো পরিবর্তন নেই</string>
     <string name="title_ping_all_server">TCP বিলম্ব পরীক্ষা করুন (TCPing)</string>
+    <string name="title_ping_selected_server">Test TCP delay of selected server</string>
     <string name="title_real_ping_all_server">প্রকৃত বিলম্ব পরীক্ষা করুন</string>
+    <string name="title_real_ping_selected_server">Test real delay of selected server</string>
     <string name="title_user_asset_setting">অ্যাসেট ফাইল</string>
     <string name="title_sort_by_test_results">টেস্ট ফলাফল দ্বারা সাজানো</string>
     <string name="title_filter_config">কনফিগারেশন ফাইল ফিল্টার করুন</string>

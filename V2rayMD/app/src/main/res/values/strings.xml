@@ -354,7 +354,9 @@
     <string name="sub_update_diff_deleted">Removed:\n%1$s</string>
     <string name="sub_update_diff_empty">Nothing changed</string>
     <string name="title_ping_all_server">Test TCP delays (TCPing)</string>
+    <string name="title_ping_selected_server">Test TCP delay of selected server</string>
     <string name="title_real_ping_all_server">Test real delays</string>
+    <string name="title_real_ping_selected_server">Test real delay of selected server</string>
     <string name="title_user_asset_setting">Asset files</string>
     <string name="title_sort_by_test_results">Sort by test results</string>
     <string name="title_filter_config">Filter configs</string>

@@ -350,7 +350,9 @@
     <string name="sub_update_diff_deleted">Đã xóa:\n%1$s</string>
     <string name="sub_update_diff_empty">Không có gì thay đổi</string>
     <string name="title_ping_all_server">Kiểm tra độ trễ TCP (TCPing)</string>
+    <string name="title_ping_selected_server">Test TCP delay of selected server</string>
     <string name="title_real_ping_all_server">Kiểm tra độ trễ thực</string>
+    <string name="title_real_ping_selected_server">Test real delay of selected server</string>
     <string name="title_user_asset_setting">Tệp tài nguyên</string>
     <string name="title_sort_by_test_results">Sắp xếp theo kết quả kiểm tra</string>
     <string name="title_filter_config">Lọc cấu hình</string>
