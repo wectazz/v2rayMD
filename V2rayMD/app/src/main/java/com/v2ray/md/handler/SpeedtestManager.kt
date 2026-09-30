@@ -169,9 +169,13 @@ object SpeedtestManager {
                 endpointOf(first.string("address"), first.int("port"))
             }
 
-            "hysteria2" -> {
-                val first = settings.jsonStrings("servers").firstOrNull() ?: return null
-                splitHostPort(first)?.let { (host, port) -> endpointOf(host, port) }
+            "hysteria", "hysteria2" -> {
+                // v2 shape: flat settings.address/settings.port; v1 shape: settings.servers array.
+                endpointOf(settings.string("address"), settings.int("port"))
+                    ?: settings.jsonObjects("servers")
+                        .firstNotNullOfOrNull { endpointOf(it.string("address"), it.int("port")) }
+                    ?: settings.jsonStrings("servers")
+                        .firstNotNullOfOrNull { splitHostPort(it)?.let { (h, p) -> endpointOf(h, p) } }
             }
 
             else -> null

@@ -169,6 +169,30 @@ class SpeedtestManagerTest {
     }
 
     @Test
+    fun `extractCustomTcpEndpoint reads hysteria v2 flat address`() {
+        val raw = """
+            {"outbounds": [{"tag": "proxy", "protocol": "hysteria",
+             "settings": {"address": "nvest.krusofiya.fun", "port": 8443, "version": 2}}]}
+        """.trimIndent()
+        assertEquals(
+            SpeedtestManager.CustomTcpEndpoint("nvest.krusofiya.fun", 8443),
+            SpeedtestManager.extractCustomTcpEndpoint(raw)
+        )
+    }
+
+    @Test
+    fun `extractCustomTcpEndpoint reads hysteria servers objects`() {
+        val raw = """
+            {"outbounds": [{"tag": "proxy", "protocol": "hysteria2",
+             "settings": {"servers": [{"address": "hy2.example.com", "port": 8443}]}}]}
+        """.trimIndent()
+        assertEquals(
+            SpeedtestManager.CustomTcpEndpoint("hy2.example.com", 8443),
+            SpeedtestManager.extractCustomTcpEndpoint(raw)
+        )
+    }
+
+    @Test
     fun `extractCustomTcpEndpoint returns null for unsupported or broken configs`() {
         assertNull(SpeedtestManager.extractCustomTcpEndpoint("not json"))
         assertNull(SpeedtestManager.extractCustomTcpEndpoint("{}"))
