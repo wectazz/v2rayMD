@@ -136,6 +136,12 @@ class RealPingWorkerService(
         val retFailure = -1L
 
         val config = MmkvManager.decodeServerConfig(guid) ?: return retFailure
+        if (config.configType == EConfigType.CUSTOM) {
+            // Custom configs carry a full JSON instead of typed host/port: extract the endpoint.
+            val raw = MmkvManager.decodeServerRaw(guid) ?: return retFailure
+            val endpoint = SpeedtestManager.extractCustomTcpEndpoint(raw) ?: return retFailure
+            return SpeedtestManager.socketConnectTime(endpoint.host, endpoint.port, 1000)
+        }
         if (!config.configType.isComplexType()
             && config.configType != EConfigType.HYSTERIA2
             && config.configType != EConfigType.WIREGUARD

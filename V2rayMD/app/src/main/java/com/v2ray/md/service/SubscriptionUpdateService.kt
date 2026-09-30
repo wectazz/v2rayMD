@@ -62,6 +62,8 @@ class SubscriptionUpdateService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // This service runs in its own process where the cached log level may be stale.
+        LogUtil.refreshLogLevel()
         NotificationHelper.startForeground(
             this,
             NotificationChannelType.SUBSCRIPTION_UPDATE,

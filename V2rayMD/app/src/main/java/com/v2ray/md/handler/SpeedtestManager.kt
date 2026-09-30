@@ -1,5 +1,7 @@
 package com.v2ray.md.handler
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.v2ray.md.AppConfig
 import com.v2ray.md.dto.IPAPIInfo
 import com.v2ray.md.dto.UrlContentRequest
@@ -111,6 +113,130 @@ object SpeedtestManager {
         Socket().use { socket ->
             socket.connect(InetSocketAddress(address, port), timeoutMs)
         }
+    }
+
+    /**
+     * TCP endpoint extracted from a raw custom (full JSON) server config.
+     */
+    internal data class CustomTcpEndpoint(val host: String, val port: Int)
+
+    /**
+     * Extracts a TCP-pingable endpoint from a custom server config that carries a full
+     * Xray JSON instead of typed host/port fields. Prefers the outbound tagged `proxy`,
+     * then tries the remaining outbounds in order. Returns null for UDP-only protocols
+     * (wireguard), unknown protocols, or unparsable configs.
+     */
+    internal fun extractCustomTcpEndpoint(rawJson: String): CustomTcpEndpoint? {
+        val root = try {
+            JsonParser.parseString(rawJson).asJsonObject
+        } catch (_: Exception) {
+            return null
+        }
+        val outbounds = try {
+            root.getAsJsonArray("outbounds")
+        } catch (_: Exception) {
+            return null
+        } ?: return null
+
+        val proxyTagged = mutableListOf<JsonObject>()
+        val rest = mutableListOf<JsonObject>()
+        for (element in outbounds) {
+            if (!element.isJsonObject) continue
+            val outbound = element.asJsonObject
+            if (outbound.string("tag") == "proxy") proxyTagged.add(outbound) else rest.add(outbound)
+        }
+        for (outbound in proxyTagged + rest) {
+            parseOutboundEndpoint(outbound)?.let { return it }
+        }
+        return null
+    }
+
+    private fun parseOutboundEndpoint(outbound: JsonObject): CustomTcpEndpoint? {
+        val protocol = outbound.string("protocol")?.lowercase() ?: return null
+        val settings = try {
+            outbound.getAsJsonObject("settings")
+        } catch (_: Exception) {
+            return null
+        } ?: return null
+        return when (protocol) {
+            "vless", "vmess" -> {
+                val first = settings.jsonObjects("vnext").firstOrNull() ?: return null
+                endpointOf(first.string("address"), first.int("port"))
+            }
+
+            "trojan", "shadowsocks", "socks", "http" -> {
+                val first = settings.jsonObjects("servers").firstOrNull() ?: return null
+                endpointOf(first.string("address"), first.int("port"))
+            }
+
+            "hysteria2" -> {
+                val first = settings.jsonStrings("servers").firstOrNull() ?: return null
+                splitHostPort(first)?.let { (host, port) -> endpointOf(host, port) }
+            }
+
+            else -> null
+        }
+    }
+
+    private fun JsonObject.jsonObjects(key: String): List<JsonObject> {
+        val array = try {
+            getAsJsonArray(key)
+        } catch (_: Exception) {
+            return emptyList()
+        } ?: return emptyList()
+        return array.mapNotNull { if (it.isJsonObject) it.asJsonObject else null }
+    }
+
+    private fun JsonObject.jsonStrings(key: String): List<String> {
+        val array = try {
+            getAsJsonArray(key)
+        } catch (_: Exception) {
+            return emptyList()
+        } ?: return emptyList()
+        return array.mapNotNull {
+            try {
+                it.takeIf { element -> element.isJsonPrimitive }
+                    ?.asJsonPrimitive?.takeIf { primitive -> primitive.isString }?.asString
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
+
+    private fun JsonObject.string(key: String): String? = try {
+        get(key)?.takeIf { it.isJsonPrimitive }
+            ?.asJsonPrimitive?.takeIf { primitive -> primitive.isString }?.asString
+    } catch (_: Exception) {
+        null
+    }
+
+    private fun JsonObject.int(key: String): Int? = try {
+        get(key)?.takeIf { it.isJsonPrimitive }?.asJsonPrimitive?.asInt
+    } catch (_: Exception) {
+        null
+    }
+
+    private fun endpointOf(host: String?, port: Int?): CustomTcpEndpoint? {
+        if (host.isNullOrBlank() || port == null || port <= 0 || port > 65535) return null
+        val normalized = normalizePingHost(host)
+        if (normalized.isEmpty()) return null
+        return CustomTcpEndpoint(normalized, port)
+    }
+
+    private fun splitHostPort(value: String): Pair<String, Int>? {
+        val trimmed = value.trim()
+        if (trimmed.isEmpty()) return null
+        if (trimmed.startsWith("[")) {
+            val end = trimmed.indexOf(']')
+            if (end <= 1) return null
+            val port = trimmed.substringAfterLast(':').toIntOrNull() ?: return null
+            return trimmed.substring(1, end) to port
+        }
+        if (!trimmed.contains(':')) return null
+        val host = trimmed.substringBeforeLast(':')
+        val port = trimmed.substringAfterLast(':').toIntOrNull() ?: return null
+        if (host.isEmpty() || host.contains(':')) return null
+        return host to port
     }
 
     fun getRemoteIPInfo(): RemoteEndpointInfo? {
