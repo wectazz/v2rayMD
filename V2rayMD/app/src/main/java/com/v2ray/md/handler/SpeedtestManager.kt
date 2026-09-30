@@ -37,7 +37,13 @@ object SpeedtestManager {
             port = port,
             timeoutMs = timeoutMs,
             connect = ::connectSocket,
-            logError = { message, error -> LogUtil.e(AppConfig.TAG, message, error) },
+            logError = { message, error ->
+                if (error == null) {
+                    LogUtil.e(AppConfig.TAG, message)
+                } else {
+                    LogUtil.e(AppConfig.TAG, message, error)
+                }
+            },
         )
     }
 
