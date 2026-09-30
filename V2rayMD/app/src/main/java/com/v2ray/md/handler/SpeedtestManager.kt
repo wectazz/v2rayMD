@@ -7,9 +7,11 @@ import com.v2ray.md.util.HttpUtil
 import com.v2ray.md.util.JsonUtil
 import com.v2ray.md.util.LogUtil
 import java.io.IOException
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 object SpeedtestManager {
 
@@ -21,36 +23,88 @@ object SpeedtestManager {
     /**
      * Measures the time taken to establish a TCP connection to a given URL and port.
      *
+     * Every resolved address is tried in order within the total [timeoutMs] budget, so a
+     * host that resolves to an unreachable address first (IPv6-first DNS, dead CDN edge)
+     * no longer reports failure while another address is reachable.
+     *
      * @param url The URL to connect to.
      * @param port The port to connect to.
      * @return The connection time in milliseconds, or -1 if the connection failed.
      */
     fun socketConnectTime(url: String, port: Int, timeoutMs: Int = 1500): Long {
-        var socket: Socket? = null
-        val start = System.currentTimeMillis()
+        return socketConnectTime(
+            url = url,
+            port = port,
+            timeoutMs = timeoutMs,
+            connect = ::connectSocket,
+            logError = { message, error -> LogUtil.e(AppConfig.TAG, message, error) },
+        )
+    }
 
-        try {
-            socket = Socket()
-            socket.connect(InetSocketAddress(url, port), timeoutMs)
+    internal fun socketConnectTime(
+        url: String,
+        port: Int,
+        timeoutMs: Int,
+        connect: (address: InetAddress, port: Int, timeoutMs: Int) -> Unit,
+        logError: (message: String, error: Throwable?) -> Unit,
+    ): Long {
+        val host = normalizePingHost(url)
+        if (host.isEmpty() || port <= 0 || port > 65535 || timeoutMs <= 0) {
+            return -1
+        }
 
-            return System.currentTimeMillis() - start
+        val startNanos = System.nanoTime()
+        val addresses = try {
+            InetAddress.getAllByName(host)
         } catch (e: UnknownHostException) {
-            LogUtil.e(AppConfig.TAG, "Unknown host: $url", e)
-        } catch (e: IOException) {
-            LogUtil.e(AppConfig.TAG, "socketConnectTime IOException: ${e.message}")
+            logError("Unknown host: $host", e)
+            return -1
+        } catch (e: SecurityException) {
+            logError("DNS lookup blocked for TCP ping", e)
+            return -1
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "Failed to establish socket connection to $url:$port", e)
-        } finally {
-            socket?.let { s ->
-                try {
-                    if (!s.isClosed) {
-                        s.close()
-                    }
-                } catch (closeEx: IOException) {
-                }
+            logError("DNS lookup failed for TCP ping", e)
+            return -1
+        }
+
+        var lastError: Exception? = null
+        for (address in addresses) {
+            val remainingMs = timeoutMs - TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos)
+            if (remainingMs <= 0) {
+                break
+            }
+            try {
+                connect(address, port, remainingMs.toInt())
+                return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos)
+            } catch (e: IOException) {
+                lastError = e
+            } catch (e: SecurityException) {
+                lastError = e
+            } catch (e: IllegalArgumentException) {
+                lastError = e
             }
         }
+        logError("socketConnectTime failed: $host:$port (${lastError?.message})", lastError)
         return -1
+    }
+
+    /**
+     * Normalizes a configured server address for raw socket use: trims whitespace and
+     * strips one pair of surrounding IPv6 brackets (`[::1]` -> `::1`), which
+     * [InetSocketAddress] would otherwise fail to resolve.
+     */
+    internal fun normalizePingHost(raw: String): String {
+        val trimmed = raw.trim()
+        if (trimmed.length > 2 && trimmed.startsWith("[") && trimmed.endsWith("]")) {
+            return trimmed.substring(1, trimmed.length - 1).trim()
+        }
+        return trimmed
+    }
+
+    private fun connectSocket(address: InetAddress, port: Int, timeoutMs: Int) {
+        Socket().use { socket ->
+            socket.connect(InetSocketAddress(address, port), timeoutMs)
+        }
     }
 
     fun getRemoteIPInfo(): RemoteEndpointInfo? {
