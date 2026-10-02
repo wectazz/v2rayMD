@@ -273,6 +273,7 @@ fun ShareMethodDialog(
             menuActions.forEach { action ->
                 item { shape ->
                     SettingsMenuItem(
+                        icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(action.iconVector),
                         title = stringResource(action.labelRes),
                         onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
