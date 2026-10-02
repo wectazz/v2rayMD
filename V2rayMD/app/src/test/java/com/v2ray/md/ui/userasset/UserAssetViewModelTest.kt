@@ -4,9 +4,9 @@ import android.app.Application
 import com.v2ray.md.AppConfig
 import com.v2ray.md.dto.entities.AssetUrlCache
 import com.v2ray.md.dto.entities.AssetUrlItem
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class UserAssetViewModelTest {

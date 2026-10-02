@@ -1,9 +1,10 @@
 package com.v2ray.md.handler
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import java.io.IOException
 import java.net.InetAddress
 import java.net.ServerSocket
@@ -43,7 +44,8 @@ class SpeedtestManagerTest {
         assertEquals(0, attempts)
     }
 
-    @Test(timeout = 15000)
+    @Test
+    @Timeout(15)
     fun `socketConnectTime returns minus one for unknown host`() {
         var attempts = 0
         val connect: (InetAddress, Int, Int) -> Unit = { _, _, _ -> attempts++ }

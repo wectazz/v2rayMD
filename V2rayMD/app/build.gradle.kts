@@ -149,6 +149,15 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+            // Treat Jupiter discovery warnings as failures: JUnit 4 failed on an invalid @Test
+            // method, such as one that returns a value, while Jupiter only warns and skips it.
+            it.systemProperty("junit.platform.discovery.issue.severity.critical", "WARNING")
+        }
+    }
+
 }
 
 dependencies {
@@ -209,7 +218,9 @@ implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.monet.compat)
 
     // Testing Libraries
-    testImplementation(libs.junit)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     testImplementation(libs.mockito.core)

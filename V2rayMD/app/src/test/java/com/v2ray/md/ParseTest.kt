@@ -1,8 +1,8 @@
 package com.v2ray.md
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import com.v2ray.md.fmt.CustomFmt
 import com.v2ray.md.fmt.WireguardFmt
 

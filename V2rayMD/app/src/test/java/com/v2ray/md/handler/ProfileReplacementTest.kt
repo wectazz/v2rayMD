@@ -4,9 +4,9 @@ import com.v2ray.md.dto.ProfileDiffEntry
 import com.v2ray.md.dto.SubscriptionUpdateResult
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 class ProfileReplacementTest {
 
