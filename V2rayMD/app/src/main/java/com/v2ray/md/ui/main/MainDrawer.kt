@@ -141,7 +141,10 @@ fun MainMenuSheetContent(
                     .padding(16.dp)
             ) {
                 Image(
-                    painter = painterResource(R.mipmap.ic_banner),
+                    // NOTE: reference the raster foreground directly. painterResource cannot
+                    // load the adaptive-icon XML (R.mipmap.ic_banner) and crashes with
+                    // IllegalArgumentException, so the XML wrapper is unusable here.
+                    painter = painterResource(R.mipmap.ic_banner_foreground),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
