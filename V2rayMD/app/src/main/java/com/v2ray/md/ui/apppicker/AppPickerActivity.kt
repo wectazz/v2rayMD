@@ -5,8 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -57,7 +60,6 @@ import com.v2ray.md.ui.compose.AppDropdownMenuItems
 import com.v2ray.md.ui.compose.AppListItem
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
-import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
 
 private enum class AppPickerMenuAction(
@@ -155,6 +157,12 @@ fun AppPickerScreen(
         onSearch(searchQuery)
     }
 
+    BackHandler(enabled = showSearch) {
+        searchQuery = ""
+        onSearch("")
+        showSearch = false
+    }
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(0),
@@ -162,49 +170,23 @@ fun AppPickerScreen(
             Column {
                 LargeFlexibleTopAppBar(
                     title = {
-                        if (showSearch) {
-                            SearchInputField(
-                                query = searchQuery,
-                                onQueryChange = { query ->
-                                    searchQuery = query
-                                    onSearch(query)
-                                },
-                                placeholder = stringResource(R.string.menu_item_search)
-                            )
-                        } else {
-                            Text(title, modifier = Modifier.padding(start = 8.dp))
-                        }
+                        Text(title, modifier = Modifier.padding(start = 8.dp))
                     },
                     navigationIcon = {
-                        if (showSearch) {
-                            MorphFilledTonalIconButton( onClick = {
-                                searchQuery = ""
-                                onSearch("")
-                                showSearch = false
-                            }, modifier = Modifier.padding(start = 8.dp)) {
-                                Icon(
-                                    painterResource(R.drawable.ic_arrow_back_24dp),
-                                    contentDescription = stringResource(R.string.acc_back)
-                                )
-                            }
-                        } else {
-                            MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
-                                Icon(
-                                    painterResource(R.drawable.ic_arrow_back_24dp),
-                                    contentDescription = stringResource(R.string.acc_back)
-                                )
-                            }
+                        MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                            Icon(
+                                painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
                         }
                     },
                     actions = {
-                        if (!showSearch) {
-                            MorphFilledTonalIconButton( onClick = { showSearch = true }) {
+                        MorphFilledTonalIconButton( onClick = { showSearch = true }) {
                             Icon(
                                 painterResource(R.drawable.ic_search_24dp),
                                 contentDescription = stringResource(R.string.acc_search)
                             )
                         }
-                    }
                     Box {
                         MorphFilledTonalIconButton( onClick = { showMenu = true }, modifier = Modifier.padding(end = 8.dp)) {
                             Icon(
@@ -231,6 +213,28 @@ fun AppPickerScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
+            AnimatedVisibility(
+                visible = showSearch,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                com.v2ray.md.ui.compose.AppSearchBar(
+                    query = searchQuery,
+                    onQueryChange = { query ->
+                        searchQuery = query
+                        onSearch(query)
+                    },
+                    onClear = {
+                        searchQuery = ""
+                        onSearch("")
+                    },
+                    onExit = {
+                        searchQuery = ""
+                        onSearch("")
+                        showSearch = false
+                    }
+                )
+            }
             AnimatedVisibility(
                 visible = isLoading,
                 enter = expandVertically(),

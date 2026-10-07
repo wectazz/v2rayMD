@@ -5,8 +5,11 @@ import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -55,7 +58,6 @@ import com.v2ray.md.ui.compose.ItemDivider
 import com.v2ray.md.ui.compose.MorphIconButton
 import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.NavigationBarsBottomPadding
-import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
@@ -149,6 +151,12 @@ fun LogcatScreen(
     var searchQuery by remember { mutableStateOf("") }
     var showSearch by remember { mutableStateOf(false) }
 
+    BackHandler(enabled = showSearch) {
+        searchQuery = ""
+        viewModel.filter("")
+        showSearch = false
+    }
+
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -159,48 +167,22 @@ fun LogcatScreen(
             Column {
                 LargeFlexibleTopAppBar(
                     title = {
-                        if (showSearch) {
-                            SearchInputField(
-                                query = searchQuery,
-                                onQueryChange = {
-                                    searchQuery = it
-                                    viewModel.filter(it)
-                                },
-                                placeholder = stringResource(R.string.menu_item_search)
-                            )
-                        } else {
-                            Text(stringResource(R.string.title_logcat), modifier = Modifier.padding(start = 8.dp))
-                        }
+                        Text(stringResource(R.string.title_logcat), modifier = Modifier.padding(start = 8.dp))
                     },
                     navigationIcon = {
-                        if (showSearch) {
-                            MorphFilledTonalIconButton( onClick = {
-                                searchQuery = ""
-                                viewModel.filter("")
-                                showSearch = false
-                            }, modifier = Modifier.padding(start = 8.dp)) {
-                                Icon(
-                                    painterResource(R.drawable.ic_arrow_back_24dp),
-                                    contentDescription = stringResource(R.string.acc_back)
-                                )
-                            }
-                        } else {
-                            MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
-                                Icon(
-                                    painterResource(R.drawable.ic_arrow_back_24dp),
-                                    contentDescription = stringResource(R.string.acc_back)
-                                )
-                            }
+                        MorphFilledTonalIconButton( onClick = onBackClick, modifier = Modifier.padding(start = 8.dp)) {
+                            Icon(
+                                painterResource(R.drawable.ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.acc_back)
+                            )
                         }
                     },
                     actions = {
-                        if (!showSearch) {
-                            MorphFilledTonalIconButton( onClick = { showSearch = true }) {
-                                Icon(
-                                    painterResource(R.drawable.ic_search_24dp),
-                                    contentDescription = stringResource(R.string.acc_search)
-                                )
-                            }
+                        MorphFilledTonalIconButton( onClick = { showSearch = true }) {
+                            Icon(
+                                painterResource(R.drawable.ic_search_24dp),
+                                contentDescription = stringResource(R.string.acc_search)
+                            )
                         }
                         MorphFilledTonalIconButton( onClick = { viewModel.copyLogcat() }) {
                             Icon(
@@ -225,6 +207,28 @@ fun LogcatScreen(
                     },
                     scrollBehavior = scrollBehavior
                 )
+                AnimatedVisibility(
+                    visible = showSearch,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    com.v2ray.md.ui.compose.AppSearchBar(
+                        query = searchQuery,
+                        onQueryChange = {
+                            searchQuery = it
+                            viewModel.filter(it)
+                        },
+                        onClear = {
+                            searchQuery = ""
+                            viewModel.filter("")
+                        },
+                        onExit = {
+                            searchQuery = ""
+                            viewModel.filter("")
+                            showSearch = false
+                        }
+                    )
+                }
                 AnimatedVisibility(
                     visible = isLoading,
                     enter = expandVertically(),

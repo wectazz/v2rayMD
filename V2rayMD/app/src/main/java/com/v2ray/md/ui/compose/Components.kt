@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -41,6 +42,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,8 +55,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -75,111 +76,106 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.v2ray.md.R
 import com.v2ray.md.util.AppIconFetcher
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AppTopBar(
-    title: String,
-    onBackClick: () -> Unit,
-    isLoading: Boolean = false,
-    isSearchActive: Boolean = false,
-    searchQuery: String = "",
-    onSearchQueryChange: (String) -> Unit = {},
-    onSearchClose: () -> Unit = {},
-    searchPlaceholder: String? = null,
-    navigationIcon: @Composable (() -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {}
-) {
-    Column {
-        TopAppBar(
-            title = {
-                if (isSearchActive) {
-                    SearchInputField(
-                        query = searchQuery,
-                        onQueryChange = onSearchQueryChange,
-                        placeholder = searchPlaceholder
-                    )
-                } else {
-                    Text(text = title)
-                }
-            },
-            navigationIcon = {
-                if (navigationIcon != null) {
-                    navigationIcon()
-                } else {
-                    MorphIconButton(
-                        modifier = Modifier.padding(start = 8.dp),
-                        onClick = if (isSearchActive) onSearchClose else onBackClick
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_back_24dp),
-                            contentDescription = stringResource(R.string.acc_back)
-                        )
-                    }
-                }
-            },
-            actions = actions
-        )
-        AnimatedVisibility(
-            visible = isLoading,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            LinearWavyProgressIndicator(
-                modifier = Modifier.fillMaxWidth(),
-                wavelength = 40.dp
-            )
-        }
-    }
-}
-
-@Composable
-fun SearchInputField(
+fun AppSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    placeholder: String?
+    onClear: () -> Unit,
+    onExit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = onQueryChange,
-            singleLine = true,
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp),
-            placeholder = { if (placeholder != null) Text(placeholder, style = TextStyle(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MorphFilledTonalIconButton(
+            onClick = onExit,
+            modifier = Modifier.padding(start = 12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_back_24dp),
+                contentDescription = stringResource(R.string.acc_back)
+            )
+        }
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier
                 .weight(1f)
-                .focusRequester(focusRequester)
-        )
-        if (query.isNotEmpty()) {
-            MorphIconButton(
-                onClick = { onQueryChange("") },
-                modifier = Modifier.padding(end = 8.dp)
-            ) {
-                Icon(painterResource(android.R.drawable.ic_menu_close_clear_cancel), stringResource(R.string.logcat_clear))
-            }
+                .padding(start = 8.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+                .height(48.dp)
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { keyboardController?.hide() }),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .focusRequester(focusRequester),
+                decorationBox = { innerTextField ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_search_24dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (query.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.menu_item_search),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
+                            innerTextField()
+                        }
+                        MorphIconButton(onClick = { if (query.isEmpty()) onExit() else onClear() }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = stringResource(R.string.logcat_clear),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
 }
