@@ -162,6 +162,7 @@ private const val ToastMaxLines = 8
 private const val ToastMaxWidthFraction = 0.75f
 private val ToastBottomOffset = 100.dp
 private const val SnackbarThrottleMs = 2000L
+private const val SnackbarFadeMs = 300L
 
 @Composable
 fun AppSnackbarHost(
@@ -177,11 +178,19 @@ fun AppSnackbarHost(
 
         // Custom fade host instead of the stock SnackbarHost: the stock enter/exit
         // animation (slide with scale) cannot be tuned via parameters.
+        // A replacement toast fades the old one out first, then fades in,
+        // instead of swapping the text abruptly mid-animation.
         val currentData = hostState.currentSnackbarData
-        var visibleData by remember { mutableStateOf(currentData) }
+        var displayedData by remember { mutableStateOf(currentData) }
+        var contentVisible by remember { mutableStateOf(currentData != null) }
         LaunchedEffect(currentData) {
             if (currentData != null) {
-                visibleData = currentData
+                if (contentVisible && displayedData !== currentData) {
+                    contentVisible = false
+                    delay(SnackbarFadeMs)
+                }
+                displayedData = currentData
+                contentVisible = true
                 // The stock host also owned the auto-dismiss timer; replicate it here
                 // so toasts disappear on their own again.
                 val timeout = when (currentData.visuals.duration) {
@@ -195,15 +204,17 @@ fun AppSnackbarHost(
                         currentData.dismiss()
                     }
                 }
+            } else {
+                contentVisible = false
             }
         }
         AnimatedVisibility(
-            visible = currentData != null,
-            enter = fadeIn(animationSpec = tween(300)),
-            exit = fadeOut(animationSpec = tween(300)),
+            visible = contentVisible,
+            enter = fadeIn(animationSpec = tween(SnackbarFadeMs.toInt())),
+            exit = fadeOut(animationSpec = tween(SnackbarFadeMs.toInt())),
             modifier = Modifier.fillMaxSize()
         ) {
-            visibleData?.let { data ->
+            displayedData?.let { data ->
                 val type = (data.visuals as? AppSnackbarVisuals)?.type ?: ToastType.NORMAL
 
             val scheme = MaterialTheme.colorScheme
