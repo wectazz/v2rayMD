@@ -1,5 +1,9 @@
 package com.v2ray.md.ui.compose
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,15 +17,17 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -169,11 +175,21 @@ fun AppSnackbarHost(
             WindowInsets.navigationBars.getBottom(this).toDp()
         }
 
-        SnackbarHost(
-            hostState = hostState,
+        // Custom fade host instead of the stock SnackbarHost: the stock enter/exit
+        // animation (slide with scale) cannot be tuned via parameters.
+        val currentData = hostState.currentSnackbarData
+        var visibleData by remember { mutableStateOf(currentData) }
+        LaunchedEffect(currentData) {
+            if (currentData != null) visibleData = currentData
+        }
+        AnimatedVisibility(
+            visible = currentData != null,
+            enter = fadeIn(animationSpec = tween(300)),
+            exit = fadeOut(animationSpec = tween(300)),
             modifier = Modifier.fillMaxSize()
-        ) { data ->
-            val type = (data.visuals as? AppSnackbarVisuals)?.type ?: ToastType.NORMAL
+        ) {
+            visibleData?.let { data ->
+                val type = (data.visuals as? AppSnackbarVisuals)?.type ?: ToastType.NORMAL
 
             val scheme = MaterialTheme.colorScheme
             val bgColor = when (type) {
@@ -221,6 +237,7 @@ fun AppSnackbarHost(
                         )
                     }
                 }
+            }
             }
         }
     }
