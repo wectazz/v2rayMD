@@ -159,4 +159,4 @@ jobs:
           tag: ${{ inputs.release_tag }}
           file_glob: true
           overwrite: true
-          prerelease: false
+          prerelease: true
