@@ -37,6 +37,22 @@ class UpdateCheckerManagerTest {
     }
 
     @Test
+    fun `multi-digit pre-release numbers order naturally`() {
+        assertTrue(cmp("2.3.11-beta10", "2.3.11-beta9") > 0)
+        assertTrue(cmp("2.3.11-beta9", "2.3.11-beta10") < 0)
+        assertTrue(cmp("2.3.11-beta2", "2.3.11-beta1") > 0)
+        assertTrue(cmp("2.3.11-rc1", "2.3.11-beta9") > 0)
+        assertTrue(cmp("2.3.11-beta10", "2.3.11") < 0)
+    }
+
+    @Test
+    fun `major and minor versions compare generically`() {
+        assertTrue(cmp("2.4.0", "2.3.99") > 0)
+        assertTrue(cmp("3.0", "2.9.9") > 0)
+        assertTrue(cmp("10.0", "9.99") > 0)
+    }
+
+    @Test
     fun `non-numeric tags never crash`() {
         assertEquals(0, cmp("2.3.9_1", "2.3.9_1"))
         // Non-numeric components count as zero instead of throwing.

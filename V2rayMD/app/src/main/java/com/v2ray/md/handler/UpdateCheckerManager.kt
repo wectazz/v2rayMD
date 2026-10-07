@@ -85,10 +85,10 @@ object UpdateCheckerManager {
             if (num1 != num2) return num1 - num2
             if (suffix1 != suffix2) {
                 // A release (empty suffix) is newer than any pre-release suffix;
-                // two suffixes compare lexicographically so that _1 < _2.
+                // two suffixes compare in natural order so that beta9 < beta10.
                 if (suffix1.isEmpty()) return 1
                 if (suffix2.isEmpty()) return -1
-                val suffixCmp = suffix1.compareTo(suffix2)
+                val suffixCmp = compareSuffixNatural(suffix1, suffix2)
                 if (suffixCmp != 0) return suffixCmp
             }
         }
@@ -99,6 +99,37 @@ object UpdateCheckerManager {
         if (component.isNullOrEmpty()) return 0 to ""
         val digits = component.takeWhile { it.isDigit() }
         return (digits.toIntOrNull() ?: 0) to component.removePrefix(digits)
+    }
+
+    /**
+     * Natural-order comparison for version suffixes: digit runs compare by numeric
+     * value so that beta9 < beta10, other characters compare as-is.
+     */
+    internal fun compareSuffixNatural(suffix1: String, suffix2: String): Int {
+        var i = 0
+        var j = 0
+        while (i < suffix1.length && j < suffix2.length) {
+            val c1 = suffix1[i]
+            val c2 = suffix2[j]
+            if (c1.isDigit() && c2.isDigit()) {
+                var k = i
+                while (k < suffix1.length && suffix1[k].isDigit()) k++
+                var l = j
+                while (l < suffix2.length && suffix2[l].isDigit()) l++
+                val num1 = suffix1.substring(i, k).trimStart('0').ifEmpty { "0" }
+                val num2 = suffix2.substring(j, l).trimStart('0').ifEmpty { "0" }
+                if (num1.length != num2.length) return num1.length - num2.length
+                val numCmp = num1.compareTo(num2)
+                if (numCmp != 0) return numCmp
+                i = k
+                j = l
+            } else {
+                if (c1 != c2) return c1 - c2
+                i++
+                j++
+            }
+        }
+        return (suffix1.length - i) - (suffix2.length - j)
     }
 
     private fun getDownloadUrl(release: GitHubRelease, abi: String): String {
