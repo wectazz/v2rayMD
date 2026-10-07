@@ -49,6 +49,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -165,58 +167,75 @@ private fun SettingsSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit,
+    onExit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    Surface(
-        shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .height(48.dp)
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        BasicTextField(
-            value = query,
-            onValueChange = onQueryChange,
-            singleLine = true,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { keyboardController?.hide() }),
-            modifier = Modifier.fillMaxSize(),
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_search_24dp),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Box(
+        MorphFilledTonalIconButton(
+            onClick = onExit,
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_back_24dp),
+                contentDescription = stringResource(R.string.acc_back)
+            )
+        }
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+                .height(48.dp)
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { keyboardController?.hide() }),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .focusRequester(focusRequester),
+                decorationBox = { innerTextField ->
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.CenterStart
+                            .fillMaxSize()
+                            .padding(horizontal = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (query.isEmpty()) {
-                            Text(
-                                text = stringResource(R.string.menu_item_search),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 1
-                            )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_search_24dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (query.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.menu_item_search),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
-                    }
-                    if (query.isNotEmpty()) {
-                        MorphIconButton( onClick = onClear) {
+                        MorphIconButton(onClick = { if (query.isEmpty()) onExit() else onClear() }) {
                             Icon(
                                 painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
                                 contentDescription = stringResource(R.string.logcat_clear),
@@ -225,8 +244,8 @@ private fun SettingsSearchBar(
                         }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -242,6 +261,7 @@ fun SettingsScreen(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val systemVpnSettingsAvailable by viewModel.systemVpnSettingsAvailable.collectAsStateWithLifecycle()
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    var searchActive by rememberSaveable { mutableStateOf(false) }
     var openSectionRes by rememberSaveable { mutableStateOf<Int?>(null) }
 
     var localDns by rememberMmkvBool(AppConfig.PREF_LOCAL_DNS_ENABLED, false)
@@ -1049,7 +1069,14 @@ fun SettingsScreen(
     )
 
     val openSection = sections.find { it.titleRes == openSectionRes }
-    BackHandler(enabled = openSectionRes != null) { openSectionRes = null }
+    BackHandler(enabled = searchActive || openSectionRes != null) {
+        if (searchActive) {
+            searchActive = false
+            searchQuery = ""
+        } else {
+            openSectionRes = null
+        }
+    }
 
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -1076,6 +1103,17 @@ fun SettingsScreen(
                             )
                         }
                     },
+                    actions = {
+                        MorphFilledTonalIconButton(
+                            onClick = { searchActive = true },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search_24dp),
+                                contentDescription = stringResource(R.string.menu_item_search)
+                            )
+                        }
+                    },
                     scrollBehavior = scrollBehavior
                 )
             } else {
@@ -1091,6 +1129,17 @@ fun SettingsScreen(
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_back_24dp),
                                 contentDescription = stringResource(R.string.acc_back)
+                            )
+                        }
+                    },
+                    actions = {
+                        MorphFilledTonalIconButton(
+                            onClick = { searchActive = true },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_search_24dp),
+                                contentDescription = stringResource(R.string.menu_item_search)
                             )
                         }
                     },
@@ -1112,11 +1161,17 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            SettingsSearchBar(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
-                onClear = { searchQuery = "" }
-            )
+            if (searchActive) {
+                SettingsSearchBar(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    onClear = { searchQuery = "" },
+                    onExit = {
+                        searchActive = false
+                        searchQuery = ""
+                    }
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -1128,9 +1183,42 @@ fun SettingsScreen(
                 modifier = Modifier.widthIn(max = 640.dp)
             ) {
                 if (searchQuery.isNotBlank()) {
-                    sections.forEach { section ->
+                    val visibleSections = openSection?.let { listOf(it) } ?: sections
+                    visibleSections.forEach { section ->
                         val matches = section.entries.filter { it.matches(searchQuery) }
                         if (matches.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val sectionIcon = section.iconVector?.let { androidx.compose.ui.graphics.vector.rememberVectorPainter(it) }
+                                    ?: section.iconRes?.let { painterResource(it) }
+                                if (sectionIcon != null) {
+                                    androidx.compose.foundation.layout.Box(
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.secondaryContainer,
+                                                VerySunnyShape
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            sectionIcon,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(24.dp),
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                }
+                                Text(
+                                    text = stringResource(section.titleRes),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                             SegmentedColumn {
                                 matches.forEach { entry ->
                                     item { shape -> entry.content(shape) }
