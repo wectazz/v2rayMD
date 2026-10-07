@@ -22,7 +22,7 @@ camerax = "1.6.2"
 composeBom = "2026.09.00"
 # material3 rides the alpha channel above the stable BOM (explicit version wins
 # over the BOM constraint). Required for the expressive APIs; revisit each bump.
-material3Alpha = "1.5.0-alpha28"
+material3Alpha = "1.5.0-alpha29"
 # Monet backport stack (ResukiSu approach): wallpaper seed on pre-S via
 # MonetCompat, M3 scheme generation via material-kolor on all versions.
 materialKolor = "5.0.1"
