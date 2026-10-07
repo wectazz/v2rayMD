@@ -2,6 +2,7 @@ package com.v2ray.md.util
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
@@ -67,9 +68,16 @@ object JsonUtil {
             .registerTypeAdapter( // custom serializer is needed here since JSON by default parse number as Double, core will fail to start
                 object : TypeToken<Double>() {}.type,
                 JsonSerializer { src: Double?, _: Type?, _: JsonSerializationContext? ->
-                    JsonPrimitive(
-                        src?.toInt()
-                    )
+                    when {
+                        src == null -> JsonNull.INSTANCE
+                        // Non-finite numbers are not valid JSON: keep the historical 0 fallback.
+                        !src.isFinite() -> JsonPrimitive(0)
+                        // Whole numbers serialize as Long so large integers survive the
+                        // round-trip instead of being clamped by toInt().
+                        src % 1.0 == 0.0 -> JsonPrimitive(src.toLong())
+                        // Fractions keep full precision instead of being truncated to 0.
+                        else -> JsonPrimitive(src)
+                    }
                 }
             )
             .create()
