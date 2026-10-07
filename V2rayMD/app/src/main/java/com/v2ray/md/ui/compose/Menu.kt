@@ -54,8 +54,8 @@ fun <T> AppBottomSheetMenu(
     onDismissRequest: () -> Unit,
     items: List<T>,
     labelRes: (T) -> Int,
-    iconRes: ((T) -> Int)? = null,
-    iconVector: ((T) -> ImageVector)? = null,
+    iconRes: ((T) -> Int?)? = null,
+    iconVector: ((T) -> ImageVector?)? = null,
     onSelected: (T) -> Unit
 ) {
     if (expanded) {
@@ -103,8 +103,8 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
     items: List<T>,
     groupBy: (T) -> G,
     labelRes: (T) -> Int,
-    iconRes: ((T) -> Int)? = null,
-    iconVector: ((T) -> ImageVector)? = null,
+    iconRes: ((T) -> Int?)? = null,
+    iconVector: ((T) -> ImageVector?)? = null,
     onSelected: (T) -> Unit
 ) {
     if (expanded) {
