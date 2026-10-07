@@ -259,12 +259,13 @@ object CoreOutboundBuilder {
             ?.ifEmpty { null }
             ?: listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS)
 
-        val remotes = if (rawDNS.size == 1 && rawDNS[0] == "local") {
-            rawDNS
-        } else if (MmkvManager.decodeSettingsBool(AppConfig.PREF_IPV6_ENABLED) == true) {
-            rawDNS
+        // "local" is not accepted by the core (panics in netip.MustParseAddr):
+        // drop it so it can never reach the generated config.
+        val usableDNS = rawDNS.filter { it != "local" }
+        val remotes = if (MmkvManager.decodeSettingsBool(AppConfig.PREF_IPV6_ENABLED) == true) {
+            usableDNS.ifEmpty { listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS) }
         } else {
-            val ipv4Dns = rawDNS.filter { !it.contains(":") }
+            val ipv4Dns = usableDNS.filter { !it.contains(":") }
             ipv4Dns.ifEmpty { listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS) }
         }
 
