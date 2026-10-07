@@ -183,7 +183,7 @@ private fun SettingsSearchBar(
     ) {
         MorphFilledTonalIconButton(
             onClick = onExit,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier.padding(start = 16.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_back_24dp),
@@ -215,7 +215,7 @@ private fun SettingsSearchBar(
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 12.dp),
+                            .padding(start = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -1165,7 +1165,11 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (searchActive) {
+            AnimatedVisibility(
+                visible = searchActive,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
                 SettingsSearchBar(
                     query = searchQuery,
                     onQueryChange = { searchQuery = it },
