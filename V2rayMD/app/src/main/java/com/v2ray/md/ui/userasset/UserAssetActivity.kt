@@ -8,6 +8,7 @@ import android.provider.OpenableColumns
 import android.text.format.DateFormat
 import android.text.format.Formatter
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -97,10 +98,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
-private enum class AddAssetMenuAction(@StringRes val labelRes: Int) {
-    File(R.string.menu_item_add_file),
-    Url(R.string.menu_item_add_url),
-    QRCode(R.string.menu_item_scan_qrcode)
+private enum class AddAssetMenuAction(@StringRes val labelRes: Int, @DrawableRes val iconRes: Int) {
+    File(R.string.menu_item_add_file, R.drawable.ic_file_24dp),
+    Url(R.string.menu_item_add_url, R.drawable.ic_cloud_download_24dp),
+    QRCode(R.string.menu_item_scan_qrcode, R.drawable.ic_scan_24dp)
 }
 
 private data class AssetDeleteTarget(val guid: String, val name: String)
@@ -321,6 +322,7 @@ internal fun UserAssetScreen(
                                 onDismissRequest = { showAddMenu = false },
                                 items = AddAssetMenuAction.entries,
                                 labelRes = { it.labelRes },
+                                iconRes = { it.iconRes },
                                 onSelected = { action ->
                                     showAddMenu = false
                                     when (action) {

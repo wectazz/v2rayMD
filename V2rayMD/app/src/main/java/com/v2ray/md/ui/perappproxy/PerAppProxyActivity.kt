@@ -3,7 +3,11 @@ package com.v2ray.md.ui.perappproxy
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -69,12 +73,16 @@ import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 
-private enum class PerAppMenuAction(@StringRes val labelRes: Int) {
-    SelectAll(R.string.menu_item_select_all),
-    InvertSelection(R.string.menu_item_invert_selection),
-    SelectProxyApps(R.string.menu_item_select_proxy_app),
-    ImportSelection(R.string.menu_item_import_proxy_app),
-    ExportSelection(R.string.menu_item_export_proxy_app)
+private enum class PerAppMenuAction(
+    @StringRes val labelRes: Int,
+    @DrawableRes val iconRes: Int? = null,
+    val iconVector: ImageVector? = null
+) {
+    SelectAll(R.string.menu_item_select_all, R.drawable.ic_select_all_24dp),
+    InvertSelection(R.string.menu_item_invert_selection, iconVector = Icons.Filled.SwapHoriz),
+    SelectProxyApps(R.string.menu_item_select_proxy_app, R.drawable.ic_per_apps_24dp),
+    ImportSelection(R.string.menu_item_import_proxy_app, R.drawable.ic_copy),
+    ExportSelection(R.string.menu_item_export_proxy_app, R.drawable.ic_share_24dp)
 }
 
 class PerAppProxyActivity : BaseComponentActivity() {
@@ -214,6 +222,8 @@ fun PerAppProxyScreen(
                                 onDismissRequest = { showMenu = false },
                                 items = PerAppMenuAction.entries,
                                 labelRes = { it.labelRes },
+                                iconRes = { it.iconRes },
+                                iconVector = { it.iconVector },
                                 onSelected = { action ->
                                     showMenu = false
                                     when (action) {

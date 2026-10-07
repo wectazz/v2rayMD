@@ -3,6 +3,7 @@ package com.v2ray.md.ui.routing
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -87,11 +88,11 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.CompositionLocalProvider
 import com.v2ray.md.ui.compose.LocalDarkTheme
 
-private enum class RoutingMenuAction(@StringRes val labelRes: Int) {
-    ImportPredefined(R.string.routing_settings_import_predefined_rulesets),
-    ImportClipboard(R.string.routing_settings_import_rulesets_from_clipboard),
-    ImportQRCode(R.string.routing_settings_import_rulesets_from_qrcode),
-    ExportClipboard(R.string.routing_settings_export_rulesets_to_clipboard)
+private enum class RoutingMenuAction(@StringRes val labelRes: Int, @DrawableRes val iconRes: Int) {
+    ImportPredefined(R.string.routing_settings_import_predefined_rulesets, R.drawable.ic_restore_24dp),
+    ImportClipboard(R.string.routing_settings_import_rulesets_from_clipboard, R.drawable.ic_copy),
+    ImportQRCode(R.string.routing_settings_import_rulesets_from_qrcode, R.drawable.ic_scan_24dp),
+    ExportClipboard(R.string.routing_settings_export_rulesets_to_clipboard, R.drawable.ic_share_24dp)
 }
 
 private enum class RoutingPreset(val type: RoutingType, @StringRes val labelRes: Int) {
@@ -267,6 +268,7 @@ fun RoutingSettingScreen(
                             onDismissRequest = { showMenu = false },
                             items = RoutingMenuAction.entries,
                             labelRes = { it.labelRes },
+                            iconRes = { it.iconRes },
                             onSelected = { action ->
                                 showMenu = false
                                 when (action) {

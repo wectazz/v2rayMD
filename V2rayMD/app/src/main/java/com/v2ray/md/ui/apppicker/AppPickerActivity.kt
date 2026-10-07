@@ -5,7 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -56,9 +60,13 @@ import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 import com.v2ray.md.ui.compose.SearchInputField
 import com.v2ray.md.ui.compose.verticalScrollbar
 
-private enum class AppPickerMenuAction(@StringRes val labelRes: Int) {
-    SelectAll(R.string.menu_item_select_all),
-    InvertSelection(R.string.menu_item_invert_selection)
+private enum class AppPickerMenuAction(
+    @StringRes val labelRes: Int,
+    @DrawableRes val iconRes: Int? = null,
+    val iconVector: ImageVector? = null
+) {
+    SelectAll(R.string.menu_item_select_all, R.drawable.ic_select_all_24dp),
+    InvertSelection(R.string.menu_item_invert_selection, iconVector = Icons.Filled.SwapHoriz)
 }
 
 class AppPickerActivity : BaseComponentActivity() {
@@ -209,6 +217,8 @@ fun AppPickerScreen(
                             onDismissRequest = { showMenu = false },
                             items = AppPickerMenuAction.entries,
                             labelRes = { it.labelRes },
+                            iconRes = { it.iconRes },
+                            iconVector = { it.iconVector },
                             onSelected = { action ->
                                 showMenu = false
                                 when (action) {
