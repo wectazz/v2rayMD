@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -97,6 +99,7 @@ import com.v2ray.md.ui.compose.SettingsSwitchItem
 import com.v2ray.md.ui.compose.SingleSelectButtonGroup
 import com.v2ray.md.ui.compose.ThemeManager
 import com.v2ray.md.ui.compose.verticalScrollbar
+import com.v2ray.md.ui.compose.VerySunnyShape
 import com.v2ray.md.util.LogUtil
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.launch
