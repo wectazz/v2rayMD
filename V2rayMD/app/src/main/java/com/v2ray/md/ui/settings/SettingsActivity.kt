@@ -183,7 +183,7 @@ private fun SettingsSearchBar(
     ) {
         MorphFilledTonalIconButton(
             onClick = onExit,
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 12.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_back_24dp),
