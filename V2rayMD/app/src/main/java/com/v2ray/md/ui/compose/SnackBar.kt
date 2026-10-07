@@ -180,7 +180,22 @@ fun AppSnackbarHost(
         val currentData = hostState.currentSnackbarData
         var visibleData by remember { mutableStateOf(currentData) }
         LaunchedEffect(currentData) {
-            if (currentData != null) visibleData = currentData
+            if (currentData != null) {
+                visibleData = currentData
+                // The stock host also owned the auto-dismiss timer; replicate it here
+                // so toasts disappear on their own again.
+                val timeout = when (currentData.visuals.duration) {
+                    SnackbarDuration.Short -> 4000L
+                    SnackbarDuration.Long -> 10000L
+                    else -> null
+                }
+                if (timeout != null) {
+                    delay(timeout)
+                    if (hostState.currentSnackbarData === currentData) {
+                        currentData.dismiss()
+                    }
+                }
+            }
         }
         AnimatedVisibility(
             visible = currentData != null,
