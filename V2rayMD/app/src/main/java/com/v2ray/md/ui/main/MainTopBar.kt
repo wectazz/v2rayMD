@@ -137,7 +137,10 @@ fun MainTopBar(
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            LinearWavyProgressIndicator(modifier = Modifier.fillMaxWidth())
+            LinearWavyProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                wavelength = 40.dp
+            )
         }
     }
 }
