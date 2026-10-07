@@ -474,6 +474,13 @@ fun SingleSelectButtonGroup(
                 checked = selected,
                 onCheckedChange = { onSelect(index) },
                 shapes = ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size),
+                // Explicit unchecked container: the default surfaceContainer is
+                // indistinguishable from the server cards behind the pills.
+                colors = ToggleButtonDefaults.colors(
+                    containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
+                    else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
                 interactionSource = interactionSources[index]
             ) {
                 Spacer(Modifier.size(pressExpand))
