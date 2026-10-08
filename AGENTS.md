@@ -44,6 +44,12 @@ CI toolchain (SDK 37, NDK, Java) from `.github/workflows/build.yml` — never co
   debug variant; run both variants when the change branches on flavor, `DISTRIBUTION`, or
   flavor-specific resources/dependencies.
 
+## Workflow: коммиты
+
+- Не коммить и не пушь каждый шаг; изменения копятся локально.
+- Коммит и пуш — только когда пользователь скажет; тогда разложить изменения по отдельным коммитам (один коммит = одно изменение, хоть на несколько файлов), если не указано иначе.
+- Стежить только явные пути; никогда `git add .`/`-A`/`commit -a`.
+
 ## Commands and validation
 
 - Docs-only: `git diff --check` (no Gradle task needed).
