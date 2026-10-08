@@ -48,8 +48,8 @@ inline fun <T> LazyListScope.lazySegmentColumn(
         val isFirst = index == 0
         val isLast = index == items.lastIndex
 
-        val topRadius = if (isFirst) 16.dp else 5.dp
-        val bottomRadius = if (isLast) 16.dp else 5.dp
+        val topRadius = if (isFirst) 28.dp else 4.dp
+        val bottomRadius = if (isLast) 28.dp else 4.dp
 
         val shape = RoundedCornerShape(
             topStart = topRadius,

@@ -307,6 +307,7 @@ fun PerAppProxyScreen(
                     .fillMaxSize()
                     .verticalScrollbar(listState),
                 contentPadding = PaddingValues(
+                    top = 8.dp,
                     bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 80.dp
                 )
             ) {
