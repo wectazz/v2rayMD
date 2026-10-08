@@ -145,8 +145,14 @@ fun MainConnectFab(
                 initialValue = 1f,
                 targetValue = 0.35f,
                 animationSpec = androidx.compose.animation.core.infiniteRepeatable(
-                    animation = androidx.compose.animation.core.tween(durationMillis = 1000),
-                    repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+                    animation = androidx.compose.animation.core.keyframes {
+                        durationMillis = 1100
+                        1f at 0
+                        0.35f at 700
+                        0.35f at 850
+                        1f at 1100
+                    },
+                    repeatMode = androidx.compose.animation.core.RepeatMode.Restart
                 ),
                 label = "stopAlpha"
             )
