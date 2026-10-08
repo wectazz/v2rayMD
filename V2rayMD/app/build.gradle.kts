@@ -5,18 +5,20 @@ plugins {
     id("com.jaredsburrows.license")
 }
 
+import java.util.Properties
+
+// Optional local release signing. Reads V2rayMD/local.properties (gitignored,
+// never committed); when absent the release build stays unsigned as before,
+// so CI and fresh checkouts are unaffected.
+val localSigningFile = rootProject.file("local.properties")
+val localSigning = Properties().also { props ->
+    if (localSigningFile.exists()) localSigningFile.inputStream().use(props::load)
+}
+val hasLocalSigning = localSigning.containsKey("local.keystore.path")
+
 android {
     namespace = "com.v2ray.md"
     compileSdk = 37
-
-    // Optional local release signing. Reads V2rayMD/local.properties (gitignored,
-    // never committed); when absent the release build stays unsigned as before,
-    // so CI and fresh checkouts are unaffected.
-    val localSigningFile = rootProject.file("local.properties")
-    val localSigning = java.util.Properties().also { props ->
-        if (localSigningFile.exists()) localSigningFile.inputStream().use(props::load)
-    }
-    val hasLocalSigning = localSigning.containsKey("local.keystore.path")
 
     if (hasLocalSigning) {
         signingConfigs {
