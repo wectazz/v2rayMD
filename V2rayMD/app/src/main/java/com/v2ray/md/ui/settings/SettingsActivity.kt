@@ -926,7 +926,8 @@ fun SettingsScreen(
                                     options = modeEntries,
                                     selectedIndex = modeValues.indexOf(mode),
                                     onSelect = { mode = modeValues[it] },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    tonalContainer = false
                                 )
                             }
                         }

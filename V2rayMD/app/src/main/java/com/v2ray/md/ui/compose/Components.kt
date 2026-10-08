@@ -453,7 +453,8 @@ fun SingleSelectButtonGroup(
     options: List<String>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tonalContainer: Boolean = true
 ) {
     val interactionSources = remember(options.size) {
         List(options.size) { MutableInteractionSource() }
@@ -476,11 +477,12 @@ fun SingleSelectButtonGroup(
                 shapes = ToggleButtonDefaults.shapesFor(ToggleButtonDefaults.size),
                 // Explicit unchecked container: the default surfaceContainer is
                 // indistinguishable from the server cards behind the pills.
-                colors = ToggleButtonDefaults.colors(
+                // Callers on an already-tonal surface opt out via tonalContainer.
+                colors = if (tonalContainer) ToggleButtonDefaults.colors(
                     containerColor = if (LocalDarkTheme.current) MaterialTheme.colorScheme.surfaceContainerHighest
                     else MaterialTheme.colorScheme.surfaceContainerHigh,
                     contentColor = MaterialTheme.colorScheme.onSurface
-                ),
+                ) else ToggleButtonDefaults.colors(),
                 interactionSource = interactionSources[index]
             ) {
                 Spacer(Modifier.size(pressExpand))
