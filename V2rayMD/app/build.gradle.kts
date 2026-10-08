@@ -1,11 +1,11 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.jaredsburrows.license")
 }
-
-import java.util.Properties
 
 // Optional local release signing. Reads V2rayMD/local.properties (gitignored,
 // never committed); when absent the release build stays unsigned as before,
