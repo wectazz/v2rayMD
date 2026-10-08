@@ -9,6 +9,26 @@ android {
     namespace = "com.v2ray.md"
     compileSdk = 37
 
+    // Optional local release signing. Reads V2rayMD/local.properties (gitignored,
+    // never committed); when absent the release build stays unsigned as before,
+    // so CI and fresh checkouts are unaffected.
+    val localSigningFile = rootProject.file("local.properties")
+    val localSigning = java.util.Properties().also { props ->
+        if (localSigningFile.exists()) localSigningFile.inputStream().use(props::load)
+    }
+    val hasLocalSigning = localSigning.containsKey("local.keystore.path")
+
+    if (hasLocalSigning) {
+        signingConfigs {
+            create("local") {
+                storeFile = file(localSigning["local.keystore.path"].toString())
+                storePassword = localSigning["local.keystore.password"].toString()
+                keyAlias = localSigning["local.key.alias"].toString()
+                keyPassword = localSigning["local.key.password"].toString()
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "com.v2ray.md"
         minSdk = 24
@@ -41,6 +61,9 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (hasLocalSigning) {
+                signingConfig = signingConfigs.getByName("local")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
