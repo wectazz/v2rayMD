@@ -1,5 +1,6 @@
 package com.v2ray.md.ui.main
 
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
