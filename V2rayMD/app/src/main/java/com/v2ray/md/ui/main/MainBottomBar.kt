@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -138,11 +139,29 @@ fun MainConnectFab(
             contentColor = MaterialTheme.colorScheme.onSurface
         )
     ) {
-        Icon(
-            painter = if (isRunning) painterResource(R.drawable.ic_stop_24dp)
-            else painterResource(R.drawable.ic_play_24dp),
-            contentDescription = stringResource(if (isRunning) R.string.acc_stop else R.string.acc_start),
-            modifier = Modifier.size(36.dp)
-        )
+        if (isRunning) {
+            val pulseAlpha by androidx.compose.animation.core.rememberInfiniteTransition(label = "stopPulse").animateFloat(
+                initialValue = 1f,
+                targetValue = 0.35f,
+                animationSpec = androidx.compose.animation.core.infiniteRepeatable(
+                    animation = androidx.compose.animation.core.tween(durationMillis = 1000),
+                    repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+                ),
+                label = "stopAlpha"
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_stop_24dp),
+                contentDescription = stringResource(R.string.acc_stop),
+                modifier = Modifier
+                    .size(36.dp)
+                    .graphicsLayer { alpha = pulseAlpha }
+            )
+        } else {
+            Icon(
+                painter = painterResource(R.drawable.ic_play_24dp),
+                contentDescription = stringResource(R.string.acc_start),
+                modifier = Modifier.size(36.dp)
+            )
+        }
     }
 }
