@@ -59,4 +59,25 @@ class UpdateCheckerManagerTest {
         assertEquals(0, cmp("2.3.beta", "2.3.beta"))
         assertTrue(cmp("2.3.1", "2.3.beta") > 0)
     }
+
+    @Test
+    fun `parenthesized links are stripped from release notes`() {
+        assertEquals(
+            "- Core update\n- Root DNS fix",
+            UpdateCheckerManager.stripReleaseNoteLinks(
+                "- Core update (https://github.com/x/y/commit/abc123)\n" +
+                    "- Root DNS fix (https://github.com/x/y/commit/def456)"
+            )
+        )
+    }
+
+    @Test
+    fun `plain parenthesized text is kept`() {
+        assertEquals(
+            "- Fix icons (themed)",
+            UpdateCheckerManager.stripReleaseNoteLinks("- Fix icons (themed)")
+        )
+        assertEquals(null, UpdateCheckerManager.stripReleaseNoteLinks(null))
+        assertEquals(null, UpdateCheckerManager.stripReleaseNoteLinks("(https://x.y/z)"))
+    }
 }

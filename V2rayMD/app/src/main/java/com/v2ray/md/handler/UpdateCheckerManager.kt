@@ -66,7 +66,7 @@ object UpdateCheckerManager {
             CheckUpdateResult(
                 hasUpdate = true,
                 latestVersion = latestVersion,
-                releaseNotes = latestRelease.body,
+                releaseNotes = stripReleaseNoteLinks(latestRelease.body),
                 downloadUrl = downloadUrl,
                 isPreRelease = latestRelease.prerelease
             )
@@ -74,6 +74,14 @@ object UpdateCheckerManager {
             CheckUpdateResult(hasUpdate = false)
         }
     }
+
+    /**
+     * Strips parenthesized links from release notes for the in-app update dialog.
+     * Plain-text bodies keep raw URLs (e.g. `Fix icons (https://…/commit/abc)`),
+     * which read as noise on a phone screen; the linked text outside stays intact.
+     */
+    internal fun stripReleaseNoteLinks(body: String?): String? =
+        body?.replace(Regex("\\s*\\(https?://[^)]*\\)"), "")?.trim()?.ifEmpty { null }
 
     internal fun compareVersions(version1: String, version2: String): Int {
         val v1 = version1.split(".")
