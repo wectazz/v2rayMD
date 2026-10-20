@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +59,7 @@ import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.ui.compose.QRCodeDialog
 import com.v2ray.md.ui.compose.SubUpdateDiffDialog
+import com.v2ray.md.ui.compose.TwelveSidedCookieShape
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -374,7 +374,7 @@ private fun MainEmptyState(
         verticalArrangement = Arrangement.Center
     ) {
         Surface(
-            shape = CircleShape,
+            shape = TwelveSidedCookieShape,
             color = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier.size(96.dp)
         ) {
