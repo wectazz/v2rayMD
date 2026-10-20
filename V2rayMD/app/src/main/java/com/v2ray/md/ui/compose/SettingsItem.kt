@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +33,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
@@ -72,6 +72,7 @@ private fun SettingsItemRow(
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     trailing: @Composable (() -> Unit)? = null,
+    value: String? = null,
     shape: Shape? = null
 ) {
     // Explicit container: the default segmented container is near-invisible
@@ -136,7 +137,7 @@ private fun SettingsItemRow(
             colors = colors,
             modifier = finalModifier
         ) {
-            Text(text = title)
+            SettingsHeadline(title, titleColor, value)
         }
     } else {
         SegmentedListItem(
@@ -149,20 +150,35 @@ private fun SettingsItemRow(
             colors = colors,
             modifier = finalModifier
         ) {
-            Text(text = title, color = titleColor)
+            SettingsHeadline(title, titleColor, value)
         }
     }
 }
 
 @Composable
-private fun TrailingValueText(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyLarge,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.widthIn(max = 160.dp)
-    )
+private fun SettingsHeadline(title: String, titleColor: Color, value: String?) {
+    if (value == null) {
+        Text(text = title, color = titleColor)
+        return
+    }
+    // Title and value share the headline slot 50/50: ListItem measures
+    // trailing content at its preferred width first, so a long value placed
+    // there squeezed the title into a sliver column (mid-word wraps).
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = title,
+            color = titleColor,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
+        )
+    }
 }
 
 @Composable
@@ -193,9 +209,7 @@ fun SettingsEditItem(
             { showDialog = true }
         } else null,
         modifier = modifier,
-        trailing = description?.let { value ->
-            { TrailingValueText(text = value) }
-        },
+        value = description,
         shape = shape
     )
 
@@ -245,9 +259,7 @@ fun SettingsListItem(
             { showDialog = true }
         } else null,
         modifier = modifier,
-        trailing = summary.takeIf { it.isNotEmpty() }?.let { value ->
-            { TrailingValueText(text = value) }
-        },
+        value = summary.takeIf { it.isNotEmpty() },
         shape = shape
     )
 
