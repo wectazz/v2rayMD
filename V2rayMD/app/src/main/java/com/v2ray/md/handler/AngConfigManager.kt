@@ -10,6 +10,8 @@ import com.v2ray.md.dto.UrlContentRequest
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.dto.entities.SubscriptionCache
 import com.v2ray.md.dto.entities.SubscriptionItem
+import com.v2ray.md.dto.entities.SubscriptionUsageInfo
+import okhttp3.Headers
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.isNotNullEmpty
 import com.v2ray.md.fmt.CustomFmt
@@ -538,6 +540,17 @@ object AngConfigManager {
             val requestHeaders = it.subscription.requestHeaders
             val proxyUsername = SettingsManager.getSocksUsername()
             val proxyPassword = SettingsManager.getSocksPassword()
+
+            // Account info (traffic, expiry, support link) the panel sends in the response headers.
+            var usageInfo: SubscriptionUsageInfo? = null
+            val captureUsageInfo: (Headers) -> Unit = { headers ->
+                usageInfo = SubscriptionInfoParser.parse(
+                    userInfo = headers["Subscription-Userinfo"],
+                    profileTitle = headers["Profile-Title"],
+                    supportUrl = headers["Support-Url"],
+                    webPageUrl = headers["Profile-Web-Page-Url"],
+                )
+            }
             
             val hwid = if (SettingsManager.isSendHwidEnabled()) {
                 android.provider.Settings.Secure.getString(
@@ -558,7 +571,8 @@ object AngConfigManager {
                         proxyUsername = proxyUsername,
                         proxyPassword = proxyPassword,
                         hwid = hwid
-                    )
+                    ),
+                    captureUsageInfo
                 )
             } catch (e: Exception) {
                 LogUtil.e(AppConfig.ANG_PACKAGE, "Update subscription: proxy not ready or other error", e)
@@ -572,7 +586,8 @@ object AngConfigManager {
                             userAgent = userAgent,
                             requestHeaders = requestHeaders,
                             hwid = hwid
-                        )
+                        ),
+                        captureUsageInfo
                     )
                 } catch (e: Exception) {
                     LogUtil.e(AppConfig.TAG, "Update subscription: Failed to get URL content with user agent", e)
@@ -588,6 +603,8 @@ object AngConfigManager {
             val count = parseConfigViaSub(configText, it.guid, false)
             if (count > 0) {
                 it.subscription.lastUpdated = System.currentTimeMillis()
+                // Replaced on every successful update so the box disappears if the panel stops sending the headers.
+                it.subscription.usageInfo = usageInfo
                 MmkvManager.encodeSubscription(it.guid, it.subscription)
                 LogUtil.i(AppConfig.TAG, "Subscription updated: ${it.subscription.remarks}, $count configs")
                 val afterServers = MmkvManager.decodeServerList(it.guid)

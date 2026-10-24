@@ -581,4 +581,7 @@
     <string name="title_management">ব্যবস্থাপনা</string>
     <string name="title_additional_menu">অতিরিক্ত মেনু</string>
     <string name="title_app_management">অ্যাপ পরিচালনা</string>
+    <string name="sub_info_open_support">সাপোর্ট লিঙ্ক খুলুন</string>
+    <string name="sub_info_open_page">সাবস্ক্রিপশন তথ্যের পাতা খুলুন</string>
+    <string name="sub_info_unlimited">সীমাহীন</string>
 </resources>

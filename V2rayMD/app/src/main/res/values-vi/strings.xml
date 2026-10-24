@@ -579,4 +579,7 @@
     <string name="title_management">Quản lý</string>
     <string name="title_additional_menu">Menu bổ sung</string>
     <string name="title_app_management">Quản lý ứng dụng</string>
+    <string name="sub_info_open_support">Mở liên kết hỗ trợ</string>
+    <string name="sub_info_open_page">Mở trang thông tin đăng ký</string>
+    <string name="sub_info_unlimited">Không giới hạn</string>
 </resources>

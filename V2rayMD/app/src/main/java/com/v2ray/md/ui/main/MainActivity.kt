@@ -24,6 +24,7 @@ import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.handler.AngConfigManager
 import com.v2ray.md.handler.SettingsChangeManager
 import com.v2ray.md.handler.SettingsManager
+import com.v2ray.md.handler.SubscriptionInfoParser
 import com.v2ray.md.ui.AboutActivity
 import com.v2ray.md.ui.backup.BackupActivity
 import com.v2ray.md.ui.base.HelperBaseComponentActivity
@@ -117,6 +118,7 @@ class MainActivity : HelperBaseComponentActivity() {
                     is MainAction.EditServer -> editServer(action.guid, action.profile)
                     is MainAction.ShareClipboard -> shareToClipboard(action.guid)
                     is MainAction.ShareFullContent -> shareFullContentAsync(action.guid)
+                    is MainAction.OpenSubscriptionLink -> openSubscriptionLink(action.url)
                     else -> mainViewModel.onAction(action)
                 }
             },
@@ -126,6 +128,12 @@ class MainActivity : HelperBaseComponentActivity() {
 
     private fun shareToClipboard(guid: String): Boolean =
         AngConfigManager.share2Clipboard(this, guid) == 0
+
+    private fun openSubscriptionLink(url: String) {
+        // Links come from a remote panel, so only http(s) and tg:// are ever handed to ACTION_VIEW.
+        val safeUrl = SubscriptionInfoParser.sanitizeLink(url) ?: return
+        Utils.openUri(this, safeUrl)
+    }
 
     private fun shareFullContentAsync(guid: String) {
         lifecycleScope.launch(Dispatchers.IO) {

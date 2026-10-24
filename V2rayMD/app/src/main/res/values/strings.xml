@@ -586,4 +586,8 @@
     <string name="title_management">Management</string>
     <string name="title_additional_menu">Additional menu</string>
     <string name="title_app_management">App management</string>
+    <string name="sub_info_open_support">Open support link</string>
+    <string name="sub_info_open_page">Open subscription page</string>
+    <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
+    <string name="sub_info_unlimited">Unlimited</string>
 </resources>

@@ -591,4 +591,7 @@
     <string name="title_management">Управление</string>
     <string name="title_additional_menu">Дополнительное меню</string>
     <string name="title_app_management">Управление приложением</string>
+    <string name="sub_info_open_support">Открыть ссылку поддержки</string>
+    <string name="sub_info_open_page">Открыть страницу подписки</string>
+    <string name="sub_info_unlimited">Без ограничений</string>
 </resources>

@@ -581,4 +581,7 @@
     <string name="title_management">مدیریت</string>
     <string name="title_additional_menu">منوی اضافی</string>
     <string name="title_app_management">مدیریت برنامه</string>
+    <string name="sub_info_open_support">باز کردن لینک پشتیبانی</string>
+    <string name="sub_info_open_page">باز کردن صفحه اطلاعات اشتراک</string>
+    <string name="sub_info_unlimited">نامحدود</string>
 </resources>

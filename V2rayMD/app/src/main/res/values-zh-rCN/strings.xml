@@ -579,4 +579,7 @@
     <string name="title_management">管理</string>
     <string name="title_additional_menu">附加菜单</string>
     <string name="title_app_management">应用管理</string>
+    <string name="sub_info_open_support">打开支持链接</string>
+    <string name="sub_info_open_page">打开订阅信息页面</string>
+    <string name="sub_info_unlimited">无限制</string>
 </resources>

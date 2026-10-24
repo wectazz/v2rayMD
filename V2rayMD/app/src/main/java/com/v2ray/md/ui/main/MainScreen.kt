@@ -335,6 +335,9 @@ fun MainScreen(
                                 shareTarget = Triple(guid, profile, true)
                             },
                             onRemoveServer = removeServer,
+                            usageInfo = group.usageInfo,
+                            groupTitle = group.remarks,
+                            onOpenLink = { url -> onAction(MainAction.OpenSubscriptionLink(url)) },
                             isRefreshing = isLoading,
                             onRefresh = { onAction(MainAction.UpdateSubscriptions) },
                             emptyContent = {
