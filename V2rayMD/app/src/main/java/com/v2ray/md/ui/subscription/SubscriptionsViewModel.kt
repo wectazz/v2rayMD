@@ -118,6 +118,11 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
                     else ->
                         toast(getString(R.string.title_update_subscription_result, result.configCount, result.successCount, result.failureCount, result.skipCount))
                 }
+                // Updating replaces profile GUIDs; without this the main screen
+                // kept stale rows and the editor opened empty (upstream #6329).
+                if (result.configCount > 0) {
+                    SettingsChangeManager.makeSetupGroupTab()
+                }
                 reload()
             } catch (cancelled: CancellationException) {
                 throw cancelled
