@@ -3,6 +3,7 @@ package com.v2ray.md.ui.main
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +36,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
@@ -50,8 +54,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.v2ray.md.ui.compose.BottomSheetGroup
+import com.v2ray.md.ui.compose.TwelveSidedCookieShape
 import com.v2ray.md.ui.compose.VerySunnyShape
 import com.v2ray.md.ui.compose.GroupedAppBottomSheetMenu
+import com.v2ray.md.ui.compose.MorphFilledTonalIconButton
 
 enum class ImportMenuGroup(
     override val titleRes: Int,
@@ -152,6 +158,20 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
         val scope = rememberCoroutineScope()
         var fastActionsExpanded by remember { mutableStateOf(false) }
         var managementExpanded by remember { mutableStateOf(false) }
+        // Actions promoted to the round morphing buttons above the "Additional menu" header.
+        val quickActions = listOf(
+            MainMoreMenuAction.TestAll,
+            MainMoreMenuAction.SortByTestResults,
+            MainMoreMenuAction.LocateSelected,
+        )
+        val selectAction: (MainMoreMenuAction) -> Unit = { item ->
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if (!sheetState.isVisible) {
+                    onDismissRequest()
+                    onSelected(item)
+                }
+            }
+        }
 
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
@@ -165,6 +185,67 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                     .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
             ) {
                 
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(MaterialTheme.colorScheme.primaryContainer, VerySunnyShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_flash_on_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(stringResource(R.string.title_fast_actions), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    quickActions.forEach { item ->
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            // 12-sided cookie badge, like the section headers; the ripple is off
+                            // because it fights the scalloped outline.
+                            MorphFilledTonalIconButton(
+                                onClick = { selectAction(item) },
+                                size = 56.dp,
+                                shape = TwelveSidedCookieShape,
+                                ripple = false,
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ) {
+                                Icon(
+                                    painter = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
+                                    contentDescription = stringResource(item.labelRes)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = stringResource(item.labelRes),
+                                // The button above already announces its name; the caption is visual only.
+                                modifier = Modifier.clearAndSetSemantics {},
+                                style = MaterialTheme.typography.labelSmall,
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 12.dp, bottom = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -190,26 +271,22 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                     item { shape ->
                         SettingsMenuItem(
                             icon = painterResource(R.drawable.ic_play_24dp),
-                            title = stringResource(R.string.title_fast_actions),
+                            title = stringResource(R.string.title_actions),
                             onClick = { fastActionsExpanded = !fastActionsExpanded },
                             expanded = fastActionsExpanded,
                             shape = shape
                         )
                     }
-                    val actions = MainMoreMenuAction.entries.filter { it.group == MainMoreMenuGroup.ACTIONS || it.group == MainMoreMenuGroup.TESTS }
+                    val actions = MainMoreMenuAction.entries.filter {
+                        (it.group == MainMoreMenuGroup.ACTIONS || it.group == MainMoreMenuGroup.TESTS) &&
+                            it !in quickActions
+                    }
                     actions.forEach { item ->
                         item(visible = fastActionsExpanded) { shape ->
                             SettingsMenuItem(
                                 icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
                                 title = stringResource(item.labelRes),
-                                onClick = {
-                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                        if (!sheetState.isVisible) {
-                                            onDismissRequest()
-                                            onSelected(item)
-                                        }
-                                    }
-                                },
+                                onClick = { selectAction(item) },
                                 shape = shape
                             )
                         }
@@ -230,14 +307,7 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                             SettingsMenuItem(
                                 icon = androidx.compose.ui.graphics.vector.rememberVectorPainter(item.iconVector),
                                 title = stringResource(item.labelRes),
-                                onClick = {
-                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                        if (!sheetState.isVisible) {
-                                            onDismissRequest()
-                                            onSelected(item)
-                                        }
-                                    }
-                                },
+                                onClick = { selectAction(item) },
                                 shape = shape
                             )
                         }

@@ -76,6 +76,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
@@ -86,6 +87,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -396,25 +398,48 @@ fun MorphFilledTonalIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    size: Dp = 48.dp,
+    shape: Shape? = null,
+    ripple: Boolean = true,
+    containerColor: Color? = null,
+    contentColor: Color? = null,
     content: @Composable () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
     val cornerRadius by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 24.dp,
+        // Half of the button size keeps the resting shape a true circle at any size.
+        targetValue = if (isPressed) 12.dp else size / 2,
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 1000f),
         label = "radius"
     )
 
-    val containerColor = if (enabled) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
-    val contentColor = if (enabled) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+    val resolvedContainerColor = if (enabled) {
+        containerColor ?: MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
+    }
+    val resolvedContentColor = if (enabled) {
+        contentColor ?: MaterialTheme.colorScheme.onSecondaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+    }
+    // A fixed decorative shape cannot morph like a corner radius, and clipping to a
+    // large generic path blanked the button on real hardware, so it is painted with
+    // background(color, shape) instead of a graphics-layer clip.
+    val shapeModifier = if (shape != null) {
+        Modifier.background(resolvedContainerColor, shape)
+    } else {
+        Modifier
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(resolvedContainerColor)
+    }
 
     Box(
         modifier = modifier
             .padding(horizontal = 4.dp)
             .minimumInteractiveComponentSize()
-            .size(48.dp)
-            .clip(RoundedCornerShape(cornerRadius))
-            .background(containerColor)
+            .size(size)
+            .then(shapeModifier)
             .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
                 awaitEachGesture {
@@ -426,14 +451,14 @@ fun MorphFilledTonalIconButton(
             }
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = LocalIndication.current,
+                indication = if (ripple) LocalIndication.current else null,
                 enabled = enabled,
                 onClick = onClick
             ),
         contentAlignment = Alignment.Center
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides contentColor
+            LocalContentColor provides resolvedContentColor
         ) {
             content()
         }
