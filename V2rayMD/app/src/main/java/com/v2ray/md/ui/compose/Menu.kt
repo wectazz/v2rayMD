@@ -131,14 +131,14 @@ fun <T, G : BottomSheetGroup> GroupedAppBottomSheetMenu(
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, VerySunnyShape),
+                                    .background(MaterialTheme.colorScheme.primaryContainer, VerySunnyShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     painter = p,
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             }
                             Spacer(modifier = Modifier.width(16.dp))

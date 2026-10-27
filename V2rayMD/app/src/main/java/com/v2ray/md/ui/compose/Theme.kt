@@ -19,6 +19,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -102,6 +103,16 @@ private fun ColorScheme.liftedDarkSurfaces(): ColorScheme =
         surfaceVariant = Color(0xFF524E57)
     )
 
+/**
+ * Selection highlights (server row, dialog row, cookie badges, empty-state action) all
+ * reuse [ColorScheme.primaryContainer]. The container tone reads almost black in the
+ * dark theme, so shift it slightly towards the saturated [ColorScheme.primary]: same
+ * hue, a touch more vivid and brighter, while [ColorScheme.onPrimaryContainer] still
+ * has enough contrast.
+ */
+private fun ColorScheme.vividSelectionContainer(): ColorScheme =
+    copy(primaryContainer = lerp(primaryContainer, primary, 0.15f))
+
 @Composable
 fun AppTheme(
     darkTheme: Boolean = resolveDarkTheme(),
@@ -120,7 +131,7 @@ fun AppTheme(
     }
     
     // No global alpha modifications, so standard components like ModalBottomSheet and Settings remain fully opaque.
-    val colorScheme = baseColorScheme
+    val colorScheme = baseColorScheme.vividSelectionContainer()
     
     val snackbarController = rememberAppSnackbarController()
 

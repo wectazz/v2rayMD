@@ -401,7 +401,7 @@ private fun ServerListItem(
     Surface(
         onClick = { actions.select(row.guid) },
         shape = shape,
-        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer
                 else MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier
             .fillMaxWidth()

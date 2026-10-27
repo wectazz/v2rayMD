@@ -1117,7 +1117,7 @@ fun SettingsScreen(
                                         modifier = Modifier
                                             .size(48.dp)
                                             .background(
-                                                MaterialTheme.colorScheme.secondaryContainer,
+                                                MaterialTheme.colorScheme.primaryContainer,
                                                 VerySunnyShape
                                             ),
                                         contentAlignment = Alignment.Center
@@ -1126,7 +1126,7 @@ fun SettingsScreen(
                                             sectionIcon,
                                             contentDescription = null,
                                             modifier = Modifier.size(24.dp),
-                                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(16.dp))

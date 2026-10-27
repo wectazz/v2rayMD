@@ -172,14 +172,14 @@ fun MoreMenuContent(expanded: Boolean, onDismissRequest: () -> Unit, onSelected:
                     androidx.compose.foundation.layout.Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer, VerySunnyShape),
+                            .background(MaterialTheme.colorScheme.primaryContainer, VerySunnyShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_play_24dp),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))

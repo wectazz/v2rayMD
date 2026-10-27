@@ -94,7 +94,7 @@ private fun SettingsItemRow(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.primaryContainer,
                         TwelveSidedCookieShape
                     ),
                 contentAlignment = Alignment.Center
@@ -103,7 +103,7 @@ private fun SettingsItemRow(
                     painter = icon,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
