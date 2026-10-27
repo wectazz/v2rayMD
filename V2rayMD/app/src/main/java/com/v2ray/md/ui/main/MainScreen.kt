@@ -184,8 +184,9 @@ fun MainScreen(
             onDismissRequest = { onAction(MainAction.DismissUpdateNotice) },
             title = {
                 Text(
-                    stringResource(R.string.update_new_version_found, updateNotice.latestVersion ?: ""),
-                    modifier = Modifier.padding(start = 8.dp)
+                    text = stringResource(R.string.update_new_version_found, updateNotice.latestVersion ?: ""),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
                 )
             },
             text = {

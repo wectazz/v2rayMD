@@ -31,6 +31,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.v2ray.md.AppConfig
@@ -162,7 +163,13 @@ fun AboutScreen(
     if (showOssDialog) {
         AlertDialog(
             onDismissRequest = { showOssDialog = false },
-            title = { Text(stringResource(R.string.title_oss_license), modifier = Modifier.padding(start = 8.dp)) },
+            title = {
+                Text(
+                    text = stringResource(R.string.title_oss_license),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            },
             text = {
                 AndroidView(
                     factory = { ctx ->

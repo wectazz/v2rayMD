@@ -63,7 +63,15 @@ fun ConfirmDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = title?.let { { Text(it) } },
+        title = title?.let {
+            {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+        },
         text = {
             Text(
                 text = message,
@@ -137,7 +145,13 @@ fun InputDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title) },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -205,7 +219,15 @@ fun <T> SelectListDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = title?.let { { Text(it) } },
+        title = title?.let {
+            {
+                Text(
+                    text = it,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+        },
         text = {
             LazyColumn {
                 items(options) { option ->
@@ -280,8 +302,10 @@ fun SubUpdateDiffDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                if (subNames.size == 1) stringResource(R.string.title_sub_update_diff, subNames.first())
-                else stringResource(R.string.title_sub_update)
+                text = if (subNames.size == 1) stringResource(R.string.title_sub_update_diff, subNames.first())
+                else stringResource(R.string.title_sub_update),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         },
         text = {

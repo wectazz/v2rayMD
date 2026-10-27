@@ -32,6 +32,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.md.BuildConfig
@@ -146,7 +147,13 @@ fun CheckUpdateScreen(
         val result = updateResult!!
         AlertDialog(
             onDismissRequest = { viewModel.dismissUpdateDialog() },
-            title = { Text(stringResource(R.string.update_new_version_found, result.latestVersion ?: ""), modifier = Modifier.padding(start = 8.dp)) },
+            title = {
+                Text(
+                    text = stringResource(R.string.update_new_version_found, result.latestVersion ?: ""),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            },
             text = {
                 val scrollState = rememberScrollState()
                 Text(
