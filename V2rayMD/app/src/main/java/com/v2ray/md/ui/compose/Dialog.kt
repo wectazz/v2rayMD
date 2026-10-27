@@ -2,7 +2,6 @@ package com.v2ray.md.ui.compose
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,29 +11,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ListItemShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import com.v2ray.md.dto.ProfileDiffEntry
 import com.v2ray.md.dto.SubscriptionUpdateResult
 import androidx.compose.ui.text.input.VisualTransformation
@@ -206,7 +206,10 @@ fun QRCodeDialog(
  * When showRadio is true, displays RadioButton (single selection mode);
  * otherwise, plain clickable list mode.
  * The selectedOption parameter is used to highlight the selected item only when showRadio is true.
+ *
+ * The options render as a segmented column, matching the Settings screens.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> SelectListDialog(
     options: List<T>,
@@ -217,57 +220,107 @@ fun <T> SelectListDialog(
     selectedOption: T? = null,
     showRadio: Boolean = false
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = title?.let {
-            {
-                Text(
-                    text = it,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
-        },
-        text = {
-            LazyColumn {
-                items(options) { option ->
-                    val isSelected = option == selectedOption
-                    Row(
+    // BasicAlertDialog instead of AlertDialog: the stock dialog pads content by 24dp on
+    // every side, which left the list narrow. The title is centred and the insets are
+    // compact here.
+    BasicAlertDialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            color = MaterialTheme.colorScheme.surfaceContainerLow
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                if (title != null) {
+                    Text(
+                        text = title,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .then(
-                                if (showRadio) Modifier.selectable(
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                val scrollState = rememberScrollState()
+                SegmentedColumn(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .weight(1f, fill = false)
+                        .verticalScroll(scrollState)
+                        .verticalScrollbar(scrollState)
+                ) {
+                    options.forEach { option ->
+                        item { _ ->
+                            val isSelected = option == selectedOption
+                            // Base parameters only affect unselected rows: the selected row
+                            // reads its own selected* colours, so those are set separately.
+                            // Values mirror BakaSU's settings dialog: surfaceBright rows on a
+                            // darker dialog, primaryContainer for the selection.
+                            val colors = ListItemDefaults.segmentedColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceBright,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
+                                trailingContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                selectedTrailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            )
+                            // The selected item keeps the regular segment outline; only the
+                            // colour changes (selectedShape would add extra rounding).
+                            val shapes = segmentedItemShapes().let { it.copy(selectedShape = it.shape) }
+                            val label: @Composable () -> Unit = {
+                                Text(
+                                    text = optionText(option),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                            // onClick is passed to the item itself: only then does it track
+                            // interactions and morph to pressedShape/focusedShape while held.
+                            if (showRadio) {
+                                SegmentedListItem(
                                     selected = isSelected,
                                     onClick = { onSelected(option) },
-                                    role = Role.RadioButton
-                                ) else Modifier.clickable { onSelected(option) }
-                            )
-                            .padding(vertical = 12.dp, horizontal = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (showRadio) {
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = null
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
+                                    shapes = shapes,
+                                    colors = colors,
+                                    trailingContent = {
+                                        RadioButton(selected = isSelected, onClick = null)
+                                    },
+                                ) {
+                                    label()
+                                }
+                            } else {
+                                SegmentedListItem(
+                                    onClick = { onSelected(option) },
+                                    shapes = shapes,
+                                    colors = colors,
+                                ) {
+                                    label()
+                                }
+                            }
                         }
-                        Text(
-                            text = optionText(option),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(R.string.action_cancel))
                     }
                 }
             }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        },
-    )
+        }
+    }
+}
+
+/** Per-item shapes for a [SegmentedListItem] placed inside a [SegmentedColumn]. */
+@Composable
+private fun segmentedItemShapes(): ListItemShapes {
+    val position = LocalSegmentedPosition.current
+    return if (position != null) {
+        ListItemDefaults.segmentedShapes(index = position.index, count = position.count)
+    } else {
+        ListItemDefaults.segmentedShapes(index = 0, count = 1)
+    }
 }
 
 /**
