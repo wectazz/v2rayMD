@@ -582,4 +582,8 @@
     <string name="sub_info_open_support">Mở liên kết hỗ trợ</string>
     <string name="sub_info_open_page">Mở trang thông tin đăng ký</string>
     <string name="sub_info_unlimited">Không giới hạn</string>
+    <string name="title_pref_hwid_override">Ghi đè HWID</string>
+    <string name="summary_pref_hwid_override">Thay thế ID thiết bị gửi tới bảng đăng ký. Bảng có thể phát hiện HWID bị thay đổi và chặn đăng ký.</string>
+    <string name="action_generate">Tạo</string>
+    <string name="action_reset">Đặt lại</string>
 </resources>

@@ -582,4 +582,8 @@
     <string name="sub_info_open_support">開啟支援連結</string>
     <string name="sub_info_open_page">開啟訂閱資訊頁面</string>
     <string name="sub_info_unlimited">無限制</string>
+    <string name="title_pref_hwid_override">覆寫 HWID</string>
+    <string name="summary_pref_hwid_override">替換傳送到訂閱面板的裝置 ID。面板可能發現 HWID 被變更並封鎖訂閱。</string>
+    <string name="action_generate">產生</string>
+    <string name="action_reset">重設</string>
 </resources>

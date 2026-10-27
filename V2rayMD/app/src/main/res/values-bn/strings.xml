@@ -584,4 +584,8 @@
     <string name="sub_info_open_support">সাপোর্ট লিঙ্ক খুলুন</string>
     <string name="sub_info_open_page">সাবস্ক্রিপশন তথ্যের পাতা খুলুন</string>
     <string name="sub_info_unlimited">সীমাহীন</string>
+    <string name="title_pref_hwid_override">HWID ওভাররাইড</string>
+    <string name="summary_pref_hwid_override">সাবস্ক্রিপশন প্যানেলে পাঠানো ডিভাইস আইডি প্রতিস্থাপন করে। প্যানেল HWID পরিবর্তন লক্ষ্য করে সাবস্ক্রিপশন ব্লক করতে পারে।</string>
+    <string name="action_generate">তৈরি করুন</string>
+    <string name="action_reset">রিসেট</string>
 </resources>

@@ -590,4 +590,9 @@
     <string name="sub_info_open_page">Open subscription page</string>
     <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
     <string name="sub_info_unlimited">Unlimited</string>
+    <string name="title_pref_hwid_override">HWID override</string>
+    <string name="summary_pref_hwid_override">Replaces the device ID sent to the subscription panel. The panel may notice the changed HWID and block the subscription.</string>
+    <string name="action_generate">Generate</string>
+    <string name="action_reset">Reset</string>
+    <string name="value_android_id" translatable="false">Android ID</string>
 </resources>

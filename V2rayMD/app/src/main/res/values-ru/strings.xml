@@ -594,4 +594,8 @@
     <string name="sub_info_open_support">Открыть ссылку поддержки</string>
     <string name="sub_info_open_page">Открыть страницу подписки</string>
     <string name="sub_info_unlimited">Без ограничений</string>
+    <string name="title_pref_hwid_override">Подмена HWID</string>
+    <string name="summary_pref_hwid_override">Заменяет идентификатор устройства, отправляемый панели подписки. Панель может заметить подмену HWID и заблокировать подписку.</string>
+    <string name="action_generate">Сгенерировать</string>
+    <string name="action_reset">Сбросить</string>
 </resources>

@@ -584,4 +584,8 @@
     <string name="sub_info_open_support">واز کردن لینگ پشتیوانی</string>
     <string name="sub_info_open_page">واز کردن صفحه اطلاعات اشتراک</string>
     <string name="sub_info_unlimited">بی‌حد</string>
+    <string name="title_pref_hwid_override">جایگزینی HWID</string>
+    <string name="summary_pref_hwid_override">شناسه دستگاه که به پنل اشتراک فرستاده می‌شود را عوض می‌کند. پنل ممکن است تغییر HWID را ببیند و اشتراک را مسدود کند.</string>
+    <string name="action_generate">ساختن</string>
+    <string name="action_reset">بازنشانی</string>
 </resources>

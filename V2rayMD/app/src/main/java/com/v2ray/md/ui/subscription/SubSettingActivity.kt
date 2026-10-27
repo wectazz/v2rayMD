@@ -29,13 +29,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -51,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +63,8 @@ import com.v2ray.md.R
 import com.v2ray.md.extension.toast
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.handler.MmkvManager.rememberMmkvBool
+import com.v2ray.md.handler.HwidManager
+import com.v2ray.md.handler.SettingsManager
 import com.v2ray.md.ui.base.BaseComponentActivity
 import com.v2ray.md.ui.compose.DeleteConfirmDialog
 import com.v2ray.md.ui.compose.MorphIconButton
@@ -72,6 +78,7 @@ import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SelectListDialog
 import com.v2ray.md.ui.compose.SubUpdateDiffDialog
 import com.v2ray.md.ui.compose.SettingsSwitchItem
+import com.v2ray.md.ui.compose.SettingsMenuItem
 import com.v2ray.md.ui.compose.SwitchCheckThumb
 import com.v2ray.md.ui.compose.verticalScrollbar
 import com.v2ray.md.util.Utils
@@ -346,77 +353,175 @@ fun SubSettingScreen(
         var autoRemoveInvalidAfterTest by rememberMmkvBool(AppConfig.PREF_AUTO_REMOVE_INVALID_AFTER_TEST, false)
         var autoSortAfterTest by rememberMmkvBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, false)
         var sendHwid by rememberMmkvBool(AppConfig.PREF_SEND_HWID, true)
+        var hwidOverride by remember { mutableStateOf(SettingsManager.getHwidOverride()) }
+        var showHwidDialog by remember { mutableStateOf(false) }
 
-        AlertDialog(
-            onDismissRequest = { showUpdateDialog = false },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-            text = {
-                val scrollState = rememberScrollState()
-                SegmentedColumn(modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .verticalScrollbar(scrollState)
-                ) {
-                    item { shape ->
-                        SettingsSwitchItem(
-                            title = stringResource(R.string.title_sub_update),
-                            checked = updateSubscription,
-                            onCheckedChange = { updateSubscription = it },
-                            shape = shape
-                        )
+        // BasicAlertDialog instead of AlertDialog: the stock dialog pads the text slot, which
+        // pushed the scrollbar ~24dp away from the visible edge of the card. The segmented
+        // column now spans the full surface and its scrollbar sits on the card edge.
+        BasicAlertDialog(onDismissRequest = { showUpdateDialog = false }) {
+            Surface(
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.surfaceContainerLow
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    val scrollState = rememberScrollState()
+                    SegmentedColumn(
+                        modifier = Modifier
+                            // ListItem's own top padding is 10dp while start/end are 16dp;
+                            // add the missing 6dp so the first row has equal insets.
+                            .padding(top = 6.dp)
+                            .weight(1f, fill = false)
+                            .verticalScroll(scrollState)
+                            .verticalScrollbar(scrollState)
+                    ) {
+                        item { shape ->
+                            SettingsSwitchItem(
+                                title = stringResource(R.string.title_sub_update),
+                                checked = updateSubscription,
+                                onCheckedChange = { updateSubscription = it },
+                                shape = shape
+                            )
+                        }
+                        item { shape ->
+                            SettingsSwitchItem(
+                                title = stringResource(R.string.title_pref_auto_test_after_update_subscription),
+                                summary = stringResource(R.string.summary_pref_auto_test_after_update_subscription),
+                                checked = autoTestAfterUpdateSubscription,
+                                onCheckedChange = { autoTestAfterUpdateSubscription = it },
+                                shape = shape
+                            )
+                        }
+                        item { shape ->
+                            SettingsSwitchItem(
+                                title = stringResource(R.string.title_pref_auto_remove_invalid_after_test),
+                                summary = stringResource(R.string.summary_pref_auto_remove_invalid_after_test),
+                                checked = autoRemoveInvalidAfterTest,
+                                enabled = autoTestAfterUpdateSubscription,
+                                onCheckedChange = { autoRemoveInvalidAfterTest = it },
+                                shape = shape
+                            )
+                        }
+                        item { shape ->
+                            SettingsSwitchItem(
+                                title = stringResource(R.string.title_pref_auto_sort_after_test),
+                                summary = stringResource(R.string.summary_pref_auto_sort_after_test),
+                                checked = autoSortAfterTest,
+                                enabled = autoTestAfterUpdateSubscription,
+                                onCheckedChange = { autoSortAfterTest = it },
+                                shape = shape
+                            )
+                        }
+                        item { shape ->
+                            SettingsSwitchItem(
+                                title = stringResource(R.string.title_pref_send_hwid),
+                                summary = stringResource(R.string.summary_pref_send_hwid),
+                                checked = sendHwid,
+                                onCheckedChange = { sendHwid = it },
+                                shape = shape
+                            )
+                        }
+                        item { shape ->
+                            SettingsMenuItem(
+                                title = stringResource(R.string.title_pref_hwid_override),
+                                subtitle = hwidOverride.ifEmpty { stringResource(R.string.value_android_id) },
+                                onClick = { showHwidDialog = true },
+                                shape = shape
+                            )
+                        }
                     }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            title = stringResource(R.string.title_pref_auto_test_after_update_subscription),
-                            summary = stringResource(R.string.summary_pref_auto_test_after_update_subscription),
-                            checked = autoTestAfterUpdateSubscription,
-                            onCheckedChange = { autoTestAfterUpdateSubscription = it },
-                            shape = shape
-                        )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = { showUpdateDialog = false }) {
+                            Text(text = stringResource(R.string.action_cancel))
+                        }
+                        TextButton(onClick = {
+                            showUpdateDialog = false
+                            onSubUpdate()
+                        }) {
+                            Text(text = stringResource(R.string.action_ok))
+                        }
                     }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            title = stringResource(R.string.title_pref_auto_remove_invalid_after_test),
-                            summary = stringResource(R.string.summary_pref_auto_remove_invalid_after_test),
-                            checked = autoRemoveInvalidAfterTest,
-                            enabled = autoTestAfterUpdateSubscription,
-                            onCheckedChange = { autoRemoveInvalidAfterTest = it },
-                            shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            title = stringResource(R.string.title_pref_auto_sort_after_test),
-                            summary = stringResource(R.string.summary_pref_auto_sort_after_test),
-                            checked = autoSortAfterTest,
-                            enabled = autoTestAfterUpdateSubscription,
-                            onCheckedChange = { autoSortAfterTest = it },
-                            shape = shape
-                        )
-                    }
-                    item { shape ->
-                        SettingsSwitchItem(
-                            title = stringResource(R.string.title_pref_send_hwid),
-                            summary = stringResource(R.string.summary_pref_send_hwid),
-                            checked = sendHwid,
-                            onCheckedChange = { sendHwid = it },
-                            shape = shape
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showUpdateDialog = false
-                    onSubUpdate()
-                }) {
-                    Text(text = stringResource(R.string.action_ok))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showUpdateDialog = false }) {
-                    Text(text = stringResource(R.string.action_cancel))
                 }
             }
-        )
+        }
+
+        if (showHwidDialog) {
+            HwidEditDialog(
+                initialValue = hwidOverride,
+                onDismiss = { showHwidDialog = false },
+                onConfirm = { value ->
+                    SettingsManager.setHwidOverride(value)
+                    hwidOverride = value.trim()
+                    showHwidDialog = false
+                }
+            )
+        }
     }
+}
+
+/**
+ * Editor for the X-HWID value. Empty means "use the real Android ID"; the value is an opaque
+ * string for the panel, so only length and control characters are validated.
+ */
+@Composable
+private fun HwidEditDialog(
+    initialValue: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+) {
+    var text by remember { mutableStateOf(initialValue) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.title_pref_hwid_override),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    singleLine = true,
+                    label = { Text(text = stringResource(R.string.title_pref_hwid_override)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { text = HwidManager.generate() }) {
+                        Text(text = stringResource(R.string.action_generate))
+                    }
+                    TextButton(onClick = { text = "" }) {
+                        Text(text = stringResource(R.string.action_reset))
+                    }
+                }
+                Text(
+                    text = stringResource(R.string.summary_pref_hwid_override),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = HwidManager.isValid(text),
+                onClick = { onConfirm(text.trim()) }
+            ) {
+                Text(text = stringResource(R.string.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.action_cancel))
+            }
+        }
+    )
 }

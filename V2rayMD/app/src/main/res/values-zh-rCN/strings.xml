@@ -582,4 +582,8 @@
     <string name="sub_info_open_support">打开支持链接</string>
     <string name="sub_info_open_page">打开订阅信息页面</string>
     <string name="sub_info_unlimited">无限制</string>
+    <string name="title_pref_hwid_override">覆盖 HWID</string>
+    <string name="summary_pref_hwid_override">替换发送到订阅面板的设备 ID。面板可能发现 HWID 被更改并封禁订阅。</string>
+    <string name="action_generate">生成</string>
+    <string name="action_reset">重置</string>
 </resources>

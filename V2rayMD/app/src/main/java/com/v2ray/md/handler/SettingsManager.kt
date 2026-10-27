@@ -418,6 +418,14 @@ object SettingsManager {
         return MmkvManager.decodeSettingsBool(AppConfig.PREF_SEND_HWID, true)
     }
 
+    /** User-supplied HWID; empty means "send the real Android ID". */
+    fun getHwidOverride(): String =
+        MmkvManager.decodeSettingsString(AppConfig.PREF_HWID_OVERRIDE, "").orEmpty()
+
+    fun setHwidOverride(value: String) {
+        MmkvManager.encodeSettings(AppConfig.PREF_HWID_OVERRIDE, value.trim())
+    }
+
     fun getPreferIpv6(): Boolean {
         return MmkvManager.decodeSettingsBool(AppConfig.PREF_USE_HEV_TUNNEL, true)
     }

@@ -553,9 +553,12 @@ object AngConfigManager {
             }
             
             val hwid = if (SettingsManager.isSendHwidEnabled()) {
-                android.provider.Settings.Secure.getString(
-                    com.v2ray.md.AngApplication.application.contentResolver,
-                    android.provider.Settings.Secure.ANDROID_ID
+                HwidManager.resolve(
+                    SettingsManager.getHwidOverride(),
+                    android.provider.Settings.Secure.getString(
+                        com.v2ray.md.AngApplication.application.contentResolver,
+                        android.provider.Settings.Secure.ANDROID_ID
+                    )
                 )
             } else null
 

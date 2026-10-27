@@ -563,5 +563,9 @@
     <string name="sub_info_open_support">Dəstək linkini aç</string>
     <string name="sub_info_open_page">Abunəlik məlumat səhifəsini aç</string>
     <string name="sub_info_unlimited">Limitsiz</string>
+    <string name="title_pref_hwid_override">HWID dəyişdirmə</string>
+    <string name="summary_pref_hwid_override">Abunəlik panelinə göndərilən cihaz ID-sini əvəz edir. Panel HWID dəyişikliyini görə və abunəliyi bloklaya bilər.</string>
+    <string name="action_generate">Yarat</string>
+    <string name="action_reset">Sıfırla</string>
 
 </resources>
