@@ -252,21 +252,25 @@ object CoreOutboundBuilder {
             ipv4Addresses.ifEmpty { listOf(AppConfig.WIREGUARD_LOCAL_ADDRESS_V4) }
         }
 
+        val defaultDns = AppConfig.WIREGUARD_LOCAL_REMOTE_DNS.split(",").map { it.trim() }
+
         val rawDNS = profileItem.remoteDNS
             ?.split(",")
             ?.map { it.trim() }
             ?.filter { it.isNotEmpty() }
             ?.ifEmpty { null }
-            ?: listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS)
+            ?: defaultDns
 
         // "local" is not accepted by the core (panics in netip.MustParseAddr):
         // drop it so it can never reach the generated config.
         val usableDNS = rawDNS.filter { it != "local" }
         val remotes = if (MmkvManager.decodeSettingsBool(AppConfig.PREF_IPV6_ENABLED) == true) {
-            usableDNS.ifEmpty { listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS) }
+            usableDNS.ifEmpty { defaultDns }
         } else {
             val ipv4Dns = usableDNS.filter { !it.contains(":") }
-            ipv4Dns.ifEmpty { listOf(AppConfig.WIREGUARD_LOCAL_REMOTE_DNS) }
+            // Fall back to the IPv4 entries of the default list, not to the whole string:
+            // one "a,b,c" element makes the core panic on ParseAddr.
+            ipv4Dns.ifEmpty { defaultDns.filter { !it.contains(":") } }
         }
 
         outboundBean?.settings?.let { wireguard ->
