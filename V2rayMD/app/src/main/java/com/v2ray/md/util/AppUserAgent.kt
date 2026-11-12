@@ -4,22 +4,17 @@ import android.os.Build
 import com.v2ray.md.BuildConfig
 
 /**
- * Default identity sent to subscription panels.
+ * Identity sent to subscription panels.
  *
- * [value] is the `User-Agent` used when a subscription has no custom one, and [os], [osVersion]
- * and [model] are sent as `x-device-os`, `x-ver-os` and `x-device-model` next to `X-HWID`, the
- * same set Throne and Remnawave panels expect.
+ * Panels map the `User-Agent` prefix to a known client and serve client-specific extras (for
+ * example v2rayn:// policy groups) only to recognised ones; `v2rayMD` is not in those lists, so
+ * the default keeps the upstream `v2rayNG` token. Device details travel separately in the
+ * `x-device-os`, `x-ver-os` and `x-device-model` headers next to `X-HWID`, the same set Throne
+ * and Remnawave panels expect.
  */
 object AppUserAgent {
 
-    val value: String by lazy {
-        format(
-            version = BuildConfig.VERSION_NAME,
-            manufacturer = Build.MANUFACTURER,
-            model = Build.MODEL,
-            androidRelease = Build.VERSION.RELEASE,
-        )
-    }
+    val value: String by lazy { "v2rayNG/${BuildConfig.VERSION_NAME}" }
 
     val os: String = "Android"
 
@@ -27,29 +22,17 @@ object AppUserAgent {
         get() = sanitize(Build.VERSION.RELEASE).ifEmpty { "unknown" }
 
     val model: String
-        get() = sanitize(listOf(Build.MANUFACTURER, Build.MODEL).joinToString(" "))
+        get() = deviceLabel(Build.MANUFACTURER, Build.MODEL)
 
     /**
-     * Builds the default UA. Header values must stay single-line and must not break the
-     * `;`/`()` structure, so every part is sanitized first.
+     * `manufacturer model` for the `x-device-model` header. Header values must stay single-line
+     * and must not break the `;`/`()` structure of surrounding headers, so parts are sanitized.
      */
-    fun format(
-        version: String,
-        manufacturer: String?,
-        model: String?,
-        androidRelease: String?,
-    ): String {
-        val device = listOf(sanitize(manufacturer), sanitize(model))
+    fun deviceLabel(manufacturer: String?, model: String?): String =
+        listOf(sanitize(manufacturer), sanitize(model))
             .filter { it.isNotEmpty() }
             .distinctBy { it.lowercase() }
             .joinToString(" ")
-        return buildString {
-            append("v2rayMD/").append(sanitize(version))
-            append(" (Linux; Android ").append(sanitize(androidRelease).ifEmpty { "unknown" })
-            if (device.isNotEmpty()) append("; ").append(device)
-            append(")")
-        }
-    }
 
     private fun sanitize(raw: String?): String =
         raw.orEmpty()
