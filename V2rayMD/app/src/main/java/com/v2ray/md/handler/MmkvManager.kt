@@ -25,7 +25,6 @@ import com.v2ray.md.dto.entities.ServerAffiliationInfo
 import com.v2ray.md.dto.entities.SubscriptionCache
 import com.v2ray.md.dto.entities.SubscriptionItem
 import com.v2ray.md.dto.entities.WebDavConfig
-import com.v2ray.md.extension.isGroupType
 import com.v2ray.md.util.JsonUtil
 import com.v2ray.md.util.Utils
 import kotlinx.coroutines.flow.collectLatest
@@ -320,13 +319,15 @@ object MmkvManager {
                 decodeServerList(subscriptionId).toList()
             }
             // Group configs (policy groups, proxy chains) survive a replace:
-            // they are re-indexed below instead of being dropped.
+            // they are re-indexed below instead of being dropped. A group the new batch
+            // imports again is dropped here, otherwise v2rayn:// groups pile up every update.
             val preservedGroups = if (append) {
                 emptyList()
             } else {
-                replacedServers.filter { guid ->
-                    decodeServerConfig(guid)?.configType?.isGroupType() == true
-                }
+                ProfileReplacement.findKeptGroups(
+                    replacedProfiles = replacedServers.associateWith(::decodeServerConfig),
+                    profiles = profiles.values,
+                )
             }
             val previousSelection = getSelectServer()
             val selectedProfile = if (!append &&
