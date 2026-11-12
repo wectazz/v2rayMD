@@ -2,7 +2,6 @@ package com.v2ray.md.util
 
 import com.v2ray.md.AppConfig
 import com.v2ray.md.AppConfig.LOOPBACK
-import com.v2ray.md.BuildConfig
 import com.v2ray.md.dto.UrlContentRequest
 import okhttp3.Credentials
 import okhttp3.Headers
@@ -157,7 +156,7 @@ object HttpUtil {
             if (currentUrl == null) continue
             val client = buildOkHttpClient(request.timeout, request.httpPort, request.proxyUsername, request.proxyPassword, followRedirects = false)
             val finalUserAgent = if (request.userAgent.isNullOrBlank()) {
-                "v2rayNG/${BuildConfig.VERSION_NAME}"
+                AppUserAgent.value
             } else {
                 request.userAgent
             }
@@ -168,6 +167,9 @@ object HttpUtil {
                 .header("Connection", "close")
             if (!request.hwid.isNullOrBlank()) {
                 requestBuilder.header("X-HWID", request.hwid)
+                requestBuilder.header("x-device-os", AppUserAgent.os)
+                requestBuilder.header("x-ver-os", AppUserAgent.osVersion)
+                requestBuilder.header("x-device-model", AppUserAgent.model)
             }
 
             applyEmbeddedBasicAuthHeader(currentUrl, requestBuilder)
