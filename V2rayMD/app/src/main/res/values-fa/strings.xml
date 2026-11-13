@@ -593,4 +593,10 @@
     <string name="summary_pref_hwid_override">شناسه دستگاهی که به پنل اشتراک ارسال می‌شود را تغییر می‌دهد. پنل ممکن است تغییر HWID را متوجه شود و اشتراک را مسدود کند.</string>
     <string name="action_generate">ایجاد</string>
     <string name="action_reset">بازنشانی</string>
+    <string name="menu_item_import_config_manually_masque">افزودن [MASQUE]</string>
+    <string name="server_lab_request_host_masque">هاست MASQUE</string>
+    <string name="server_lab_path_masque">مسیر MASQUE</string>
+    <string name="server_lab_masque_warp_settings">WARP</string>
+    <string name="server_lab_masque_warp_private_key">کلید خصوصی WARP</string>
+    <string name="server_lab_masque_warp_public_key">کلید عمومی WARP</string>
 </resources>

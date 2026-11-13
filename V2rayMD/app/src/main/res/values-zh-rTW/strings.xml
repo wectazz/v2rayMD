@@ -591,4 +591,10 @@
     <string name="summary_pref_hwid_override">替換傳送到訂閱面板的裝置 ID。面板可能發現 HWID 被變更並封鎖訂閱。</string>
     <string name="action_generate">產生</string>
     <string name="action_reset">重設</string>
+    <string name="menu_item_import_config_manually_masque">新增 [MASQUE]</string>
+    <string name="server_lab_request_host_masque">MASQUE host</string>
+    <string name="server_lab_path_masque">MASQUE path</string>
+    <string name="server_lab_masque_warp_settings">WARP</string>
+    <string name="server_lab_masque_warp_private_key">WARP PrivateKey</string>
+    <string name="server_lab_masque_warp_public_key">WARP PublicKey</string>
 </resources>

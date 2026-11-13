@@ -574,4 +574,10 @@
     <string name="action_generate">Yarat</string>
     <string name="action_reset">Sıfırla</string>
 
+    <string name="menu_item_import_config_manually_masque">[MASQUE] əlavə et</string>
+    <string name="server_lab_request_host_masque">MASQUE host</string>
+    <string name="server_lab_path_masque">MASQUE yolu</string>
+    <string name="server_lab_masque_warp_settings">WARP</string>
+    <string name="server_lab_masque_warp_private_key">WARP PrivateKey</string>
+    <string name="server_lab_masque_warp_public_key">WARP PublicKey</string>
 </resources>

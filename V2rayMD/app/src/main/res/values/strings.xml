@@ -600,4 +600,10 @@
     <string name="action_generate">Generate</string>
     <string name="action_reset">Reset</string>
     <string name="value_android_id" translatable="false">Android ID</string>
+    <string name="menu_item_import_config_manually_masque">Add [MASQUE]</string>
+    <string name="server_lab_request_host_masque">MASQUE host</string>
+    <string name="server_lab_path_masque">MASQUE path</string>
+    <string name="server_lab_masque_warp_settings">WARP</string>
+    <string name="server_lab_masque_warp_private_key">WARP PrivateKey</string>
+    <string name="server_lab_masque_warp_public_key">WARP PublicKey</string>
 </resources>

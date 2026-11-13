@@ -601,4 +601,10 @@
     <string name="summary_pref_hwid_override">يستبدل معرّف الجهاز المُرسل إلى لوحة الاشتراك. قد تلاحظ اللوحة تغيير HWID وتحظر الاشتراك.</string>
     <string name="action_generate">إنشاء</string>
     <string name="action_reset">إعادة تعيين</string>
+    <string name="menu_item_import_config_manually_masque">إضافة [MASQUE]</string>
+    <string name="server_lab_request_host_masque">MASQUE host</string>
+    <string name="server_lab_path_masque">MASQUE path</string>
+    <string name="server_lab_masque_warp_settings">WARP</string>
+    <string name="server_lab_masque_warp_private_key">المفتاح السري WARP</string>
+    <string name="server_lab_masque_warp_public_key">المفتاح العام WARP</string>
 </resources>
