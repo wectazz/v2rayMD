@@ -178,12 +178,13 @@ object CoreConfigContextBuilder {
     }
 
     private fun resolveProxyChainProfiles(config: ProfileItem): List<ProfileItem> {
-        if (config.proxyChainProfiles.isNullOrBlank()) {
+        val chainRemarks = config.proxyChainProfileList
+        if (chainRemarks.isNullOrEmpty()) {
             return listOf(config)
         }
 
         try {
-            return config.proxyChainProfiles.orEmpty().split(",")
+            return chainRemarks
                 .asSequence()
                 .mapNotNull { remark -> SettingsManager.getServerViaRemarks(remark) }
                 .filter { it.server.isNotNullEmpty() }
