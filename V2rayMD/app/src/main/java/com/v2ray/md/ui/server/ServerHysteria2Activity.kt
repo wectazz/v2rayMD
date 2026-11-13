@@ -8,6 +8,7 @@ import com.v2ray.md.AppConfig
 import com.v2ray.md.R
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.enums.EConfigType
+import com.v2ray.md.ui.compose.FormDropdownField
 import com.v2ray.md.ui.compose.FormTextField
 import com.v2ray.md.ui.compose.SegmentedColumn
 import com.v2ray.md.ui.compose.SettingsSwitchItem
@@ -55,11 +56,45 @@ class ServerHysteria2Activity : BaseServerActivity() {
             { state.password = it },
             isError = state.isPasswordError
         )
-        FormTextField(
-            stringResource(R.string.server_obfs_password),
-            state.obfsPassword,
-            { state.obfsPassword = it }
+        val obfsOptions = listOf("none", "salamander", "gecko")
+        val selectedObfs = when {
+            state.obfs.equals("gecko", ignoreCase = true) -> "gecko"
+            state.obfs.equals("salamander", ignoreCase = true) -> "salamander"
+            state.obfsPassword.isNotBlank() && !state.obfs.equals("none", ignoreCase = true) -> "salamander"
+            else -> "none"
+        }
+        FormDropdownField(
+            label = stringResource(R.string.server_obfs_type),
+            value = selectedObfs,
+            options = obfsOptions,
+            onValueChange = {
+                state.obfs = if (it == "none") "" else it
+                if (it == "none") {
+                    state.obfsPassword = ""
+                    state.minPacketSize = ""
+                    state.maxPacketSize = ""
+                }
+            }
         )
+        if (selectedObfs != "none") {
+            FormTextField(
+                stringResource(R.string.server_obfs_password),
+                state.obfsPassword,
+                { state.obfsPassword = it }
+            )
+            if (selectedObfs == "gecko") {
+                FormTextField(
+                    stringResource(R.string.server_lab_min_packet_size),
+                    state.minPacketSize,
+                    { state.minPacketSize = it }
+                )
+                FormTextField(
+                    stringResource(R.string.server_lab_max_packet_size),
+                    state.maxPacketSize,
+                    { state.maxPacketSize = it }
+                )
+            }
+        }
         FormTextField(
             stringResource(R.string.server_lab_port_hop),
             state.portHopping,
