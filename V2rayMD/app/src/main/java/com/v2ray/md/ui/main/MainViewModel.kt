@@ -246,9 +246,10 @@ class MainViewModel(
         MainStatus.Disconnected -> dataSource.getString(R.string.connection_not_connected)
         MainStatus.Connected -> dataSource.getString(R.string.connection_connected)
         MainStatus.Testing -> dataSource.getString(R.string.connection_test_testing)
-        // Bulk progress stays out of the connection bar: it covers the connection state chip
-        // and is already visible in the list rows.
-        is MainStatus.TestProgress -> ""
+        is MainStatus.TestProgress -> dataSource.getString(
+            R.string.connection_running_task_left,
+            status.progress
+        )
 
         is MainStatus.ConnectionTest -> formatConnectionTestResult(status.result)
     }
