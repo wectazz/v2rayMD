@@ -179,9 +179,8 @@ class MainViewModel(
             }
 
             is MainServiceEvent.MeasureConfigNotify -> {
-                if (event.requestId == testRequests.bulk?.id) {
-                    _uiState.update { it.copy(status = MainStatus.TestProgress(event.progress)) }
-                }
+                // Progress text ("Выполняется проверок: N") is deliberately not surfaced in the
+                // connection bar; the status keeps showing the connection state while a batch runs.
             }
 
             is MainServiceEvent.MeasureConfigFinish -> {
@@ -246,9 +245,10 @@ class MainViewModel(
         MainStatus.Disconnected -> dataSource.getString(R.string.connection_not_connected)
         MainStatus.Connected -> dataSource.getString(R.string.connection_connected)
         MainStatus.Testing -> dataSource.getString(R.string.connection_test_testing)
-        // Bulk progress text is intentionally not rendered in the connection bar; the bar itself
-        // stays visible (see MainBottomBar) so it keeps its place while testing runs.
-        is MainStatus.TestProgress -> ""
+        is MainStatus.TestProgress -> dataSource.getString(
+            R.string.connection_running_task_left,
+            status.progress
+        )
 
         is MainStatus.ConnectionTest -> formatConnectionTestResult(status.result)
     }
