@@ -1,7 +1,7 @@
 package com.v2ray.md.dto
 
 import android.content.Context
-import com.v2ray.md.dto.entities.ProfileItem
+import com.v2ray.md.dto.entities.ProfileEntry
 import com.v2ray.md.enums.CoreResolvedType
 
 data class CoreConfigContext(
@@ -13,8 +13,8 @@ data class CoreConfigContext(
 ) {
     data class ResolvedOutbound(
         val tag: String,
-        val profile: ProfileItem,
-        val resolvedProfiles: List<ProfileItem>,
+        val entry: ProfileEntry,
+        val resolvedEntries: List<ProfileEntry>,
         val resolvedType: CoreResolvedType,
     )
 

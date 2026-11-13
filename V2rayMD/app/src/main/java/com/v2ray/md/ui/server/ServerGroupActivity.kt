@@ -93,6 +93,7 @@ class ServerGroupActivity : BaseComponentActivity() {
                 BUILTIN_OUTBOUND_TAGS + SettingsManager.getProfileRemarks(
                     excludeConfigTypes = setOf(
                         EConfigType.CUSTOM,
+                        EConfigType.CUSTOM_OUTBOUND,
                         EConfigType.POLICYGROUP,
                         EConfigType.PROXYCHAIN,
                     )

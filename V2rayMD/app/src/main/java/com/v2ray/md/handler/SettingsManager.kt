@@ -12,6 +12,7 @@ import com.v2ray.md.AppConfig.GEOSITE_PRIVATE
 import com.v2ray.md.AppConfig.TAG_DIRECT
 import com.v2ray.md.AppConfig.VPN
 import com.v2ray.md.dto.V2rayConfig
+import com.v2ray.md.dto.entities.ProfileEntry
 import com.v2ray.md.dto.entities.ProfileItem
 import com.v2ray.md.dto.entities.RulesetItem
 import com.v2ray.md.dto.entities.SubscriptionItem
@@ -203,18 +204,18 @@ object SettingsManager {
     }
 
     /**
-     * Get server via remarks.
+     * Get server entry via remarks.
      * @param remarks The remarks of the server.
-     * @return The ProfileItem.
+     * @return The ProfileEntry.
      */
-    fun getServerViaRemarks(remarks: String?): ProfileItem? {
+    fun getProfileEntryViaRemarks(remarks: String?): ProfileEntry? {
         if (remarks.isNullOrEmpty()) {
             return null
         }
         val serverList = decodeAllServerList()
         return serverList
-            .mapNotNull { guid -> decodeServerConfig(guid) }
-            .firstOrNull { it.remarks == remarks }
+            .mapNotNull { guid -> decodeServerConfig(guid)?.let { ProfileEntry(guid, it) } }
+            .firstOrNull { it.profile.remarks == remarks }
     }
 
     /**

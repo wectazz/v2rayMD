@@ -15,6 +15,7 @@ import okhttp3.Headers
 import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.isNotNullEmpty
 import com.v2ray.md.fmt.CustomFmt
+import com.v2ray.md.fmt.CustomOutboundFmt
 import com.v2ray.md.fmt.Hysteria2Fmt
 import com.v2ray.md.fmt.ShadowsocksFmt
 import com.v2ray.md.fmt.SocksFmt
@@ -416,6 +417,23 @@ object AngConfigManager {
                 throw e
             } catch (e: Exception) {
                 LogUtil.e(AppConfig.TAG, "Failed to parse custom config server as single config", e)
+            }
+            return 0
+        } else if (!server.contains("outbounds") && server.contains("protocol")) {
+            try {
+                val (config, rawOutbound) = CustomOutboundFmt.parse(server)
+                config.subscriptionId = subid
+                config.description = generateDescription(config)
+                commitProfiles(
+                    configs = listOf(ParsedProfile(config, rawOutbound)),
+                    subid = subid,
+                    append = append,
+                )
+                return 1
+            } catch (e: ProfileStorageException) {
+                throw e
+            } catch (e: Exception) {
+                LogUtil.e(AppConfig.TAG, "Failed to parse custom outbound", e)
             }
             return 0
         } else if (server.startsWith("[Interface]") && server.contains("[Peer]")) {

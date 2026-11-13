@@ -65,6 +65,7 @@ import com.v2ray.md.enums.EConfigType
 import com.v2ray.md.extension.toast
 import com.v2ray.md.extension.toastSuccess
 import com.v2ray.md.fmt.CustomFmt
+import com.v2ray.md.fmt.CustomOutboundFmt
 import com.v2ray.md.handler.AngConfigManager
 import com.v2ray.md.handler.MmkvManager
 import com.v2ray.md.ui.base.BaseComponentActivity
@@ -89,11 +90,15 @@ class ServerCustomConfigActivity : BaseComponentActivity() {
 
     private var initialRemarks: String = ""
     private var initialContent: String = ""
+    private var configType = EConfigType.CUSTOM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config = MmkvManager.decodeServerConfig(editGuid)
-        initialRemarks = config?.remarks ?: ""
+        config?.let {
+            configType = it.configType
+            initialRemarks = it.remarks
+        }
         initialContent = MmkvManager.decodeServerRaw(editGuid).orEmpty()
     }
 
@@ -118,8 +123,12 @@ class ServerCustomConfigActivity : BaseComponentActivity() {
             return false
         }
 
-        val parsedProfile = try {
-            CustomFmt.parse(content)
+        val (parsedProfile, contentToSave) = try {
+            if (configType == EConfigType.CUSTOM_OUTBOUND) {
+                CustomOutboundFmt.parse(content)
+            } else {
+                Pair(CustomFmt.parse(content), content)
+            }
         } catch (e: Exception) {
             LogUtil.e(
                 AppConfig.TAG,
@@ -140,13 +149,13 @@ class ServerCustomConfigActivity : BaseComponentActivity() {
 
         val config =
             MmkvManager.decodeServerConfig(editGuid)
-                ?: ProfileItem.create(EConfigType.CUSTOM)
+                ?: ProfileItem.create(configType)
 
         config.remarks =
-            remarks.ifEmpty { parsedProfile?.remarks.orEmpty() }
+            remarks.ifEmpty { parsedProfile.remarks }
 
-        config.server = parsedProfile?.server
-        config.serverPort = parsedProfile?.serverPort
+        config.server = parsedProfile.server
+        config.serverPort = parsedProfile.serverPort
         config.description =
             AngConfigManager.generateDescription(config)
 
@@ -157,7 +166,7 @@ class ServerCustomConfigActivity : BaseComponentActivity() {
 
         MmkvManager.encodeServerRaw(
             savedGuid,
-            content
+            contentToSave
         )
 
         toastSuccess(R.string.toast_success)

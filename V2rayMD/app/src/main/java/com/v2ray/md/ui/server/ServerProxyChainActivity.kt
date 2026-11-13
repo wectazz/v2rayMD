@@ -84,7 +84,12 @@ class ServerProxyChainActivity : BaseComponentActivity() {
         super.onCreate(savedInstanceState)
 
         allRemarks = SettingsManager.getProfileRemarks(
-            excludeConfigTypes = setOf(EConfigType.CUSTOM, EConfigType.POLICYGROUP, EConfigType.PROXYCHAIN)
+            excludeConfigTypes = setOf(
+                EConfigType.CUSTOM,
+                EConfigType.CUSTOM_OUTBOUND,
+                EConfigType.POLICYGROUP,
+                EConfigType.PROXYCHAIN,
+            )
         )
         val config = MmkvManager.decodeServerConfig(editGuid)
         initialRemarks = config?.remarks ?: ""
@@ -128,8 +133,8 @@ class ServerProxyChainActivity : BaseComponentActivity() {
         }
 
         val invalidMembers = chainMembers.filter { member ->
-            val profile = SettingsManager.getServerViaRemarks(member)
-            profile == null || profile.configType.isComplexType()
+            val entry = SettingsManager.getProfileEntryViaRemarks(member)
+            entry == null || entry.profile.configType.isComplexType()
         }
 
         if (invalidMembers.isNotEmpty()) {
