@@ -880,7 +880,8 @@ class MainViewModel(
         _uiState.update {
             it.copy(
                 isTesting = testRequests.isTesting,
-                status = if (it.isRunning) MainStatus.Connected else MainStatus.Disconnected
+                status = if (testRequests.isTesting) MainStatus.Testing
+                else if (it.isRunning) MainStatus.Connected else MainStatus.Disconnected
             )
         }
     }
@@ -925,7 +926,8 @@ class MainViewModel(
         )
         _uiState.update {
             it.copy(
-                isTesting = true
+                isTesting = true,
+                status = MainStatus.Testing
             )
         }
         bulkTestJob = viewModelScope.launch {
@@ -954,7 +956,7 @@ class MainViewModel(
     fun testCurrentServerRealPing() {
         if (!uiState.value.isRunning) return
         val requestId = testRequests.beginCurrent()
-        _uiState.update { it.copy(isTesting = true) }
+        _uiState.update { it.copy(isTesting = true, status = MainStatus.Testing) }
         dataSource.testCurrentServerRealPing(requestId)
     }
 
