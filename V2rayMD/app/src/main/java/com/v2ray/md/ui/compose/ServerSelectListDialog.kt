@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -96,7 +97,21 @@ fun ServerSelectListDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 360.dp)
+                ) {
+                    if (filteredOptions.isEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.connection_test_empty_message),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(vertical = 12.dp, horizontal = 4.dp)
+                            )
+                        }
+                    }
                     items(filteredOptions) { option ->
                         val isSelected = option == selectedOption
                         Row(
