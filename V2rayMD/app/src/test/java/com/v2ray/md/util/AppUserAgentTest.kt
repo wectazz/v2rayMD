@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test
 class AppUserAgentTest {
 
     @Test
+    fun userAgentMatchesThePanelFormat() {
+        assertEquals("v2rayMD/2.4.0/Android", AppUserAgent.userAgent("2.4.0"))
+    }
+
+    @Test
     fun deviceLabelJoinsManufacturerAndModel() {
         assertEquals("Xiaomi 2311DRK48G", AppUserAgent.deviceLabel("Xiaomi", "2311DRK48G"))
     }

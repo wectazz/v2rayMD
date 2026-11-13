@@ -6,15 +6,17 @@ import com.v2ray.md.BuildConfig
 /**
  * Identity sent to subscription panels.
  *
- * Panels map the `User-Agent` prefix to a known client and serve client-specific extras (for
- * example v2rayn:// policy groups) only to recognised ones; `v2rayMD` is not in those lists, so
- * the default keeps the upstream `v2rayNG` token. Device details travel separately in the
- * `x-device-os`, `x-ver-os` and `x-device-model` headers next to `X-HWID`, the same set Throne
- * and Remnawave panels expect.
+ * The UA carries the client name, app version and platform — the format the panel matches against
+ * to decide which subscription flavour to serve: `v2rayMD/<version>/Android`. Device details
+ * travel separately in the `x-device-os`, `x-ver-os` and `x-device-model` headers next to
+ * `X-HWID`, the same set Throne and Remnawave panels expect.
  */
 object AppUserAgent {
 
-    val value: String by lazy { "v2rayNG/${BuildConfig.VERSION_NAME}" }
+    val value: String by lazy { userAgent(BuildConfig.VERSION_NAME) }
+
+    /** Matches the panel's expected `client/version/platform` shape. */
+    fun userAgent(version: String): String = "v2rayMD/$version/Android"
 
     val os: String = "Android"
 
