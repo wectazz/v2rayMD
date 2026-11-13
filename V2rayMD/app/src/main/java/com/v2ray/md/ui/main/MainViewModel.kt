@@ -246,10 +246,9 @@ class MainViewModel(
         MainStatus.Disconnected -> dataSource.getString(R.string.connection_not_connected)
         MainStatus.Connected -> dataSource.getString(R.string.connection_connected)
         MainStatus.Testing -> dataSource.getString(R.string.connection_test_testing)
-        is MainStatus.TestProgress -> dataSource.getString(
-            R.string.connection_running_task_left,
-            status.progress
-        )
+        // Bulk progress text is intentionally not rendered in the connection bar; the bar itself
+        // stays visible (see MainBottomBar) so it keeps its place while testing runs.
+        is MainStatus.TestProgress -> ""
 
         is MainStatus.ConnectionTest -> formatConnectionTestResult(status.result)
     }

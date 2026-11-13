@@ -75,7 +75,7 @@ fun MainCombinedBottomBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         androidx.compose.animation.AnimatedVisibility(
-            visible = isRunning && statsText.isNotEmpty(),
+            visible = isRunning,
             modifier = Modifier.weight(1f),
             enter = androidx.compose.animation.fadeIn(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
             exit = androidx.compose.animation.fadeOut(animationSpec = androidx.compose.animation.core.tween(500, easing = androidx.compose.animation.core.FastOutSlowInEasing))
